@@ -1,0 +1,218 @@
+package regression.features.properties;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import com.grl.TestUtil;
+import com.jayway.jsonpath.ReadContext;
+import java.util.List;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+
+/**
+ * Integration tests for taxonomy pattern detection and mapping.
+ * Tests all four taxonomy patterns (A, B, C, D) and their OpenAPI output.
+ */
+public class TaxonomyPatternsIT {
+
+  private static ReadContext spec;
+
+  @BeforeAll
+  static void setup() {
+    spec = TestUtil.getGeneratedSpec(
+        TestUtil.asFilePath(TaxonomyPatternsIT.class,
+            "/regression/configs/config_taxonomy_patterns.yaml"));
+  }
+
+  @Test
+  void resourceSchemaExists() {
+    assertNotNull(spec.read("$.components.schemas.PatternTestResource"));
+    assertEquals("object", spec.read("$.components.schemas.PatternTestResource.type"));
+    assertEquals("Pattern Test Resource", spec.read("$.components.schemas.PatternTestResource.title"));
+  }
+
+  @Nested
+  class PatternATests {
+
+    @Test
+    void patternACreatesInlineEnum() {
+      // Pattern A: hasStatusA should create inline enum from untyped individuals
+      assertNotNull(spec.read("$.components.schemas.PatternTestResource.properties.hasStatusA"));
+    }
+
+    @Test
+    void patternAIsArrayType() {
+      // someValuesFrom generates array
+      assertEquals("array",
+          spec.read("$.components.schemas.PatternTestResource.properties.hasStatusA.type"));
+    }
+
+    @Test
+    void patternAHasEnumValues() {
+      // Check enum values from individual labels
+      List<String> enumValues = spec.read(
+          "$.components.schemas.PatternTestResource.properties.hasStatusA.items.enum", List.class);
+      assertNotNull(enumValues);
+      assertTrue(enumValues.contains("Active"), "Should contain 'Active'");
+      assertTrue(enumValues.contains("Inactive"), "Should contain 'Inactive'");
+      assertTrue(enumValues.contains("Pending"), "Should contain 'Pending'");
+    }
+
+    @Test
+    void patternAHasMinItems() {
+      // someValuesFrom implies at least one
+      assertEquals(1, spec.read(
+          "$.components.schemas.PatternTestResource.properties.hasStatusA.minItems", Integer.class));
+    }
+
+    @Test
+    void patternAIsRequired() {
+      List<String> required = spec.read(
+          "$.components.schemas.PatternTestResource.required", List.class);
+      assertTrue(required.contains("hasStatusA"), "hasStatusA should be required");
+    }
+  }
+
+  @Nested
+  class PatternBTests {
+
+    @Test
+    void patternBCreatesEnumFromTypedIndividuals() {
+      // Pattern B: hasSensorType should create enum from typed individuals
+      assertNotNull(spec.read("$.components.schemas.PatternTestResource.properties.hasSensorType"));
+    }
+
+    @Test
+    void patternBIsArrayType() {
+      assertEquals("array",
+          spec.read("$.components.schemas.PatternTestResource.properties.hasSensorType.type"));
+    }
+
+    @Test
+    void patternBHasEnumValuesFromLabels() {
+      // Pattern B uses prefLabel values
+      List<String> enumValues = spec.read(
+          "$.components.schemas.PatternTestResource.properties.hasSensorType.items.enum", List.class);
+      assertNotNull(enumValues);
+      assertTrue(enumValues.contains("Analog"), "Should contain 'Analog'");
+      assertTrue(enumValues.contains("Digital"), "Should contain 'Digital'");
+      assertTrue(enumValues.contains("Hybrid"), "Should contain 'Hybrid'");
+    }
+
+    @Test
+    void patternBHasMinItems() {
+      assertEquals(1, spec.read(
+          "$.components.schemas.PatternTestResource.properties.hasSensorType.minItems", Integer.class));
+    }
+
+    @Test
+    void patternBIsRequired() {
+      List<String> required = spec.read(
+          "$.components.schemas.PatternTestResource.required", List.class);
+      assertTrue(required.contains("hasSensorType"), "hasSensorType should be required");
+    }
+  }
+
+  @Nested
+  class PatternCTests {
+
+    @Test
+    void patternCCreatesRefToSchema() {
+      // Pattern C: hasEnvironment should create $ref to EnvironmentCode schema
+      assertNotNull(spec.read("$.components.schemas.PatternTestResource.properties.hasEnvironment"));
+    }
+
+    @Test
+    void patternCIsArrayType() {
+      assertEquals("array",
+          spec.read("$.components.schemas.PatternTestResource.properties.hasEnvironment.type"));
+    }
+
+    @Test
+    void patternCHasRefToTaxonomySchema() {
+      // Items should $ref to the taxonomy schema
+      String ref = spec.read(
+          "$.components.schemas.PatternTestResource.properties.hasEnvironment.items.$ref");
+      assertNotNull(ref, "Should have $ref to taxonomy schema");
+      assertTrue(ref.contains("EnvironmentCode"), "Should reference EnvironmentCode schema");
+    }
+
+    @Test
+    void patternCTaxonomySchemaExists() {
+      // The referenced schema should exist in components/schemas
+      assertNotNull(spec.read("$.components.schemas.EnvironmentCode"),
+          "EnvironmentCode schema should exist");
+    }
+
+    @Test
+    void patternCHasMinItems() {
+      assertEquals(1, spec.read(
+          "$.components.schemas.PatternTestResource.properties.hasEnvironment.minItems", Integer.class));
+    }
+
+    @Test
+    void patternCIsRequired() {
+      List<String> required = spec.read(
+          "$.components.schemas.PatternTestResource.required", List.class);
+      assertTrue(required.contains("hasEnvironment"), "hasEnvironment should be required");
+    }
+  }
+
+  @Nested
+  class PatternDTests {
+
+    @Test
+    void patternDCreatesProperty() {
+      // Pattern D: hasMeasurementContext should create a property
+      // Note: Current implementation generates inline enum, future may generate $ref to Coding
+      assertNotNull(
+          spec.read("$.components.schemas.PatternTestResource.properties.MeasurementContextCode"));
+    }
+
+    @Test
+    void patternDIsArrayType() {
+      assertEquals("array",
+          spec.read("$.components.schemas.PatternTestResource.properties.MeasurementContextCode.type"));
+    }
+
+    @Test
+    void patternDHasEnumValues() {
+      // Pattern D currently generates inline enum from SKOS concepts
+      List<String> enumValues = spec.read(
+          "$.components.schemas.PatternTestResource.properties.MeasurementContextCode.items.enum", List.class);
+      assertNotNull(enumValues, "Should have enum values");
+      assertTrue(enumValues.contains("Continuous"), "Should contain 'Continuous'");
+      assertTrue(enumValues.contains("Discrete"), "Should contain 'Discrete'");
+      assertTrue(enumValues.contains("Triggered"), "Should contain 'Triggered'");
+    }
+
+    @Test
+    void patternDHasMinItems() {
+      assertEquals(1, spec.read(
+          "$.components.schemas.PatternTestResource.properties.MeasurementContextCode.minItems", Integer.class));
+    }
+
+    @Test
+    void patternDIsRequired() {
+      List<String> required = spec.read(
+          "$.components.schemas.PatternTestResource.required", List.class);
+      assertTrue(required.contains("MeasurementContextCode"), "MeasurementContextCode should be required");
+    }
+  }
+
+  @Nested
+  class EndpointTests {
+
+    @Test
+    void resourceHasCollectionEndpoint() {
+      assertNotNull(spec.read("$.paths['/PatternTestResource']"));
+    }
+
+    @Test
+    void resourceHasSingleEndpoint() {
+      assertNotNull(spec.read("$.paths['/PatternTestResource/{PatternTestResourceId}']"));
+    }
+  }
+}

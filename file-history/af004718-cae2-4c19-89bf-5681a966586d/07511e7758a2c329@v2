@@ -1,0 +1,368 @@
+# Common Patterns
+
+Recipe-style patterns for common ASG use cases.
+
+## Configuration Patterns
+
+### Multi-Environment Configuration
+
+Use inheritance for environment-specific settings:
+
+**base-config.yaml:**
+```yaml
+enforceRequiredness: true
+namespaceMappings:
+  - "!http://www.w3.org/.*"
+  - ".*"
+templates:
+  openapi:
+    openapi: 3.1.0
+```
+
+**dev-config.yaml:**
+```yaml
+extends: base-config.yaml
+name: myapi_dev
+outputDir: ./output/dev
+templates:
+  openapi:
+    servers:
+      - url: http://localhost:8080
+        description: Development
+```
+
+**prod-config.yaml:**
+```yaml
+extends: base-config.yaml
+name: myapi_prod
+outputDir: ./output/prod
+templates:
+  openapi:
+    servers:
+      - url: https://api.example.com
+        description: Production
+```
+
+### Multiple APIs from One Ontology
+
+Define multiple API spec classes with different resources:
+
+```yaml
+# Public API
+rootClass: https://example.com/PublicAPIV1.0
+name: public_api
+```
+
+```yaml
+# Admin API
+rootClass: https://example.com/AdminAPIV1.0
+name: admin_api
+```
+
+In the ontology, use different `apiLabel` values for each API.
+
+## Ontology Patterns
+
+### Required String Property
+
+```xml
+<rdfs:subClassOf>
+    <owl:Restriction>
+        <owl:onProperty rdf:resource="https://example.com/name"/>
+        <owl:qualifiedCardinality rdf:datatype="xsd:nonNegativeInteger">1</owl:qualifiedCardinality>
+        <owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:Restriction>
+</rdfs:subClassOf>
+```
+
+**Result:** Required, non-array string property.
+
+### Optional String Property
+
+```xml
+<rdfs:subClassOf>
+    <owl:Restriction>
+        <owl:onProperty rdf:resource="https://example.com/nickname"/>
+        <owl:maxCardinality rdf:datatype="xsd:nonNegativeInteger">1</owl:maxCardinality>
+    </owl:Restriction>
+</rdfs:subClassOf>
+```
+
+**Result:** Optional, non-array property (maxItems: 1).
+
+### Required Array Property
+
+```xml
+<rdfs:subClassOf>
+    <owl:Restriction>
+        <owl:onProperty rdf:resource="https://example.com/tags"/>
+        <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:Restriction>
+</rdfs:subClassOf>
+```
+
+**Result:** Required array with minItems: 1.
+
+### Optional Array with Max Size
+
+```xml
+<rdfs:subClassOf>
+    <owl:Restriction>
+        <owl:onProperty rdf:resource="https://example.com/aliases"/>
+        <owl:maxCardinality rdf:datatype="xsd:nonNegativeInteger">5</owl:maxCardinality>
+    </owl:Restriction>
+</rdfs:subClassOf>
+```
+
+**Result:** Optional array with maxItems: 5.
+
+### Fixed-Size Array
+
+```xml
+<rdfs:subClassOf>
+    <owl:Restriction>
+        <owl:onProperty rdf:resource="https://example.com/coordinates"/>
+        <owl:qualifiedCardinality rdf:datatype="xsd:nonNegativeInteger">2</owl:qualifiedCardinality>
+        <owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#double"/>
+    </owl:Restriction>
+</rdfs:subClassOf>
+```
+
+**Result:** Required array with minItems: 2, maxItems: 2.
+
+### String Enum Property
+
+```xml
+<!-- Named individuals as enum values -->
+<owl:NamedIndividual rdf:about="https://example.com/StatusActive">
+    <rdf:type rdf:resource="https://example.com/Status"/>
+    <skos:prefLabel>Active</skos:prefLabel>
+</owl:NamedIndividual>
+<owl:NamedIndividual rdf:about="https://example.com/StatusInactive">
+    <rdf:type rdf:resource="https://example.com/Status"/>
+    <skos:prefLabel>Inactive</skos:prefLabel>
+</owl:NamedIndividual>
+
+<rdfs:subClassOf>
+    <owl:Restriction>
+        <owl:onProperty rdf:resource="https://example.com/status"/>
+        <owl:someValuesFrom rdf:resource="https://example.com/Status"/>
+    </owl:Restriction>
+</rdfs:subClassOf>
+```
+
+**Result:** String property with enum: [Active, Inactive].
+
+### Reference to Another Resource
+
+```xml
+<rdfs:subClassOf>
+    <owl:Restriction>
+        <owl:onProperty rdf:resource="https://example.com/createdBy"/>
+        <owl:someValuesFrom rdf:resource="https://example.com/User"/>
+    </owl:Restriction>
+</rdfs:subClassOf>
+```
+
+**Result:** If `User` is a resource class:
+```yaml
+createdBy:
+  type: string
+  x-grl-model-link: User
+  description: Unique identifier of User
+```
+
+### Nested Object (Non-Resource)
+
+```xml
+<!-- Address class (no apiID, not a resource) -->
+<owl:Class rdf:about="https://example.com/Address">
+    <skos:prefLabel>Address</skos:prefLabel>
+    <rdfs:subClassOf>
+        <owl:Restriction>
+            <owl:onProperty rdf:resource="https://example.com/street"/>
+            <owl:someValuesFrom rdf:resource="xsd:string"/>
+        </owl:Restriction>
+    </rdfs:subClassOf>
+    <!-- more properties... -->
+</owl:Class>
+
+<!-- Reference from Person -->
+<rdfs:subClassOf>
+    <owl:Restriction>
+        <owl:onProperty rdf:resource="https://example.com/address"/>
+        <owl:someValuesFrom rdf:resource="https://example.com/Address"/>
+    </owl:Restriction>
+</rdfs:subClassOf>
+```
+
+**Result:** Nested object via $ref (not x-grl-model-link).
+
+### DateTime Property
+
+```xml
+<rdfs:subClassOf>
+    <owl:Restriction>
+        <owl:onProperty rdf:resource="https://example.com/createdAt"/>
+        <owl:qualifiedCardinality rdf:datatype="xsd:nonNegativeInteger">1</owl:qualifiedCardinality>
+        <owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#dateTime"/>
+    </owl:Restriction>
+</rdfs:subClassOf>
+```
+
+**Result:**
+```yaml
+createdAt:
+  type: string
+  format: date-time
+  example: "2025-01-15T14:55:58+00:00"
+```
+
+### URI Property
+
+```xml
+<rdfs:subClassOf>
+    <owl:Restriction>
+        <owl:onProperty rdf:resource="https://example.com/website"/>
+        <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#anyURI"/>
+    </owl:Restriction>
+</rdfs:subClassOf>
+```
+
+**Result:**
+```yaml
+website:
+  type: string
+  format: uri
+  example: "http://www.example.com"
+```
+
+### Property with Default Value
+
+```xml
+<rdfs:subClassOf>
+    <owl:Restriction>
+        <owl:onProperty rdf:resource="https://example.com/country"/>
+        <owl:hasValue rdf:datatype="xsd:string">USA</owl:hasValue>
+    </owl:Restriction>
+</rdfs:subClassOf>
+```
+
+**Result:**
+```yaml
+country:
+  type: string
+  default: "USA"
+```
+
+### Union Type (anyOf)
+
+```xml
+<rdfs:subClassOf>
+    <owl:Restriction>
+        <owl:onProperty rdf:resource="https://example.com/contact"/>
+        <owl:someValuesFrom>
+            <owl:Class>
+                <owl:unionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="https://example.com/Email"/>
+                    <rdf:Description rdf:about="https://example.com/Phone"/>
+                </owl:unionOf>
+            </owl:Class>
+        </owl:someValuesFrom>
+    </owl:Restriction>
+</rdfs:subClassOf>
+```
+
+**Result:**
+```yaml
+contact:
+  anyOf:
+    - $ref: '#/components/schemas/Email'
+    - $ref: '#/components/schemas/Phone'
+```
+
+## Security Patterns
+
+### OAuth2 with Per-Resource Scopes
+
+**config.yaml:**
+```yaml
+securitySchemeName: oauth2
+defaultSecurityTemplate: "{api}.{model}.{action}"
+securityActionMappings:
+  GET: read
+  POST: create
+  PUT: update
+  PATCH: update
+  DELETE: delete
+
+templates:
+  openapi:
+    components:
+      securitySchemes:
+        oauth2:
+          type: oauth2
+          flows:
+            authorizationCode:
+              authorizationUrl: https://auth.example.com/authorize
+              tokenUrl: https://auth.example.com/token
+```
+
+**Result:** Each endpoint gets security like `myapi.Employee.read`.
+
+### Resource-Level Security Override
+
+In ontology:
+```xml
+<owl:Class rdf:about="https://example.com/AdminSettings">
+    <GRLAnnotations:security>admin</GRLAnnotations:security>
+</owl:Class>
+```
+
+**config.yaml:**
+```yaml
+securityTemplate: "{api}.{security}.{action}"
+```
+
+**Result:** AdminSettings endpoints get security like `myapi.admin.read`.
+
+### API Key Authentication
+
+```yaml
+templates:
+  openapi:
+    components:
+      securitySchemes:
+        api_key:
+          type: apiKey
+          in: header
+          name: X-API-Key
+    security:
+      - api_key: []
+
+# Disable scope-based security
+defaultSecurityTemplate: null
+```
+
+## Organization Patterns
+
+### Grouping Resources with Tags
+
+On `hasResourceSchema` axioms:
+```xml
+<owl:Axiom>
+    <owl:annotatedSource rdf:resource="https://example.com/MyAPIV1.0"/>
+    <owl:annotatedProperty rdf:resource="rdfs:subClassOf"/>
+    <owl:annotatedTarget><!-- hasResourceSchema for Employee --></owl:annotatedTarget>
+    <api:apitag>Human Resources</api:apitag>
+</owl:Axiom>
+
+<owl:Axiom>
+    <owl:annotatedSource rdf:resource="https://example.com/MyAPIV1.0"/>
+    <owl:annotatedProperty rdf:resource="rdfs:subClassOf"/>
+    <owl:annotatedTarget><!-- hasResourceSchema for Product --></owl:annotatedTarget>
+    <api:apitag>Inventory</api:apitag>
+</owl:Axiom>
+```
+
+**Result:** Resources grouped by tag in OpenAPI tags and operation tags.

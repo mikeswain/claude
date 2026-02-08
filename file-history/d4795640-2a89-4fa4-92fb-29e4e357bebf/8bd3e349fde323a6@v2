@@ -1,0 +1,64 @@
+package kakuro;
+
+import java.util.Map;
+
+import static kakuro.Assertions.*;
+
+/** Tests for {@link Solver}. */
+public final class SolverTest {
+
+    public static void main(String[] args) {
+        solvesEasyPuzzle();
+        returnsEmptyForImpossiblePuzzle();
+        solvesOneEmptyCell();
+        System.out.println("SolverTest: all passed");
+    }
+
+    static void solvesEasyPuzzle() {
+        // #    [4\]  [6\]
+        // [\3] [_]   [_]
+        // [\7] [_]   [_]
+        // Expected: 1,2,3,4
+        var grid = buildEasyGrid();
+        var result = new Solver(grid).solve();
+        assertTrue(result.isPresent(), "solution found");
+        var solution = result.get();
+        assertEquals(1, solution.get(new Position(1, 1)), "(1,1)");
+        assertEquals(2, solution.get(new Position(1, 2)), "(1,2)");
+        assertEquals(3, solution.get(new Position(2, 1)), "(2,1)");
+        assertEquals(4, solution.get(new Position(2, 2)), "(2,2)");
+    }
+
+    static void returnsEmptyForImpossiblePuzzle() {
+        // [\3] [_] — needs two cells summing to 3 but only one cell
+        // Actually: a single cell can't equal 3 via run constraint if target=99
+        // [\99] [_]
+        var cells = new Cell[][] {{
+                new Cell.Clue(0, 99),
+                new Cell.Empty(0)
+        }};
+        var grid = new Grid(cells);
+        var result = new Solver(grid).solve();
+        assertFalse(result.isPresent(), "no solution for impossible puzzle");
+    }
+
+    static void solvesOneEmptyCell() {
+        // [\5] [_]
+        var cells = new Cell[][] {{
+                new Cell.Clue(0, 5),
+                new Cell.Empty(0)
+        }};
+        var grid = new Grid(cells);
+        var result = new Solver(grid).solve();
+        assertTrue(result.isPresent(), "solution found");
+        assertEquals(5, result.get().get(new Position(0, 1)), "single cell = 5");
+    }
+
+    private static Grid buildEasyGrid() {
+        return new Grid(new Cell[][] {
+                {new Cell.Black(), new Cell.Clue(4, 0), new Cell.Clue(6, 0)},
+                {new Cell.Clue(0, 3), new Cell.Empty(0), new Cell.Empty(0)},
+                {new Cell.Clue(0, 7), new Cell.Empty(0), new Cell.Empty(0)}
+        });
+    }
+}

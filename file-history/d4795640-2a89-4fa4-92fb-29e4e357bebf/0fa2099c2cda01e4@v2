@@ -1,0 +1,48 @@
+package kakuro;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
+
+public final class CsvParser {
+
+    /**
+     * Parses a kakuro CSV file into a Grid.
+     * Format: '#' = black, '_' = empty, 'D\A' = clue (down\across, blank = 0).
+     */
+    public static Grid parse(Path path) throws IOException {
+        List<String> lines = Files.readAllLines(path).stream()
+                .filter(l -> !l.isBlank())
+                .toList();
+        int rows = lines.size();
+        String[] firstRow = splitRow(lines.getFirst());
+        int cols = firstRow.length;
+        var cells = new Cell[rows][cols];
+        for (int r = 0; r < rows; r++) {
+            String[] tokens = splitRow(lines.get(r));
+            for (int c = 0; c < cols; c++) {
+                cells[r][c] = parseCell(tokens[c].trim());
+            }
+        }
+        return new Grid(cells);
+    }
+
+    private static String[] splitRow(String line) {
+        return line.split(",", -1);
+    }
+
+    private static Cell parseCell(String token) {
+        if (token.equals("#")) return new Cell.Black();
+        if (token.equals("_")) return new Cell.Empty(0);
+        if (token.contains("\\")) return parseClue(token);
+        throw new IllegalArgumentException("Unknown cell token: " + token);
+    }
+
+    private static Cell.Clue parseClue(String token) {
+        String[] parts = token.split("\\\\", -1);
+        int down = parts[0].isBlank() ? 0 : Integer.parseInt(parts[0]);
+        int across = parts[1].isBlank() ? 0 : Integer.parseInt(parts[1]);
+        return new Cell.Clue(down, across);
+    }
+}

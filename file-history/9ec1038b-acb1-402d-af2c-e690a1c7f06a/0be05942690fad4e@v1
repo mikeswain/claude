@@ -1,0 +1,63 @@
+package com.grl.component.asg.configuration;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import com.grl.TestUtil;
+import jakarta.validation.ConstraintViolationException;
+import java.io.IOException;
+import java.net.URI;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import org.junit.jupiter.api.Test;
+
+public class ConfigTest {
+  @Test
+  public void shouldLoadSimpleConfig() throws IOException {
+    Path configPath = TestUtil.asFilePath(ConfigTest.class, "config-full.yaml");
+    YamlConfig config = Config.load(configPath);
+    assertEquals("myname", config.getName());
+    assertEquals(configPath.getParent().resolve("outputs")
+        .normalize(), config.getOutputDir(), "Paths resolved relative to file location");
+  }
+
+  @Test
+  public void shouldFailWhenInvalid() throws IOException {
+    Path configPath = TestUtil.asFilePath(ConfigTest.class, "config-badname.yaml");
+    assertThrows(ConstraintViolationException.class, () -> {Config.load(configPath);});
+  }
+
+  @Test
+  public void shouldRecursiveLoadExtendedConfig() throws IOException {
+    Path grandchildPath = TestUtil.asFilePath(ConfigTest.class, "subdir/config-grandchild.yaml");
+    Path childPath = TestUtil.asFilePath(ConfigTest.class, "config-child.yaml");
+    YamlConfig config = Config.load(grandchildPath);
+    assertEquals(childPath, config.getExtends(), "Paths resolved relative to file location");
+    assertEquals("grandchild", config.getName(), "Name is overridden");
+    assertEquals("only-set-in-child", config.getSecuritySchemeName(), "name is inherited from child config");
+    assertEquals("only-set-in-parent", config.getRootClass(), "name is inherited from parent config");
+    assertEquals("yes",
+        config.getTemplates().getOpenapi().getSecurity().getFirst().get("mike").getFirst());
+    Map<String, Set<String>> namespaceMappings = config.getNamespaceMappings();
+    assertEquals(Set.of("this-will-be-the-first", "this-will-be-the-second", "this-will-be-the-third"),
+        namespaceMappings.get("grl1"), "Single in list is inherited");
+  }
+
+  @Test
+  public void shouldConvertRelativePaths() throws IOException {
+    Path configPath = TestUtil.asFilePath(ConfigTest.class, "config-special-types.yaml");
+    YamlConfig config = Config.load(configPath);
+    // Path
+    assertEquals(configPath.getParent().resolve("relative-path").normalize(), config.getOutputDir());
+    // URI always get resolved to absolute file::
+    List<URI> ontologies = config.getOntologies();
+    Path here = configPath.getParent();
+    assertEquals(List.of(here.resolve("relative-path.txt").normalize().toUri(), here.resolve("relative-path.txt")
+        .normalize().toUri(), here.resolve("up/../down/relative-path.txt").normalize()
+        .toUri(), URI.create("https://some.url.com/ontology.owl"), here.resolve("with spaces.txt").normalize()
+        .toUri()), ontologies);
+
+  }
+}

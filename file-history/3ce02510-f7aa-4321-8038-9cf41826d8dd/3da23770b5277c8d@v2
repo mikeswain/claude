@@ -1,0 +1,330 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns="https://example.com/taxonomy-patterns/"
+     xml:base="https://example.com/taxonomy-patterns/"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+     xmlns:base="https://www.graphresearchlabs.com/base/"
+     xmlns:api="https://www.graphresearchlabs.com/"
+     xmlns:tp="https://example.com/taxonomy-patterns/">
+
+    <owl:Ontology rdf:about="https://example.com/taxonomy-patterns/">
+        <owl:imports rdf:resource="https://www.graphresearchlabs.com/base/V1.0.2"/>
+        <rdfs:comment>Test ontology for taxonomy pattern detection (Patterns A, B, C, D).</rdfs:comment>
+    </owl:Ontology>
+
+    <!-- APIRoot links to API specification -->
+    <rdf:Description rdf:about="https://www.graphresearchlabs.com/base/APIRoot">
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="https://www.graphresearchlabs.com/base/hasAPI"/>
+                <owl:someValuesFrom rdf:resource="https://example.com/taxonomy-patterns/TaxonomyPatternsAPIV1.0"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </rdf:Description>
+
+    <!-- API Specification Class -->
+    <owl:Class rdf:about="https://example.com/taxonomy-patterns/TaxonomyPatternsAPIV1.0">
+        <rdfs:subClassOf rdf:resource="https://www.graphresearchlabs.com/base/GRLAPISpecifications"/>
+        <rdfs:subClassOf rdf:nodeID="hasPatternTestResource"/>
+        <skos:prefLabel>Taxonomy Patterns API V1.0</skos:prefLabel>
+        <api:apiDisplayLabel>TaxonomyPatternsAPIV1.0</api:apiDisplayLabel>
+    </owl:Class>
+
+    <owl:Restriction rdf:nodeID="hasPatternTestResource">
+        <owl:onProperty rdf:resource="https://www.graphresearchlabs.com/base/hasResourceSchema"/>
+        <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+        <owl:onClass rdf:resource="https://example.com/taxonomy-patterns/PatternTestResource"/>
+    </owl:Restriction>
+    <owl:Axiom>
+        <owl:annotatedSource rdf:resource="https://example.com/taxonomy-patterns/TaxonomyPatternsAPIV1.0"/>
+        <owl:annotatedProperty rdf:resource="http://www.w3.org/2000/01/rdf-schema#subClassOf"/>
+        <owl:annotatedTarget rdf:nodeID="hasPatternTestResource"/>
+        <api:apitag>PatternTestResource</api:apitag>
+    </owl:Axiom>
+
+    <!-- ================================================================== -->
+    <!-- PATTERN A: Inline enumeration with untyped individuals             -->
+    <!-- ================================================================== -->
+
+    <!-- Pattern A - Untyped individuals (only owl:NamedIndividual) -->
+    <owl:NamedIndividual rdf:about="https://example.com/taxonomy-patterns/Active">
+        <rdfs:label>Active</rdfs:label>
+    </owl:NamedIndividual>
+
+    <owl:NamedIndividual rdf:about="https://example.com/taxonomy-patterns/Inactive">
+        <rdfs:label>Inactive</rdfs:label>
+    </owl:NamedIndividual>
+
+    <owl:NamedIndividual rdf:about="https://example.com/taxonomy-patterns/Pending">
+        <rdfs:label>Pending</rdfs:label>
+    </owl:NamedIndividual>
+
+    <owl:ObjectProperty rdf:about="https://example.com/taxonomy-patterns/hasStatusA">
+        <skos:prefLabel>Has Status A</skos:prefLabel>
+        <skos:definition>Pattern A: Status using untyped individuals.</skos:definition>
+    </owl:ObjectProperty>
+
+    <!-- ================================================================== -->
+    <!-- PATTERN B: Typed individuals with metadata                         -->
+    <!-- ================================================================== -->
+
+    <!-- Pattern B - Domain class for typed individuals -->
+    <owl:Class rdf:about="https://example.com/taxonomy-patterns/SensorTypeCode">
+        <skos:prefLabel>Sensor Type Code</skos:prefLabel>
+        <skos:definition>Code values for sensor types.</skos:definition>
+    </owl:Class>
+
+    <!-- Pattern B - Typed individuals with codeValue and property assertions -->
+    <owl:NamedIndividual rdf:about="https://example.com/taxonomy-patterns/SensorTypeAnalog">
+        <rdf:type rdf:resource="https://example.com/taxonomy-patterns/SensorTypeCode"/>
+        <skos:notation>analog</skos:notation>
+        <skos:prefLabel>Analog</skos:prefLabel>
+        <skos:definition>Analog sensor type.</skos:definition>
+        <tp:codeValue>analog</tp:codeValue>
+        <tp:voltage>5V</tp:voltage>
+        <tp:hasCategory rdf:resource="https://example.com/taxonomy-patterns/MeasurementCategory"/>
+    </owl:NamedIndividual>
+
+    <owl:NamedIndividual rdf:about="https://example.com/taxonomy-patterns/SensorTypeDigital">
+        <rdf:type rdf:resource="https://example.com/taxonomy-patterns/SensorTypeCode"/>
+        <skos:notation>digital</skos:notation>
+        <skos:prefLabel>Digital</skos:prefLabel>
+        <skos:definition>Digital sensor type.</skos:definition>
+        <tp:codeValue>digital</tp:codeValue>
+        <tp:voltage>3.3V</tp:voltage>
+    </owl:NamedIndividual>
+
+    <owl:NamedIndividual rdf:about="https://example.com/taxonomy-patterns/SensorTypeHybrid">
+        <rdf:type rdf:resource="https://example.com/taxonomy-patterns/SensorTypeCode"/>
+        <skos:notation>hybrid</skos:notation>
+        <skos:prefLabel>Hybrid</skos:prefLabel>
+        <skos:definition>Hybrid sensor type.</skos:definition>
+        <tp:codeValue>hybrid</tp:codeValue>
+    </owl:NamedIndividual>
+
+    <!-- Nested individual for object property expansion -->
+    <owl:NamedIndividual rdf:about="https://example.com/taxonomy-patterns/MeasurementCategory">
+        <skos:notation>measurement</skos:notation>
+        <skos:prefLabel>Measurement</skos:prefLabel>
+        <tp:unit>volts</tp:unit>
+    </owl:NamedIndividual>
+
+    <owl:AnnotationProperty rdf:about="https://example.com/taxonomy-patterns/codeValue"/>
+    <owl:DatatypeProperty rdf:about="https://example.com/taxonomy-patterns/voltage"/>
+    <owl:DatatypeProperty rdf:about="https://example.com/taxonomy-patterns/unit"/>
+    <owl:ObjectProperty rdf:about="https://example.com/taxonomy-patterns/hasCategory"/>
+
+    <owl:ObjectProperty rdf:about="https://example.com/taxonomy-patterns/hasSensorType">
+        <skos:prefLabel>Has Sensor Type</skos:prefLabel>
+        <skos:definition>Pattern B: Sensor type using typed individuals.</skos:definition>
+    </owl:ObjectProperty>
+
+    <!-- ================================================================== -->
+    <!-- PATTERN C: Class-based taxonomy (extensible)                       -->
+    <!-- ================================================================== -->
+
+    <!-- Pattern C - Taxonomy class -->
+    <owl:Class rdf:about="https://example.com/taxonomy-patterns/EnvironmentCode">
+        <skos:prefLabel>Environment Code</skos:prefLabel>
+        <skos:definition>Operating environment classification.</skos:definition>
+    </owl:Class>
+
+    <!-- Pattern C - Subclasses for hierarchy -->
+    <owl:Class rdf:about="https://example.com/taxonomy-patterns/IndoorEnvironment">
+        <rdfs:subClassOf rdf:resource="https://example.com/taxonomy-patterns/EnvironmentCode"/>
+        <skos:prefLabel>Indoor Environment</skos:prefLabel>
+    </owl:Class>
+
+    <owl:Class rdf:about="https://example.com/taxonomy-patterns/OutdoorEnvironment">
+        <rdfs:subClassOf rdf:resource="https://example.com/taxonomy-patterns/EnvironmentCode"/>
+        <skos:prefLabel>Outdoor Environment</skos:prefLabel>
+    </owl:Class>
+
+    <!-- Pattern C - Individuals -->
+    <owl:NamedIndividual rdf:about="https://example.com/taxonomy-patterns/EnvOffice">
+        <rdf:type rdf:resource="https://example.com/taxonomy-patterns/IndoorEnvironment"/>
+        <skos:prefLabel>Office</skos:prefLabel>
+        <tp:codeValue>office</tp:codeValue>
+    </owl:NamedIndividual>
+
+    <owl:NamedIndividual rdf:about="https://example.com/taxonomy-patterns/EnvWarehouse">
+        <rdf:type rdf:resource="https://example.com/taxonomy-patterns/IndoorEnvironment"/>
+        <skos:prefLabel>Warehouse</skos:prefLabel>
+        <tp:codeValue>warehouse</tp:codeValue>
+    </owl:NamedIndividual>
+
+    <owl:NamedIndividual rdf:about="https://example.com/taxonomy-patterns/EnvOutdoor">
+        <rdf:type rdf:resource="https://example.com/taxonomy-patterns/OutdoorEnvironment"/>
+        <skos:prefLabel>Outdoor</skos:prefLabel>
+        <tp:codeValue>outdoor</tp:codeValue>
+    </owl:NamedIndividual>
+
+    <owl:ObjectProperty rdf:about="https://example.com/taxonomy-patterns/hasEnvironment">
+        <skos:prefLabel>Has Environment</skos:prefLabel>
+        <skos:definition>Pattern C: Environment using class-based taxonomy.</skos:definition>
+    </owl:ObjectProperty>
+
+    <!-- ================================================================== -->
+    <!-- PATTERN D: SKOS taxonomy                                           -->
+    <!-- ================================================================== -->
+
+    <!-- Pattern D - SKOS ConceptScheme -->
+    <owl:NamedIndividual rdf:about="https://example.com/taxonomy-patterns/MeasurementContextScheme">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
+        <skos:prefLabel>Measurement Context Code System</skos:prefLabel>
+        <skos:definition>Code system for measurement context types.</skos:definition>
+    </owl:NamedIndividual>
+
+    <!-- Pattern D - Bridge class linking to SKOS scheme -->
+    <owl:Class rdf:about="https://example.com/taxonomy-patterns/MeasurementContextCode">
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.w3.org/2004/02/skos/core#inScheme"/>
+                <owl:hasValue rdf:resource="https://example.com/taxonomy-patterns/MeasurementContextScheme"/>
+            </owl:Restriction>
+        </owl:equivalentClass>
+        <skos:prefLabel>Measurement Context Code</skos:prefLabel>
+        <skos:definition>SKOS-based measurement context codes.</skos:definition>
+    </owl:Class>
+
+    <!-- Pattern D - SKOS Concepts -->
+    <owl:NamedIndividual rdf:about="https://example.com/taxonomy-patterns/ContextContinuous">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <rdf:type rdf:resource="https://example.com/taxonomy-patterns/MeasurementContextCode"/>
+        <skos:inScheme rdf:resource="https://example.com/taxonomy-patterns/MeasurementContextScheme"/>
+        <skos:notation>continuous</skos:notation>
+        <skos:prefLabel>Continuous</skos:prefLabel>
+        <skos:definition>Continuous measurement context.</skos:definition>
+    </owl:NamedIndividual>
+
+    <owl:NamedIndividual rdf:about="https://example.com/taxonomy-patterns/ContextDiscrete">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <rdf:type rdf:resource="https://example.com/taxonomy-patterns/MeasurementContextCode"/>
+        <skos:inScheme rdf:resource="https://example.com/taxonomy-patterns/MeasurementContextScheme"/>
+        <skos:notation>discrete</skos:notation>
+        <skos:prefLabel>Discrete</skos:prefLabel>
+        <skos:definition>Discrete measurement context.</skos:definition>
+    </owl:NamedIndividual>
+
+    <owl:NamedIndividual rdf:about="https://example.com/taxonomy-patterns/ContextTriggered">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <rdf:type rdf:resource="https://example.com/taxonomy-patterns/MeasurementContextCode"/>
+        <skos:inScheme rdf:resource="https://example.com/taxonomy-patterns/MeasurementContextScheme"/>
+        <skos:notation>triggered</skos:notation>
+        <skos:prefLabel>Triggered</skos:prefLabel>
+        <skos:definition>Event-triggered measurement context.</skos:definition>
+        <skos:broader rdf:resource="https://example.com/taxonomy-patterns/ContextDiscrete"/>
+    </owl:NamedIndividual>
+
+    <owl:ObjectProperty rdf:about="https://example.com/taxonomy-patterns/hasMeasurementContext">
+        <skos:prefLabel>Has Measurement Context</skos:prefLabel>
+        <skos:definition>Pattern D: Measurement context using SKOS taxonomy.</skos:definition>
+    </owl:ObjectProperty>
+
+    <!-- ================================================================== -->
+    <!-- MAIN RESOURCE CLASS                                                -->
+    <!-- ================================================================== -->
+
+    <owl:Class rdf:about="https://example.com/taxonomy-patterns/PatternTestResource">
+        <skos:prefLabel>Pattern Test Resource</skos:prefLabel>
+        <skos:definition>Resource class to test all taxonomy patterns.</skos:definition>
+
+        <!-- apiID -->
+        <rdfs:subClassOf rdf:nodeID="patternApiId"/>
+
+        <!-- Pattern A: owl:oneOf with untyped individuals -->
+        <rdfs:subClassOf rdf:nodeID="hasStatusARestr"/>
+
+        <!-- Pattern B: owl:oneOf with typed individuals -->
+        <rdfs:subClassOf rdf:nodeID="hasSensorTypeRestr"/>
+
+        <!-- Pattern C: someValuesFrom named class (extensible) -->
+        <rdfs:subClassOf rdf:nodeID="hasEnvironmentRestr"/>
+
+        <!-- Pattern D: someValuesFrom SKOS-based class -->
+        <rdfs:subClassOf rdf:nodeID="hasMeasurementContextRestr"/>
+    </owl:Class>
+
+    <!-- apiID restriction -->
+    <owl:Restriction rdf:nodeID="patternApiId">
+        <owl:onProperty rdf:resource="https://www.graphresearchlabs.com/base/apiID"/>
+        <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+        <owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:Restriction>
+    <owl:Axiom>
+        <owl:annotatedSource rdf:resource="https://example.com/taxonomy-patterns/PatternTestResource"/>
+        <owl:annotatedProperty rdf:resource="http://www.w3.org/2000/01/rdf-schema#subClassOf"/>
+        <owl:annotatedTarget rdf:nodeID="patternApiId"/>
+        <api:apiLabel>TaxonomyPatternsAPIV1.0</api:apiLabel>
+    </owl:Axiom>
+
+    <!-- Pattern A: hasStatusA restriction with owl:oneOf (untyped individuals) -->
+    <owl:Restriction rdf:nodeID="hasStatusARestr">
+        <owl:onProperty rdf:resource="https://example.com/taxonomy-patterns/hasStatusA"/>
+        <owl:someValuesFrom>
+            <owl:Class>
+                <owl:oneOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="https://example.com/taxonomy-patterns/Active"/>
+                    <rdf:Description rdf:about="https://example.com/taxonomy-patterns/Inactive"/>
+                    <rdf:Description rdf:about="https://example.com/taxonomy-patterns/Pending"/>
+                </owl:oneOf>
+            </owl:Class>
+        </owl:someValuesFrom>
+    </owl:Restriction>
+    <owl:Axiom>
+        <owl:annotatedSource rdf:resource="https://example.com/taxonomy-patterns/PatternTestResource"/>
+        <owl:annotatedProperty rdf:resource="http://www.w3.org/2000/01/rdf-schema#subClassOf"/>
+        <owl:annotatedTarget rdf:nodeID="hasStatusARestr"/>
+        <api:apiLabel>TaxonomyPatternsAPIV1.0</api:apiLabel>
+    </owl:Axiom>
+
+    <!-- Pattern B: hasSensorType restriction with owl:oneOf (typed individuals) -->
+    <owl:Restriction rdf:nodeID="hasSensorTypeRestr">
+        <owl:onProperty rdf:resource="https://example.com/taxonomy-patterns/hasSensorType"/>
+        <owl:someValuesFrom>
+            <owl:Class>
+                <owl:oneOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="https://example.com/taxonomy-patterns/SensorTypeAnalog"/>
+                    <rdf:Description rdf:about="https://example.com/taxonomy-patterns/SensorTypeDigital"/>
+                    <rdf:Description rdf:about="https://example.com/taxonomy-patterns/SensorTypeHybrid"/>
+                </owl:oneOf>
+            </owl:Class>
+        </owl:someValuesFrom>
+    </owl:Restriction>
+    <owl:Axiom>
+        <owl:annotatedSource rdf:resource="https://example.com/taxonomy-patterns/PatternTestResource"/>
+        <owl:annotatedProperty rdf:resource="http://www.w3.org/2000/01/rdf-schema#subClassOf"/>
+        <owl:annotatedTarget rdf:nodeID="hasSensorTypeRestr"/>
+        <api:apiLabel>TaxonomyPatternsAPIV1.0</api:apiLabel>
+    </owl:Axiom>
+
+    <!-- Pattern C: hasEnvironment restriction (someValuesFrom named class) -->
+    <owl:Restriction rdf:nodeID="hasEnvironmentRestr">
+        <owl:onProperty rdf:resource="https://example.com/taxonomy-patterns/hasEnvironment"/>
+        <owl:someValuesFrom rdf:resource="https://example.com/taxonomy-patterns/EnvironmentCode"/>
+    </owl:Restriction>
+    <owl:Axiom>
+        <owl:annotatedSource rdf:resource="https://example.com/taxonomy-patterns/PatternTestResource"/>
+        <owl:annotatedProperty rdf:resource="http://www.w3.org/2000/01/rdf-schema#subClassOf"/>
+        <owl:annotatedTarget rdf:nodeID="hasEnvironmentRestr"/>
+        <api:apiLabel>TaxonomyPatternsAPIV1.0</api:apiLabel>
+    </owl:Axiom>
+
+    <!-- Pattern D: hasMeasurementContext restriction (someValuesFrom SKOS class) -->
+    <owl:Restriction rdf:nodeID="hasMeasurementContextRestr">
+        <owl:onProperty rdf:resource="https://example.com/taxonomy-patterns/hasMeasurementContext"/>
+        <owl:someValuesFrom rdf:resource="https://example.com/taxonomy-patterns/MeasurementContextCode"/>
+    </owl:Restriction>
+    <owl:Axiom>
+        <owl:annotatedSource rdf:resource="https://example.com/taxonomy-patterns/PatternTestResource"/>
+        <owl:annotatedProperty rdf:resource="http://www.w3.org/2000/01/rdf-schema#subClassOf"/>
+        <owl:annotatedTarget rdf:nodeID="hasMeasurementContextRestr"/>
+        <api:apiLabel>TaxonomyPatternsAPIV1.0</api:apiLabel>
+    </owl:Axiom>
+
+</rdf:RDF>

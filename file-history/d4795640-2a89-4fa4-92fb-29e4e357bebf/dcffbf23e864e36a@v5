@@ -1,0 +1,46 @@
+package kakuro;
+
+import java.nio.file.Path;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
+/** CLI entry point: reads a kakuro CSV and prints the solution. */
+public final class Main {
+
+    public static void main(String[] args) throws Exception {
+        if (args.length != 1) {
+            System.err.println("Usage: java kakuro.Main <puzzle.csv>");
+            System.exit(1);
+        }
+        var grid = CsvParser.parse(Path.of(args[0]));
+        var solver = new Solver(grid);
+        solver.solve().ifPresentOrElse(
+                solution -> printGrid(grid, solution),
+                () -> System.out.println("No solution found."));
+    }
+
+    private static void printGrid(Grid grid, Map<Position, Integer> solution) {
+        IntStream.range(0, grid.rows()).forEach(r -> {
+            var line = IntStream.range(0, grid.cols())
+                    .mapToObj(c -> formatCell(grid.get(r, c),
+                            solution.getOrDefault(new Position(r, c), 0)))
+                    .collect(Collectors.joining(" "));
+            System.out.println(line);
+        });
+    }
+
+    private static String formatCell(Cell cell, int solvedValue) {
+        return switch (cell) {
+            case Cell.Black b -> "  #  ";
+            case Cell.Clue clue -> formatClue(clue);
+            case Cell.Empty e -> String.format("  %d  ", solvedValue);
+        };
+    }
+
+    private static String formatClue(Cell.Clue clue) {
+        String d = clue.down() > 0 ? String.valueOf(clue.down()) : " ";
+        String a = clue.across() > 0 ? String.valueOf(clue.across()) : " ";
+        return String.format("%2s\\%-2s", d, a);
+    }
+}

@@ -1,0 +1,24 @@
+package kakuro;
+
+/** Minimal test assertion helpers. */
+final class Assertions {
+
+    static void assertEquals(Object expected, Object actual, String label) {
+        if (!expected.equals(actual)) {
+            throw new AssertionError(
+                    label + ": expected " + expected + " but got " + actual);
+        }
+    }
+
+    static void assertTrue(boolean condition, String label) {
+        if (!condition) {
+            throw new AssertionError(label + ": expected true");
+        }
+    }
+
+    static void assertFalse(boolean condition, String label) {
+        if (condition) {
+            throw new AssertionError(label + ": expected false");
+        }
+    }
+}

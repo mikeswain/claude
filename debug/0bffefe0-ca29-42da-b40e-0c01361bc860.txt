@@ -1,0 +1,134 @@
+2026-02-06T09:08:58.553Z [DEBUG] [init] configureGlobalMTLS starting
+2026-02-06T09:08:58.554Z [DEBUG] [init] configureGlobalMTLS complete
+2026-02-06T09:08:58.554Z [DEBUG] [init] configureGlobalAgents starting
+2026-02-06T09:08:58.554Z [DEBUG] [init] configureGlobalAgents complete
+2026-02-06T09:08:58.557Z [DEBUG] Applying permission update: Adding 22 allow rule(s) to destination 'localSettings': ["Bash(xargs cat:*)","Bash(wc:*)","Bash(git log:*)","Bash(mvn test:*)","Bash(git add:*)","Bash(git commit:*)","Bash(mvn verify:*)","Bash(git -C /home/mike/grl/ASG status)","Bash(git -C /home/mike/grl/ASG diff --stat)","Bash(git -C /home/mike/grl/ASG log --oneline -5)","Bash(git -C /home/mike/grl/ASG add src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java)","Bash(git -C /home/mike/grl/ASG commit -m \"$\\(cat <<''EOF''\nrefactor ResourceSchemaMapper for legibility\n\nExtract 228-line createSchema\\(\\) god method into focused helper methods:\n- initializeResourceSchema\\(\\), createSchemaVisitors\\(\\), collectRelevantAxioms\\(\\)\n- visitAxiomsWithVisitors\\(\\), mergeVisitorRestrictions\\(\\)\n- findDataProperty\\(\\), findObjectProperty\\(\\), extractPropertyRanges\\(\\)\n- extractExampleValue\\(\\), processDataProperties\\(\\), processObjectProperties\\(\\)\n- processTaxonomyProperties\\(\\), addTaxonomyPropertyToSchema\\(\\)\n- logMissingPropertiesWarning\\(\\)\n\nAdd VisitorPair and AxiomCollection record types for better abstraction.\nAdd comprehensive Javadoc and inline comments throughout.\n\ncreateSchema\\(\\) reduced from 228 lines to 19 lines.\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")","Bash(grep:*)","Bash(ls:*)","Bash(mvn clean compile test-compile:*)","Bash(mvn clean verify:*)","Bash(java -jar:*)","Bash(mvn clean test:*)","WebSearch","Bash(git push:*)","Bash(mvn compile:*)","Bash(find:*)"]
+2026-02-06T09:08:58.557Z [DEBUG] [STARTUP] Loading MCP configs...
+2026-02-06T09:08:58.559Z [DEBUG] [ToolSearch:optimistic] mode=tst-auto, ENABLE_TOOL_SEARCH=undefined, result=true
+2026-02-06T09:08:58.560Z [DEBUG] [STARTUP] Running setup()...
+2026-02-06T09:08:58.560Z [DEBUG] Found 0 plugins (0 enabled, 0 disabled)
+2026-02-06T09:08:58.560Z [DEBUG] Loading skills from: managed=/etc/claude-code/.claude/skills, user=/home/mike/.claude/skills, project=[]
+2026-02-06T09:08:58.561Z [DEBUG] Passes: Cache stale, returning cached data and refreshing in background
+2026-02-06T09:08:58.561Z [DEBUG] Error log sink initialized
+2026-02-06T09:08:58.564Z [DEBUG] getPluginSkills: Processing 0 enabled plugins
+2026-02-06T09:08:58.564Z [DEBUG] Total plugin skills loaded: 0
+2026-02-06T09:08:58.564Z [DEBUG] Total plugin commands loaded: 0
+2026-02-06T09:08:58.564Z [DEBUG] Registered 0 hooks from 0 plugins
+2026-02-06T09:08:58.564Z [DEBUG] [STARTUP] setup() completed in 4ms
+2026-02-06T09:08:58.564Z [DEBUG] [STARTUP] Loading commands and agents...
+2026-02-06T09:08:58.569Z [DEBUG] Total plugin agents loaded: 0
+2026-02-06T09:08:58.569Z [DEBUG] Loaded 0 unique skills (managed: 0, user: 0, project: 0, additional: 0, legacy commands: 0)
+2026-02-06T09:08:58.571Z [DEBUG] getSkills returning: 0 skill dir commands, 0 plugin skills, 2 bundled skills
+2026-02-06T09:08:58.571Z [DEBUG] [STARTUP] Commands and agents loaded in 7ms
+2026-02-06T09:08:58.572Z [DEBUG] [STARTUP] Running showSetupScreens()...
+2026-02-06T09:08:58.572Z [DEBUG] [render] initLayout starting
+2026-02-06T09:08:58.572Z [DEBUG] Layout engine: yoga
+2026-02-06T09:08:58.575Z [DEBUG] Acquired PID lock for 2.1.32 (PID 317177)
+2026-02-06T09:08:58.575Z [DEBUG] Acquired PID lock on running version: /home/mike/.local/share/claude/versions/2.1.32
+2026-02-06T09:08:58.578Z [DEBUG] [render] initLayout complete
+2026-02-06T09:08:58.582Z [DEBUG] [keybindings] KeybindingSetup initialized with 100 bindings, 0 warnings
+2026-02-06T09:08:58.586Z [DEBUG] [render] first ink render: 365ms since process start
+2026-02-06T09:08:58.586Z [DEBUG] [Claude in Chrome] Found brave profiles: Default
+2026-02-06T09:08:58.586Z [DEBUG] [keybindings] Watching for changes to /home/mike/.claude/keybindings.json
+2026-02-06T09:08:58.625Z [DEBUG] [Perfetto] initializePerfettoTracing called, env value: undefined
+2026-02-06T09:08:58.626Z [DEBUG] Grove: Using fresh cached config
+2026-02-06T09:08:58.626Z [DEBUG] [render] initLayout starting
+2026-02-06T09:08:58.626Z [DEBUG] [render] initLayout complete
+2026-02-06T09:08:58.627Z [DEBUG] [keybindings] KeybindingSetup initialized with 100 bindings, 0 warnings
+2026-02-06T09:08:58.630Z [DEBUG] [render] first ink render: 408ms since process start
+2026-02-06T09:08:58.630Z [DEBUG] [Claude in Chrome] Extension not found in any browser
+2026-02-06T09:08:58.636Z [DEBUG] Git remote URL: git@github.com:Graph-Research-Labs/ASG.git
+2026-02-06T09:08:58.636Z [DEBUG] Parsed repository: Graph-Research-Labs/ASG from git@github.com:Graph-Research-Labs/ASG.git
+2026-02-06T09:08:58.636Z [DEBUG] Parsed repository: Graph-Research-Labs/ASG from URL: git@github.com:Graph-Research-Labs/ASG.git
+2026-02-06T09:08:58.636Z [DEBUG] Path /home/mike/grl/ASG already tracked for repo graph-research-labs/asg
+2026-02-06T09:08:58.905Z [DEBUG] Failed to fetch and cache passes eligibility
+2026-02-06T09:08:58.905Z [ERROR] AxiosError: Error
+    at AR (/$bunfs/root/claude:42:1144)
+    at <anonymous> (/$bunfs/root/claude:47:10093)
+    at emit (node:events:92:22)
+    at endReadableNT (internal:streams/readable:862:50)
+    at processTicksAndRejections (native:7:39)
+    at request (/$bunfs/root/claude:49:2149)
+    at processTicksAndRejections (native:7:39)
+2026-02-06T09:09:00.244Z [DEBUG] Writing to temp file: /home/mike/.claude.json.tmp.317177.1770368940244
+2026-02-06T09:09:00.244Z [DEBUG] Preserving file permissions: 100600
+2026-02-06T09:09:00.244Z [DEBUG] Temp file written successfully, size: 7015 bytes
+2026-02-06T09:09:00.244Z [DEBUG] Applied original permissions to temp file
+2026-02-06T09:09:00.244Z [DEBUG] Renaming /home/mike/.claude.json.tmp.317177.1770368940244 to /home/mike/.claude.json
+2026-02-06T09:09:00.244Z [DEBUG] File /home/mike/.claude.json written atomically
+2026-02-06T09:09:01.070Z [DEBUG] [STARTUP] showSetupScreens() completed in 2498ms
+2026-02-06T09:09:01.070Z [DEBUG] [LSP MANAGER] initializeLspServerManager() called
+2026-02-06T09:09:01.070Z [DEBUG] [LSP MANAGER] Created manager instance, state=pending
+2026-02-06T09:09:01.070Z [DEBUG] [LSP MANAGER] Starting async initialization (generation 1)
+2026-02-06T09:09:01.070Z [DEBUG] [API:request] Creating client, ANTHROPIC_CUSTOM_HEADERS present: false, has Authorization header: false
+2026-02-06T09:09:01.070Z [DEBUG] [API:auth] OAuth token check starting
+2026-02-06T09:09:01.071Z [DEBUG] Passes: Cache stale, returning cached data and refreshing in background
+2026-02-06T09:09:01.071Z [DEBUG] Total LSP servers loaded: 0
+2026-02-06T09:09:01.071Z [DEBUG] [STARTUP] MCP configs loaded in 2514ms
+2026-02-06T09:09:01.076Z [DEBUG] [Reconnection] computeInitialTeamContext: No teammate context set (not a teammate)
+2026-02-06T09:09:01.077Z [DEBUG] Writing to temp file: /home/mike/.claude.json.tmp.317177.1770368941077
+2026-02-06T09:09:01.077Z [DEBUG] Preserving file permissions: 100600
+2026-02-06T09:09:01.078Z [DEBUG] Temp file written successfully, size: 7015 bytes
+2026-02-06T09:09:01.078Z [DEBUG] Applied original permissions to temp file
+2026-02-06T09:09:01.078Z [DEBUG] Renaming /home/mike/.claude.json.tmp.317177.1770368941077 to /home/mike/.claude.json
+2026-02-06T09:09:01.078Z [DEBUG] File /home/mike/.claude.json written atomically
+2026-02-06T09:09:01.078Z [DEBUG] [LSP SERVER MANAGER] getAllLspServers returned 0 server(s)
+2026-02-06T09:09:01.078Z [DEBUG] LSP manager initialized with 0 servers
+2026-02-06T09:09:01.080Z [DEBUG] Getting matching hook commands for SessionStart with query: startup
+2026-02-06T09:09:01.080Z [DEBUG] Found 0 hook matchers in settings
+2026-02-06T09:09:01.080Z [DEBUG] Matched 0 unique hooks for query "startup" (0 before deduplication)
+2026-02-06T09:09:01.080Z [DEBUG] installed_plugins.json doesn't exist, returning empty V2 object
+2026-02-06T09:09:01.080Z [DEBUG] Initialized versioned plugins system with 0 plugins
+2026-02-06T09:09:01.080Z [DEBUG] LSP server manager initialized successfully
+2026-02-06T09:09:01.080Z [DEBUG] LSP notification handlers registered successfully for all 0 server(s)
+2026-02-06T09:09:01.081Z [DEBUG] [API:auth] OAuth token check complete
+2026-02-06T09:09:01.084Z [DEBUG] [render] initLayout starting
+2026-02-06T09:09:01.084Z [DEBUG] [render] initLayout complete
+2026-02-06T09:09:01.286Z [DEBUG] [keybindings] KeybindingSetup initialized with 100 bindings, 0 warnings
+2026-02-06T09:09:01.311Z [DEBUG] [REPL:mount] REPL mounted, disabled=false
+2026-02-06T09:09:01.312Z [DEBUG] Official marketplace auto-install skipped: already_attempted
+2026-02-06T09:09:01.312Z [DEBUG] performStartupChecks called
+2026-02-06T09:09:01.312Z [DEBUG] Starting background plugin installations
+2026-02-06T09:09:01.312Z [DEBUG] performBackgroundPluginInstallations called
+2026-02-06T09:09:01.314Z [DEBUG] [render] first ink render: 3093ms since process start
+2026-02-06T09:09:01.319Z [DEBUG] Watching for changes in setting files /home/mike/grl/ASG/.claude/settings.json, /home/mike/grl/ASG/.claude/settings.local.json...
+2026-02-06T09:09:01.320Z [DEBUG] [claudeai-mcp] Checking gate (cached)...
+2026-02-06T09:09:01.320Z [DEBUG] [claudeai-mcp] Gate returned: true
+2026-02-06T09:09:01.320Z [DEBUG] [claudeai-mcp] Fetching from https://api.anthropic.com/v1/mcp_servers?limit=1000
+2026-02-06T09:09:01.321Z [DEBUG] Setting installation status: 0 marketplaces, 0 installable plugins, 0 uninstallable plugins
+2026-02-06T09:09:01.322Z [DEBUG] Loaded plugins - Enabled: 0, Disabled: 0, Commands: 0, Agents: 0, Errors: 0
+2026-02-06T09:09:01.328Z [DEBUG] Writing to temp file: /home/mike/.claude.json.tmp.317177.1770368941328
+2026-02-06T09:09:01.328Z [DEBUG] Preserving file permissions: 100600
+2026-02-06T09:09:01.329Z [DEBUG] Temp file written successfully, size: 7015 bytes
+2026-02-06T09:09:01.329Z [DEBUG] Applied original permissions to temp file
+2026-02-06T09:09:01.329Z [DEBUG] Renaming /home/mike/.claude.json.tmp.317177.1770368941328 to /home/mike/.claude.json
+2026-02-06T09:09:01.329Z [DEBUG] File /home/mike/.claude.json written atomically
+2026-02-06T09:09:01.330Z [DEBUG] Writing to temp file: /home/mike/.claude.json.tmp.317177.1770368941330
+2026-02-06T09:09:01.330Z [DEBUG] Preserving file permissions: 100600
+2026-02-06T09:09:01.332Z [DEBUG] Temp file written successfully, size: 7015 bytes
+2026-02-06T09:09:01.332Z [DEBUG] Applied original permissions to temp file
+2026-02-06T09:09:01.332Z [DEBUG] Renaming /home/mike/.claude.json.tmp.317177.1770368941330 to /home/mike/.claude.json
+2026-02-06T09:09:01.332Z [DEBUG] File /home/mike/.claude.json written atomically
+2026-02-06T09:09:01.388Z [DEBUG] Ripgrep first use test: PASSED (mode=builtin, path=/home/mike/.local/share/claude/versions/2.1.32)
+2026-02-06T09:09:01.428Z [DEBUG] [API:request] Creating client, ANTHROPIC_CUSTOM_HEADERS present: false, has Authorization header: false
+2026-02-06T09:09:01.428Z [DEBUG] [API:auth] OAuth token check starting
+2026-02-06T09:09:01.428Z [DEBUG] [API:auth] OAuth token check complete
+2026-02-06T09:09:01.605Z [DEBUG] Writing to temp file: /home/mike/.claude.json.tmp.317177.1770368941605
+2026-02-06T09:09:01.605Z [DEBUG] Preserving file permissions: 100600
+2026-02-06T09:09:01.607Z [DEBUG] Temp file written successfully, size: 7015 bytes
+2026-02-06T09:09:01.608Z [DEBUG] Applied original permissions to temp file
+2026-02-06T09:09:01.608Z [DEBUG] Renaming /home/mike/.claude.json.tmp.317177.1770368941605 to /home/mike/.claude.json
+2026-02-06T09:09:01.608Z [DEBUG] File /home/mike/.claude.json written atomically
+2026-02-06T09:09:01.608Z [DEBUG] Passes eligibility cached for org ae3d356a-579b-43fe-83c6-0f421f0498ba: true
+2026-02-06T09:09:01.608Z [DEBUG] [claudeai-mcp] Fetched 0 servers
+2026-02-06T09:09:01.784Z [DEBUG] AutoUpdaterWrapper: Installation type: native
+2026-02-06T09:09:02.644Z [DEBUG] Checking for native installer update to version 2.1.34
+2026-02-06T09:09:02.645Z [DEBUG] Downloading native installer version 2.1.34
+2026-02-06T09:09:39.257Z [DEBUG] Atomically installed binary to /home/mike/.local/share/claude/versions/2.1.34
+2026-02-06T09:09:39.263Z [DEBUG] Created directory /home/mike/.local/bin for symlink
+2026-02-06T09:09:39.264Z [DEBUG] Atomically updated symlink /home/mike/.local/bin/claude -> /home/mike/.local/share/claude/versions/2.1.34
+2026-02-06T09:09:39.264Z [DEBUG] Successfully updated to version 2.1.34
+2026-02-06T09:09:40.064Z [DEBUG] Getting matching hook commands for SessionEnd with query: prompt_input_exit
+2026-02-06T09:09:40.064Z [DEBUG] Found 0 hook matchers in settings
+2026-02-06T09:09:40.064Z [DEBUG] Matched 0 unique hooks for query "prompt_input_exit" (0 before deduplication)
+2026-02-06T09:09:40.068Z [DEBUG] LSP server manager shut down successfully

@@ -1,0 +1,73 @@
+package kakuro;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+
+import static kakuro.Assertions.*;
+
+/** Tests for {@link CsvParser}. */
+public final class CsvParserTest {
+
+    public static void main(String[] args) throws Exception {
+        parsesBlackCell();
+        parsesEmptyCell();
+        parsesDownOnlyClue();
+        parsesAcrossOnlyClue();
+        parsesCombinedClue();
+        parsesGridDimensions();
+        System.out.println("CsvParserTest: all passed");
+    }
+
+    static void parsesBlackCell() throws Exception {
+        var grid = parseOneCellGrid("#");
+        assertTrue(grid.get(0, 0) instanceof Cell.Black, "black cell");
+    }
+
+    static void parsesEmptyCell() throws Exception {
+        var grid = parseOneCellGrid("_");
+        assertTrue(grid.get(0, 0) instanceof Cell.Empty e && e.value() == 0,
+                "empty cell");
+    }
+
+    static void parsesDownOnlyClue() throws Exception {
+        var grid = parseOneCellGrid("5\\");
+        var clue = (Cell.Clue) grid.get(0, 0);
+        assertEquals(5, clue.down(), "down value");
+        assertEquals(0, clue.across(), "across value");
+    }
+
+    static void parsesAcrossOnlyClue() throws Exception {
+        var grid = parseOneCellGrid("\\8");
+        var clue = (Cell.Clue) grid.get(0, 0);
+        assertEquals(0, clue.down(), "down value");
+        assertEquals(8, clue.across(), "across value");
+    }
+
+    static void parsesCombinedClue() throws Exception {
+        var grid = parseOneCellGrid("12\\7");
+        var clue = (Cell.Clue) grid.get(0, 0);
+        assertEquals(12, clue.down(), "down value");
+        assertEquals(7, clue.across(), "across value");
+    }
+
+    static void parsesGridDimensions() throws Exception {
+        var csv = "#,\\3,\\7\n3\\,_,_\n4\\,_,_\n";
+        var grid = parseCsv(csv);
+        assertEquals(3, grid.rows(), "rows");
+        assertEquals(3, grid.cols(), "cols");
+    }
+
+    private static Grid parseOneCellGrid(String token) throws Exception {
+        return parseCsv(token + "\n");
+    }
+
+    private static Grid parseCsv(String content) throws Exception {
+        Path tmp = Files.createTempFile("kakuro-test", ".csv");
+        Files.writeString(tmp, content);
+        try {
+            return CsvParser.parse(tmp);
+        } finally {
+            Files.deleteIfExists(tmp);
+        }
+    }
+}

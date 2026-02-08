@@ -1,0 +1,597 @@
+/home/mike/grl/ASG/src/main/java/com/grl/component/schema/SchemaVisitor.java-54- * <pre>{@code
+/home/mike/grl/ASG/src/main/java/com/grl/component/schema/SchemaVisitor.java-55- * OWLClass myClass = ...;
+/home/mike/grl/ASG/src/main/java/com/grl/component/schema/SchemaVisitor.java-56- * OWLOntology ontology = ...;
+/home/mike/grl/ASG/src/main/java/com/grl/component/schema/SchemaVisitor.java-57- * OWLClass owlThing = dataFactory.getOWLThing();
+/home/mike/grl/ASG/src/main/java/com/grl/component/schema/SchemaVisitor.java-58- *
+src/main/java/com/grl/component/schema/SchemaVisitor.java:59: * SchemaVisitor visitor = new SchemaVisitor(myClass, ontology, owlThing);
+/home/mike/grl/ASG/src/main/java/com/grl/component/schema/SchemaVisitor.java-60- * myClass.accept(visitor);
+/home/mike/grl/ASG/src/main/java/com/grl/component/schema/SchemaVisitor.java-61- *
+/home/mike/grl/ASG/src/main/java/com/grl/component/schema/SchemaVisitor.java-62- * // Access collected restrictions
+/home/mike/grl/ASG/src/main/java/com/grl/component/schema/SchemaVisitor.java-63- * Map<String, List<RestrictionInfo>> restrictions = visitor.getRestrictions();
+/home/mike/grl/ASG/src/main/java/com/grl/component/schema/SchemaVisitor.java-64- * Set<String> objectProperties = visitor.getObjectPropertyNames();
+--
+/home/mike/grl/ASG/src/main/java/com/grl/component/schema/SchemaVisitor.java-111-
+/home/mike/grl/ASG/src/main/java/com/grl/component/schema/SchemaVisitor.java-112-  // Taxonomy pattern tracking
+/home/mike/grl/ASG/src/main/java/com/grl/component/schema/SchemaVisitor.java-113-  private final Map<String, TaxonomyInfo> taxonomyPatterns = new HashMap<>();
+/home/mike/grl/ASG/src/main/java/com/grl/component/schema/SchemaVisitor.java-114-
+/home/mike/grl/ASG/src/main/java/com/grl/component/schema/SchemaVisitor.java-115-  /**
+src/main/java/com/grl/component/schema/SchemaVisitor.java:116:   * Creates a new SchemaVisitor to analyze OWL class restrictions.
+/home/mike/grl/ASG/src/main/java/com/grl/component/schema/SchemaVisitor.java-117-   *
+/home/mike/grl/ASG/src/main/java/com/grl/component/schema/SchemaVisitor.java-118-   * @param visitedClass the OWL class to analyze for restrictions
+/home/mike/grl/ASG/src/main/java/com/grl/component/schema/SchemaVisitor.java-119-   * @param onto         the ontology containing the class and its axioms
+src/main/java/com/grl/component/schema/SchemaVisitor.java-120-   * @param owlThing     reference to owl:Thing (restrictions to owl:Thing are ignored as they add
+/home/mike/grl/ASG/src/main/java/com/grl/component/schema/SchemaVisitor.java-121-   *                     no information)
+--
+src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-62-      / Create owl:oneOf restriction
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-63-      var oneOf = factory.getOWLObjectOneOf(active, inactive);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-64-      var restriction = factory.getOWLObjectSomeValuesFrom(hasCategory, oneOf);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-65-      manager.addAxiom(ontology, factory.getOWLSubClassOfAxiom(testClass, restriction));
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-66-
+src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java:67:      SchemaVisitor visitor = new SchemaVisitor(testClass, ontology, owlThing);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-68-      testClass.accept(visitor);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-69-
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-70-      Map<String, TaxonomyInfo> patterns = visitor.getTaxonomyPatterns();
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-71-      assertTrue(patterns.containsKey("hasCategory"));
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-72-      assertEquals(TaxonomyPattern.PATTERN_A, patterns.get("hasCategory").pattern());
+--
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-83-
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-84-      var oneOf = factory.getOWLObjectOneOf(low, high);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-85-      var restriction = factory.getOWLObjectAllValuesFrom(hasCategory, oneOf);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-86-      manager.addAxiom(ontology, factory.getOWLSubClassOfAxiom(testClass, restriction));
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-87-
+src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java:88:      SchemaVisitor visitor = new SchemaVisitor(testClass, ontology, owlThing);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-89-      testClass.accept(visitor);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-90-
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-91-      Map<String, TaxonomyInfo> patterns = visitor.getTaxonomyPatterns();
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-92-      assertTrue(patterns.containsKey("hasCategory"));
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-93-      assertEquals(TaxonomyPattern.PATTERN_A, patterns.get("hasCategory").pattern());
+--
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-103-
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-104-      var oneOf = factory.getOWLObjectOneOf(val1, val2);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-105-      var restriction = factory.getOWLObjectExactCardinality(1, hasCategory, oneOf);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-106-      manager.addAxiom(ontology, factory.getOWLSubClassOfAxiom(testClass, restriction));
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-107-
+src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java:108:      SchemaVisitor visitor = new SchemaVisitor(testClass, ontology, owlThing);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-109-      testClass.accept(visitor);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-110-
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-111-      Map<String, TaxonomyInfo> patterns = visitor.getTaxonomyPatterns();
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-112-      assertTrue(patterns.containsKey("hasCategory"));
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-113-      assertEquals(TaxonomyPattern.PATTERN_A, patterns.get("hasCategory").pattern());
+--
+src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-133-      / Create owl:oneOf restriction
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-134-      var oneOf = factory.getOWLObjectOneOf(active, inactive);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-135-      var restriction = factory.getOWLObjectSomeValuesFrom(hasCategory, oneOf);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-136-      manager.addAxiom(ontology, factory.getOWLSubClassOfAxiom(testClass, restriction));
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-137-
+src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java:138:      SchemaVisitor visitor = new SchemaVisitor(testClass, ontology, owlThing);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-139-      testClass.accept(visitor);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-140-
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-141-      Map<String, TaxonomyInfo> patterns = visitor.getTaxonomyPatterns();
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-142-      assertTrue(patterns.containsKey("hasCategory"));
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-143-      assertEquals(TaxonomyPattern.PATTERN_B, patterns.get("hasCategory").pattern());
+--
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-158-
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-159-      var oneOf = factory.getOWLObjectOneOf(code1);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-160-      var restriction = factory.getOWLObjectSomeValuesFrom(hasCategory, oneOf);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-161-      manager.addAxiom(ontology, factory.getOWLSubClassOfAxiom(testClass, restriction));
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-162-
+src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java:163:      SchemaVisitor visitor = new SchemaVisitor(testClass, ontology, owlThing);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-164-      testClass.accept(visitor);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-165-
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-166-      Map<String, TaxonomyInfo> patterns = visitor.getTaxonomyPatterns();
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-167-      TaxonomyInfo info = patterns.get("hasCategory");
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-168-      assertNotNull(info);
+--
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-190-
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-191-      var oneOf = factory.getOWLObjectOneOf(code1);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-192-      var restriction = factory.getOWLObjectSomeValuesFrom(hasCategory, oneOf);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-193-      manager.addAxiom(ontology, factory.getOWLSubClassOfAxiom(testClass, restriction));
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-194-
+src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java:195:      SchemaVisitor visitor = new SchemaVisitor(testClass, ontology, owlThing);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-196-      testClass.accept(visitor);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-197-
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-198-      Map<String, TaxonomyInfo> patterns = visitor.getTaxonomyPatterns();
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-199-      TaxonomyInfo info = patterns.get("hasCategory");
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-200-      assertNotNull(info);
+--
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-220-
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-221-      var oneOf = factory.getOWLObjectOneOf(code1);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-222-      var restriction = factory.getOWLObjectSomeValuesFrom(hasCategory, oneOf);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-223-      manager.addAxiom(ontology, factory.getOWLSubClassOfAxiom(testClass, restriction));
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-224-
+src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java:225:      SchemaVisitor visitor = new SchemaVisitor(testClass, ontology, owlThing);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-226-      testClass.accept(visitor);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-227-
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-228-      Map<String, TaxonomyInfo> patterns = visitor.getTaxonomyPatterns();
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-229-      TaxonomyInfo info = patterns.get("hasCategory");
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-230-      assertNotNull(info);
+--
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-257-
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-258-      var oneOf = factory.getOWLObjectOneOf(code1);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-259-      var restriction = factory.getOWLObjectSomeValuesFrom(hasCategory, oneOf);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-260-      manager.addAxiom(ontology, factory.getOWLSubClassOfAxiom(testClass, restriction));
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-261-
+src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java:262:      SchemaVisitor visitor = new SchemaVisitor(testClass, ontology, owlThing);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-263-      testClass.accept(visitor);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-264-
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-265-      Map<String, TaxonomyInfo> patterns = visitor.getTaxonomyPatterns();
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-266-      TaxonomyInfo info = patterns.get("hasCategory");
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-267-      assertNotNull(info);
+--
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-290-
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-291-      var oneOf = factory.getOWLObjectOneOf(code1);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-292-      var restriction = factory.getOWLObjectSomeValuesFrom(hasCategory, oneOf);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-293-      manager.addAxiom(ontology, factory.getOWLSubClassOfAxiom(testClass, restriction));
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-294-
+src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java:295:      SchemaVisitor visitor = new SchemaVisitor(testClass, ontology, owlThing);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-296-      testClass.accept(visitor);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-297-
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-298-      Map<String, TaxonomyInfo> patterns = visitor.getTaxonomyPatterns();
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-299-      TaxonomyInfo info = patterns.get("hasCategory");
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-300-      TaxonomyInfo.IndividualGraph graph = info.individualGraphs().get(0);
+--
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-321-
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-322-      // Create restriction to the named class
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-323-      var restriction = factory.getOWLObjectSomeValuesFrom(hasCategory, environmentCode);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-324-      manager.addAxiom(ontology, factory.getOWLSubClassOfAxiom(testClass, restriction));
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-325-
+src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java:326:      SchemaVisitor visitor = new SchemaVisitor(testClass, ontology, owlThing);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-327-      testClass.accept(visitor);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-328-
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-329-      Map<String, TaxonomyInfo> patterns = visitor.getTaxonomyPatterns();
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-330-      assertTrue(patterns.containsKey("hasCategory"));
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-331-      assertEquals(TaxonomyPattern.PATTERN_C, patterns.get("hasCategory").pattern());
+--
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-347-      manager.addAxiom(ontology, factory.getOWLClassAssertionAxiom(childClass, ind1));
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-348-
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-349-      var restriction = factory.getOWLObjectSomeValuesFrom(hasCategory, parentClass);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-350-      manager.addAxiom(ontology, factory.getOWLSubClassOfAxiom(testClass, restriction));
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-351-
+src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java:352:      SchemaVisitor visitor = new SchemaVisitor(testClass, ontology, owlThing);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-353-      testClass.accept(visitor);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-354-
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-355-      Map<String, TaxonomyInfo> patterns = visitor.getTaxonomyPatterns();
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-356-      TaxonomyInfo info = patterns.get("hasCategory");
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-357-      assertNotNull(info);
+--
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-372-
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-373-      // Now use Person as range for our test property
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-374-      var restriction = factory.getOWLObjectSomeValuesFrom(hasCategory, personClass);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-375-      manager.addAxiom(ontology, factory.getOWLSubClassOfAxiom(testClass, restriction));
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-376-
+src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java:377:      SchemaVisitor visitor = new SchemaVisitor(testClass, ontology, owlThing);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-378-      testClass.accept(visitor);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-379-
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-380-      Map<String, TaxonomyInfo> patterns = visitor.getTaxonomyPatterns();
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-381-      // Should not detect as taxonomy pattern because Person has object property restrictions
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-382-      assertFalse(patterns.containsKey("hasCategory"));
+--
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-401-      manager.addAxiom(ontology, factory.getOWLClassAssertionAxiom(measurementContext, continuous));
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-402-
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-403-      var restriction = factory.getOWLObjectSomeValuesFrom(hasCategory, measurementContext);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-404-      manager.addAxiom(ontology, factory.getOWLSubClassOfAxiom(testClass, restriction));
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-405-
+src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java:406:      SchemaVisitor visitor = new SchemaVisitor(testClass, ontology, owlThing);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-407-      testClass.accept(visitor);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-408-
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-409-      Map<String, TaxonomyInfo> patterns = visitor.getTaxonomyPatterns();
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-410-      assertTrue(patterns.containsKey("hasCategory"));
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-411-      assertEquals(TaxonomyPattern.PATTERN_D, patterns.get("hasCategory").pattern());
+--
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-430-      manager.addAxiom(ontology, factory.getOWLClassAssertionAxiom(codeClass, code1));
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-431-
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-432-      var restriction = factory.getOWLObjectSomeValuesFrom(hasCategory, codeClass);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-433-      manager.addAxiom(ontology, factory.getOWLSubClassOfAxiom(testClass, restriction));
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-434-
+src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java:435:      SchemaVisitor visitor = new SchemaVisitor(testClass, ontology, owlThing);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-436-      testClass.accept(visitor);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-437-
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-438-      Map<String, TaxonomyInfo> patterns = visitor.getTaxonomyPatterns();
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-439-      assertTrue(patterns.containsKey("hasCategory"));
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-440-      assertEquals(TaxonomyPattern.PATTERN_D, patterns.get("hasCategory").pattern());
+--
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-447-    @Test
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-448-    void noPatternForOwlThing() {
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-449-      var restriction = factory.getOWLObjectSomeValuesFrom(hasCategory, owlThing);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-450-      manager.addAxiom(ontology, factory.getOWLSubClassOfAxiom(testClass, restriction));
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-451-
+src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java:452:      SchemaVisitor visitor = new SchemaVisitor(testClass, ontology, owlThing);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-453-      testClass.accept(visitor);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-454-
+src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-455-      / owl:Thing should be ignored
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-456-      Map<String, TaxonomyInfo> patterns = visitor.getTaxonomyPatterns();
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-457-      assertFalse(patterns.containsKey("hasCategory"));
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-458-    }
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-459-
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-460-    @Test
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-461-    void emptyOntologyNoPatterns() {
+src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java:462:      SchemaVisitor visitor = new SchemaVisitor(testClass, ontology, owlThing);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-463-      testClass.accept(visitor);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-464-
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-465-      assertTrue(visitor.getTaxonomyPatterns().isEmpty());
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-466-    }
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTaxonomyDetectionTest.java-467-  }
+--
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/OntologyMapper.java-360-    return requirements.build();
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/OntologyMapper.java-361-  }
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/OntologyMapper.java-362-
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/OntologyMapper.java-363-  private void mapToComponentSchemas(OWLClass resourceClass, String name, String definition) {
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/OntologyMapper.java-364-
+src/main/java/com/grl/component/mapper/OntologyMapper.java:365:    ResourceSchemaMapper schemaMapper = new ResourceSchemaMapper(context, resourceClass, definition);
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/OntologyMapper.java-366-    Map<String, Schema> schemas = openApi.getComponents()
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/OntologyMapper.java-367-        .schemas(Optional.ofNullable(openApi.getComponents().getSchemas()).orElse(new LinkedHashMap<>())).getSchemas();
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/OntologyMapper.java-368-    schemas.put(name, schemaMapper.getSchema());
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/OntologyMapper.java-369-    schemas.putAll(context.getSchemaByRef());
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/OntologyMapper.java-370-  }
+--
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-182-   * @return the configured visitor
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-183-   */
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-184-  private SchemaVisitor createSchemaVisitor(OWLClass analyzedClass) {
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-185-    OWLDataFactory dataFactory = context.getManager().getOWLDataFactory();
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-186-    OWLClass owlThing = dataFactory.getOWLThing();
+src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java:187:    return new SchemaVisitor(analyzedClass, context.getOntology(), owlThing);
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-188-  }
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-189-
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-190-  /**
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-191-   * Collects all relevant axioms for the analyzed class from the ontology.
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-192-   *
+--
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/MappingContext.java-79-      if (!computing.contains(s)) {
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/MappingContext.java-80-        computing.add(s);
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/MappingContext.java-81-        try {
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/MappingContext.java-82-          OWLClass cls = manager.getOWLDataFactory().getOWLClass(IRI.create(defaultOntologyPrefixIRI + shortName));
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/MappingContext.java-83-          String description = OntologyUtil.getDescription(cls, ontology);
+src/main/java/com/grl/component/mapper/MappingContext.java:84:          ResourceSchemaMapper resourceSchemaMapper = new ResourceSchemaMapper(this, cls, description);
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/MappingContext.java-85-          return resourceSchemaMapper.getSchema();
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/MappingContext.java-86-        } finally {
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/MappingContext.java-87-          computing.remove(s);
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/MappingContext.java-88-        }
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/MappingContext.java-89-      } else
+--
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ObjectPropertyMapper.java-115-      context.addSchema(ref);
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ObjectPropertyMapper.java-116-      OWLClass rangeCls = context.getManager().getOWLDataFactory()
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ObjectPropertyMapper.java-117-          .getOWLClass(IRI.create(context.getDefaultOntologyPrefixIRI() + ref));
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ObjectPropertyMapper.java-118-      String rangeDescription = OntologyUtil.getDescription(rangeCls, context.getOntology());
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ObjectPropertyMapper.java-119-      Schema<?> rangePropertiesSchema = mapLinkedResourceClass(rangeCls).orElseGet(() -> {
+src/main/java/com/grl/component/mapper/ObjectPropertyMapper.java:120:        ResourceSchemaMapper rangeSchema = new ResourceSchemaMapper(context, rangeCls, rangeDescription);
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ObjectPropertyMapper.java-121-        Schema childSchema = new ComposedSchema();
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ObjectPropertyMapper.java-122-        childSchema.setName(rangeSchema.getSchemaName());
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ObjectPropertyMapper.java-123-        childSchema.setDescription(rangeDescription);
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ObjectPropertyMapper.java-124-        childSchema.set$ref(ref);
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ObjectPropertyMapper.java-125-        return childSchema;
+--
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-58-    // TestClass subClassOf (hasProperty some TargetClass)
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-59-    var restriction = factory.getOWLObjectSomeValuesFrom(hasProperty, targetClass);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-60-    var axiom = factory.getOWLSubClassOfAxiom(testClass, restriction);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-61-    manager.addAxiom(ontology, axiom);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-62-
+src/test/java/com/grl/component/schema/SchemaVisitorTest.java:63:    SchemaVisitor visitor = new SchemaVisitor(testClass, ontology, owlThing);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-64-    testClass.accept(visitor);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-65-
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-66-    Map<String, Set<RestrictionInfo>> restrictions = visitor.getRestrictions();
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-67-    assertTrue(restrictions.containsKey("hasProperty"), "Should contain hasProperty");
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-68-
+--
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-80-    // TestClass subClassOf (hasProperty only TargetClass)
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-81-    var restriction = factory.getOWLObjectAllValuesFrom(hasProperty, targetClass);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-82-    var axiom = factory.getOWLSubClassOfAxiom(testClass, restriction);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-83-    manager.addAxiom(ontology, axiom);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-84-
+src/test/java/com/grl/component/schema/SchemaVisitorTest.java:85:    SchemaVisitor visitor = new SchemaVisitor(testClass, ontology, owlThing);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-86-    testClass.accept(visitor);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-87-
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-88-    Map<String, Set<RestrictionInfo>> restrictions = visitor.getRestrictions();
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-89-    assertTrue(restrictions.containsKey("hasProperty"));
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-90-
+--
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-99-    // TestClass subClassOf (hasProperty min 1 TargetClass)
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-100-    var restriction = factory.getOWLObjectMinCardinality(1, hasProperty, targetClass);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-101-    var axiom = factory.getOWLSubClassOfAxiom(testClass, restriction);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-102-    manager.addAxiom(ontology, axiom);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-103-
+src/test/java/com/grl/component/schema/SchemaVisitorTest.java:104:    SchemaVisitor visitor = new SchemaVisitor(testClass, ontology, owlThing);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-105-    testClass.accept(visitor);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-106-
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-107-    Map<String, Set<RestrictionInfo>> restrictions = visitor.getRestrictions();
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-108-    assertTrue(restrictions.containsKey("hasProperty"));
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-109-
+--
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-123-    // TestClass subClassOf (hasProperty max 5 TargetClass)
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-124-    var restriction = factory.getOWLObjectMaxCardinality(5, hasProperty, targetClass);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-125-    var axiom = factory.getOWLSubClassOfAxiom(testClass, restriction);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-126-    manager.addAxiom(ontology, axiom);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-127-
+src/test/java/com/grl/component/schema/SchemaVisitorTest.java:128:    SchemaVisitor visitor = new SchemaVisitor(testClass, ontology, owlThing);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-129-    testClass.accept(visitor);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-130-
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-131-    Map<String, Set<RestrictionInfo>> restrictions = visitor.getRestrictions();
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-132-    Set<RestrictionInfo> infos = restrictions.get("hasProperty");
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-133-    assertEquals(1, infos.size());
+--
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-144-    // TestClass subClassOf (hasProperty exactly 3 TargetClass)
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-145-    var restriction = factory.getOWLObjectExactCardinality(3, hasProperty, targetClass);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-146-    var axiom = factory.getOWLSubClassOfAxiom(testClass, restriction);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-147-    manager.addAxiom(ontology, axiom);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-148-
+src/test/java/com/grl/component/schema/SchemaVisitorTest.java:149:    SchemaVisitor visitor = new SchemaVisitor(testClass, ontology, owlThing);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-150-    testClass.accept(visitor);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-151-
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-152-    Map<String, Set<RestrictionInfo>> restrictions = visitor.getRestrictions();
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-153-    Set<RestrictionInfo> infos = restrictions.get("hasProperty");
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-154-    assertEquals(1, infos.size());
+--
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-167-    OWLDatatype stringType = factory.getStringOWLDatatype();
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-168-    var restriction = factory.getOWLDataSomeValuesFrom(hasDataProperty, stringType);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-169-    var axiom = factory.getOWLSubClassOfAxiom(testClass, restriction);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-170-    manager.addAxiom(ontology, axiom);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-171-
+src/test/java/com/grl/component/schema/SchemaVisitorTest.java:172:    SchemaVisitor visitor = new SchemaVisitor(testClass, ontology, owlThing);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-173-    testClass.accept(visitor);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-174-
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-175-    Map<String, Set<RestrictionInfo>> restrictions = visitor.getRestrictions();
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-176-    assertTrue(restrictions.containsKey("hasDataProperty"));
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-177-
+--
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-191-    OWLDatatype stringType = factory.getStringOWLDatatype();
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-192-    var restriction = factory.getOWLDataMinCardinality(2, hasDataProperty, stringType);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-193-    var axiom = factory.getOWLSubClassOfAxiom(testClass, restriction);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-194-    manager.addAxiom(ontology, axiom);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-195-
+src/test/java/com/grl/component/schema/SchemaVisitorTest.java:196:    SchemaVisitor visitor = new SchemaVisitor(testClass, ontology, owlThing);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-197-    testClass.accept(visitor);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-198-
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-199-    Map<String, Set<RestrictionInfo>> restrictions = visitor.getRestrictions();
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-200-    Set<RestrictionInfo> infos = restrictions.get("hasDataProperty");
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-201-    assertEquals(1, infos.size());
+--
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-215-    var maxRestriction = factory.getOWLObjectMaxCardinality(5, hasProperty, targetClass);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-216-
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-217-    manager.addAxiom(ontology, factory.getOWLSubClassOfAxiom(testClass, minRestriction));
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-218-    manager.addAxiom(ontology, factory.getOWLSubClassOfAxiom(testClass, maxRestriction));
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-219-
+src/test/java/com/grl/component/schema/SchemaVisitorTest.java:220:    SchemaVisitor visitor = new SchemaVisitor(testClass, ontology, owlThing);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-221-    testClass.accept(visitor);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-222-
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-223-    Map<String, Set<RestrictionInfo>> restrictions = visitor.getRestrictions();
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-224-    Set<RestrictionInfo> infos = restrictions.get("hasProperty");
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-225-    assertEquals(2, infos.size(), "Should have two restrictions on same property");
+--
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-234-    // Add a restriction so the collections are not empty
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-235-    var restriction = factory.getOWLObjectMinCardinality(1, hasProperty, targetClass);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-236-    var axiom = factory.getOWLSubClassOfAxiom(testClass, restriction);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-237-    manager.addAxiom(ontology, axiom);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-238-
+src/test/java/com/grl/component/schema/SchemaVisitorTest.java:239:    SchemaVisitor visitor = new SchemaVisitor(testClass, ontology, owlThing);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-240-    testClass.accept(visitor);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-241-
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-242-    // Verify collections are returned (encapsulation check)
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-243-    assertNotNull(visitor.getRestrictions(), "Should return restrictions map");
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-244-    assertNotNull(visitor.getObjectPropertyNames(), "Should return object property names");
+--
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-256-    var union = factory.getOWLObjectUnionOf(targetClass, anotherClass);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-257-    var restriction = factory.getOWLObjectSomeValuesFrom(hasProperty, union);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-258-    var axiom = factory.getOWLSubClassOfAxiom(testClass, restriction);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-259-    manager.addAxiom(ontology, axiom);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-260-
+src/test/java/com/grl/component/schema/SchemaVisitorTest.java:261:    SchemaVisitor visitor = new SchemaVisitor(testClass, ontology, owlThing);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-262-    testClass.accept(visitor);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-263-
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-264-    Map<String, Set<RestrictionInfo>> restrictions = visitor.getRestrictions();
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-265-    assertTrue(restrictions.containsKey("hasProperty"), "Should handle union in restriction");
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-266-  }
+--
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-273-    manager.addAxiom(ontology, axiom1);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-274-    manager.addAxiom(ontology, axiom2);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-275-
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-276-    // Should not throw StackOverflowError due to processedClasses tracking
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-277-    assertDoesNotThrow(() -> {
+src/test/java/com/grl/component/schema/SchemaVisitorTest.java:278:      SchemaVisitor visitor = new SchemaVisitor(testClass, ontology, owlThing);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-279-      testClass.accept(visitor);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-280-    }, "Should handle circular class hierarchies");
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-281-  }
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-282-
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-283-  @Nested
+--
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-288-      OWLDatatype intType = factory.getIntegerOWLDatatype();
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-289-      var restriction = factory.getOWLDataAllValuesFrom(hasDataProperty, intType);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-290-      var axiom = factory.getOWLSubClassOfAxiom(testClass, restriction);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-291-      manager.addAxiom(ontology, axiom);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-292-
+src/test/java/com/grl/component/schema/SchemaVisitorTest.java:293:      SchemaVisitor visitor = new SchemaVisitor(testClass, ontology, owlThing);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-294-      testClass.accept(visitor);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-295-
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-296-      Map<String, Set<RestrictionInfo>> restrictions = visitor.getRestrictions();
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-297-      assertTrue(restrictions.containsKey("hasDataProperty"));
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-298-
+--
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-307-      OWLDatatype stringType = factory.getStringOWLDatatype();
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-308-      var restriction = factory.getOWLDataMaxCardinality(10, hasDataProperty, stringType);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-309-      var axiom = factory.getOWLSubClassOfAxiom(testClass, restriction);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-310-      manager.addAxiom(ontology, axiom);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-311-
+src/test/java/com/grl/component/schema/SchemaVisitorTest.java:312:      SchemaVisitor visitor = new SchemaVisitor(testClass, ontology, owlThing);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-313-      testClass.accept(visitor);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-314-
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-315-      Map<String, Set<RestrictionInfo>> restrictions = visitor.getRestrictions();
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-316-      Set<RestrictionInfo> infos = restrictions.get("hasDataProperty");
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-317-      assertEquals(1, infos.size());
+--
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-328-      OWLDatatype stringType = factory.getStringOWLDatatype();
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-329-      var restriction = factory.getOWLDataExactCardinality(1, hasDataProperty, stringType);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-330-      var axiom = factory.getOWLSubClassOfAxiom(testClass, restriction);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-331-      manager.addAxiom(ontology, axiom);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-332-
+src/test/java/com/grl/component/schema/SchemaVisitorTest.java:333:      SchemaVisitor visitor = new SchemaVisitor(testClass, ontology, owlThing);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-334-      testClass.accept(visitor);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-335-
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-336-      Map<String, Set<RestrictionInfo>> restrictions = visitor.getRestrictions();
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-337-      Set<RestrictionInfo> infos = restrictions.get("hasDataProperty");
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-338-      assertEquals(1, infos.size());
+--
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-358-      manager.addAxiom(ontology, factory.getOWLSubClassOfAxiom(parentClass,
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-359-          factory.getOWLDataSomeValuesFrom(parentProp, stringType)));
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-360-      // Test class is subclass of parent
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-361-      manager.addAxiom(ontology, factory.getOWLSubClassOfAxiom(testClass, parentClass));
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-362-
+src/test/java/com/grl/component/schema/SchemaVisitorTest.java:363:      SchemaVisitor visitor = new SchemaVisitor(testClass, ontology, owlThing);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-364-      testClass.accept(visitor);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-365-
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-366-      // Should collect parent's restriction
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-367-      assertTrue(visitor.getDataPropertyNames().contains("parentProp"));
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-368-    }
+--
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-380-      manager.addAxiom(ontology, factory.getOWLSubClassOfAxiom(parent2,
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-381-          factory.getOWLDataSomeValuesFrom(prop2, stringType)));
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-382-      manager.addAxiom(ontology, factory.getOWLSubClassOfAxiom(testClass, parent1));
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-383-      manager.addAxiom(ontology, factory.getOWLSubClassOfAxiom(testClass, parent2));
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-384-
+src/test/java/com/grl/component/schema/SchemaVisitorTest.java:385:      SchemaVisitor visitor = new SchemaVisitor(testClass, ontology, owlThing);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-386-      testClass.accept(visitor);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-387-
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-388-      assertTrue(visitor.getDataPropertyNames().contains("prop1"));
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-389-      assertTrue(visitor.getDataPropertyNames().contains("prop2"));
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-390-    }
+--
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-397-    void testObjectPropertyRangesCollected() {
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-398-      var restriction = factory.getOWLObjectSomeValuesFrom(hasProperty, targetClass);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-399-      var axiom = factory.getOWLSubClassOfAxiom(testClass, restriction);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-400-      manager.addAxiom(ontology, axiom);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-401-
+src/test/java/com/grl/component/schema/SchemaVisitorTest.java:402:      SchemaVisitor visitor = new SchemaVisitor(testClass, ontology, owlThing);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-403-      testClass.accept(visitor);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-404-
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-405-      assertTrue(visitor.getObjectPropertyRanges().containsKey("hasProperty"));
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-406-      assertTrue(visitor.getObjectPropertyRanges().get("hasProperty").contains(targetClass));
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-407-    }
+--
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-411-      OWLDatatype intType = factory.getIntegerOWLDatatype();
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-412-      var restriction = factory.getOWLDataSomeValuesFrom(hasDataProperty, intType);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-413-      var axiom = factory.getOWLSubClassOfAxiom(testClass, restriction);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-414-      manager.addAxiom(ontology, axiom);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-415-
+src/test/java/com/grl/component/schema/SchemaVisitorTest.java:416:      SchemaVisitor visitor = new SchemaVisitor(testClass, ontology, owlThing);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-417-      testClass.accept(visitor);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-418-
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-419-      assertTrue(visitor.getDataPropertyRanges().containsKey("hasDataProperty"));
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-420-      assertTrue(visitor.getDataPropertyRanges().get("hasDataProperty").contains(intType));
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-421-    }
+--
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-424-    void testOwlThingRangeIsIgnored() {
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-425-      var restriction = factory.getOWLObjectSomeValuesFrom(hasProperty, owlThing);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-426-      var axiom = factory.getOWLSubClassOfAxiom(testClass, restriction);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-427-      manager.addAxiom(ontology, axiom);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-428-
+src/test/java/com/grl/component/schema/SchemaVisitorTest.java:429:      SchemaVisitor visitor = new SchemaVisitor(testClass, ontology, owlThing);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-430-      testClass.accept(visitor);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-431-
+src/test/java/com/grl/component/schema/SchemaVisitorTest.java-432-      / Property should be tracked but owl:Thing should not be in ranges
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-433-      assertTrue(visitor.getObjectPropertyNames().contains("hasProperty"));
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-434-      assertFalse(visitor.getObjectPropertyRanges().get("hasProperty").contains(owlThing));
+--
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-441-    @Test
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-442-    void testGetRestrictionsReturnsUnmodifiableMap() {
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-443-      var restriction = factory.getOWLObjectMinCardinality(1, hasProperty, targetClass);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-444-      manager.addAxiom(ontology, factory.getOWLSubClassOfAxiom(testClass, restriction));
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-445-
+src/test/java/com/grl/component/schema/SchemaVisitorTest.java:446:      SchemaVisitor visitor = new SchemaVisitor(testClass, ontology, owlThing);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-447-      testClass.accept(visitor);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-448-
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-449-      Map<String, Set<RestrictionInfo>> restrictions = visitor.getRestrictions();
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-450-      org.junit.jupiter.api.Assertions.assertThrows(UnsupportedOperationException.class, () ->
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-451-          restrictions.put("newKey", Set.of()));
+--
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-454-    @Test
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-455-    void testGetObjectPropertyNamesReturnsUnmodifiableSet() {
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-456-      var restriction = factory.getOWLObjectSomeValuesFrom(hasProperty, targetClass);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-457-      manager.addAxiom(ontology, factory.getOWLSubClassOfAxiom(testClass, restriction));
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-458-
+src/test/java/com/grl/component/schema/SchemaVisitorTest.java:459:      SchemaVisitor visitor = new SchemaVisitor(testClass, ontology, owlThing);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-460-      testClass.accept(visitor);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-461-
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-462-      Set<String> names = visitor.getObjectPropertyNames();
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-463-      org.junit.jupiter.api.Assertions.assertThrows(UnsupportedOperationException.class, () ->
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-464-          names.add("newProperty"));
+--
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-468-    void testGetDataPropertyNamesReturnsUnmodifiableSet() {
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-469-      OWLDatatype stringType = factory.getStringOWLDatatype();
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-470-      var restriction = factory.getOWLDataSomeValuesFrom(hasDataProperty, stringType);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-471-      manager.addAxiom(ontology, factory.getOWLSubClassOfAxiom(testClass, restriction));
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-472-
+src/test/java/com/grl/component/schema/SchemaVisitorTest.java:473:      SchemaVisitor visitor = new SchemaVisitor(testClass, ontology, owlThing);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-474-      testClass.accept(visitor);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-475-
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-476-      Set<String> names = visitor.getDataPropertyNames();
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-477-      org.junit.jupiter.api.Assertions.assertThrows(UnsupportedOperationException.class, () ->
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-478-          names.add("newProperty"));
+--
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-481-    @Test
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-482-    void testGetObjectPropertyRangesReturnsUnmodifiableMultimap() {
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-483-      var restriction = factory.getOWLObjectSomeValuesFrom(hasProperty, targetClass);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-484-      manager.addAxiom(ontology, factory.getOWLSubClassOfAxiom(testClass, restriction));
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-485-
+src/test/java/com/grl/component/schema/SchemaVisitorTest.java:486:      SchemaVisitor visitor = new SchemaVisitor(testClass, ontology, owlThing);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-487-      testClass.accept(visitor);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-488-
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-489-      var ranges = visitor.getObjectPropertyRanges();
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-490-      OWLClass newClass = factory.getOWLClass(IRI.create(BASE_IRI + "NewClass"));
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-491-      org.junit.jupiter.api.Assertions.assertThrows(UnsupportedOperationException.class, () ->
+--
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-496-  @Nested
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-497-  class EdgeCases {
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-498-
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-499-    @Test
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-500-    void testEmptyClassHasNoRestrictions() {
+src/test/java/com/grl/component/schema/SchemaVisitorTest.java:501:      SchemaVisitor visitor = new SchemaVisitor(testClass, ontology, owlThing);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-502-      testClass.accept(visitor);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-503-
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-504-      assertTrue(visitor.getRestrictions().isEmpty());
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-505-      assertTrue(visitor.getObjectPropertyNames().isEmpty());
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-506-      assertTrue(visitor.getDataPropertyNames().isEmpty());
+--
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-511-      var individual = factory.getOWLNamedIndividual(IRI.create(BASE_IRI + "individual1"));
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-512-      var restriction = factory.getOWLObjectHasValue(hasProperty, individual);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-513-      var axiom = factory.getOWLSubClassOfAxiom(testClass, restriction);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-514-      manager.addAxiom(ontology, axiom);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-515-
+src/test/java/com/grl/component/schema/SchemaVisitorTest.java:516:      SchemaVisitor visitor = new SchemaVisitor(testClass, ontology, owlThing);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-517-      testClass.accept(visitor);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-518-
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-519-      assertTrue(visitor.getObjectPropertyNames().contains("hasProperty"));
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-520-    }
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-521-
+--
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-524-      var literal = factory.getOWLLiteral("defaultValue");
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-525-      var restriction = factory.getOWLDataHasValue(hasDataProperty, literal);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-526-      var axiom = factory.getOWLSubClassOfAxiom(testClass, restriction);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-527-      manager.addAxiom(ontology, axiom);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-528-
+src/test/java/com/grl/component/schema/SchemaVisitorTest.java:529:      SchemaVisitor visitor = new SchemaVisitor(testClass, ontology, owlThing);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-530-      testClass.accept(visitor);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-531-
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-532-      assertTrue(visitor.getDataPropertyNames().contains("hasDataProperty"));
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-533-    }
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-534-
+--
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-539-      var dataRestriction = factory.getOWLDataSomeValuesFrom(hasDataProperty, stringType);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-540-
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-541-      manager.addAxiom(ontology, factory.getOWLSubClassOfAxiom(testClass, objRestriction));
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-542-      manager.addAxiom(ontology, factory.getOWLSubClassOfAxiom(testClass, dataRestriction));
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-543-
+src/test/java/com/grl/component/schema/SchemaVisitorTest.java:544:      SchemaVisitor visitor = new SchemaVisitor(testClass, ontology, owlThing);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-545-      testClass.accept(visitor);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-546-
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-547-      assertTrue(visitor.getObjectPropertyNames().contains("hasProperty"));
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-548-      assertTrue(visitor.getDataPropertyNames().contains("hasDataProperty"));
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-549-      // Verify they're not mixed up
+--
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-557-      var intersection = factory.getOWLObjectIntersectionOf(targetClass, anotherClass);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-558-      var restriction = factory.getOWLObjectSomeValuesFrom(hasProperty, intersection);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-559-      var axiom = factory.getOWLSubClassOfAxiom(testClass, restriction);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-560-      manager.addAxiom(ontology, axiom);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-561-
+src/test/java/com/grl/component/schema/SchemaVisitorTest.java:562:      SchemaVisitor visitor = new SchemaVisitor(testClass, ontology, owlThing);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-563-      testClass.accept(visitor);
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-564-
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-565-      assertTrue(visitor.getRestrictions().containsKey("hasProperty"));
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-566-    }
+/home/mike/grl/ASG/src/test/java/com/grl/component/schema/SchemaVisitorTest.java-567-  }

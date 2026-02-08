@@ -1,0 +1,195 @@
+# Ontology Structure
+
+This document describes the required structure for ASG-compatible ontologies.
+
+## API Identification
+
+### APIRoot Class
+
+Every API must be identified through a class hierarchy that connects to `APIRoot`:
+
+1. **APIRoot** is a well-known class in the base ontology
+2. Your API specification class must be reachable from `APIRoot` via `hasAPI`
+
+```xml
+<!-- APIRoot links to your API spec -->
+<rdf:Description rdf:about="https://www.graphresearchlabs.com/base/APIRoot">
+    <rdfs:subClassOf>
+        <owl:Restriction>
+            <owl:onProperty rdf:resource="https://www.graphresearchlabs.com/base/hasAPI"/>
+            <owl:someValuesFrom rdf:resource="https://example.com/MyAPIV1.0"/>
+        </owl:Restriction>
+    </rdfs:subClassOf>
+</rdf:Description>
+```
+
+### API Specification Class
+
+The API specification class defines which resources are exposed:
+
+```xml
+<owl:Class rdf:about="https://example.com/MyAPIV1.0">
+    <!-- Extend GRLAPISpecifications -->
+    <rdfs:subClassOf rdf:resource="https://www.graphresearchlabs.com/base/GRLAPISpecifications"/>
+
+    <!-- Link to resources via hasResourceSchema -->
+    <rdfs:subClassOf>
+        <owl:Restriction>
+            <owl:onProperty rdf:resource="https://www.graphresearchlabs.com/base/hasResourceSchema"/>
+            <owl:qualifiedCardinality>1</owl:qualifiedCardinality>
+            <owl:onClass rdf:resource="https://example.com/Employee"/>
+        </owl:Restriction>
+    </rdfs:subClassOf>
+
+    <!-- Display label -->
+    <skos:prefLabel>My API V1.0</skos:prefLabel>
+    <GRLAnnotations:apiDisplayLabel>MyAPIV1.0</GRLAnnotations:apiDisplayLabel>
+</owl:Class>
+```
+
+### Multiple APIs
+
+If your ontology contains multiple API specification classes, you must specify which one to use via the `rootClass` configuration:
+
+```yaml
+rootClass: https://example.com/MyAPIV1.0
+```
+
+## Resource Classes
+
+Resource classes become REST API resources with full CRUD operations.
+
+### Requirements
+
+Each resource class must:
+
+1. Be linked from the API spec via `hasResourceSchema`
+2. Have an `apiID` data property (for unique identification)
+3. Have properties annotated with `apiLabel` matching the API name
+
+### Generated Endpoints
+
+For each resource class (e.g., `Employee`):
+
+| Endpoint | Methods |
+|----------|---------|
+| `/Employee` | GET (list), POST (create) |
+| `/Employee/{EmployeeId}` | GET, PUT, PATCH, DELETE |
+
+### Example Resource Class
+
+```xml
+<owl:Class rdf:about="https://example.com/Employee">
+    <!-- Human-readable label -->
+    <skos:prefLabel>Employee</skos:prefLabel>
+    <skos:definition>A person employed by an organization.</skos:definition>
+
+    <!-- Required: apiID property -->
+    <rdfs:subClassOf>
+        <owl:Restriction>
+            <owl:onProperty rdf:resource="https://www.graphresearchlabs.com/base/apiID"/>
+            <owl:qualifiedCardinality>1</owl:qualifiedCardinality>
+            <owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        </owl:Restriction>
+    </rdfs:subClassOf>
+
+    <!-- Data property: name -->
+    <rdfs:subClassOf>
+        <owl:Restriction>
+            <owl:onProperty rdf:resource="https://example.com/name"/>
+            <owl:qualifiedCardinality>1</owl:qualifiedCardinality>
+            <owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        </owl:Restriction>
+    </rdfs:subClassOf>
+
+    <!-- Object property: works for employer -->
+    <rdfs:subClassOf>
+        <owl:Restriction>
+            <owl:onProperty rdf:resource="https://example.com/worksFor"/>
+            <owl:someValuesFrom rdf:resource="https://example.com/Employer"/>
+        </owl:Restriction>
+    </rdfs:subClassOf>
+</owl:Class>
+
+<!-- Annotations linking to API -->
+<owl:Axiom>
+    <owl:annotatedSource rdf:resource="https://example.com/Employee"/>
+    <owl:annotatedProperty rdf:resource="http://www.w3.org/2000/01/rdf-schema#subClassOf"/>
+    <owl:annotatedTarget><!-- blank node for apiID restriction --></owl:annotatedTarget>
+    <www:apiLabel>MyAPIV1.0</www:apiLabel>
+</owl:Axiom>
+<!-- Similar axioms for other restrictions... -->
+```
+
+## Property Annotations
+
+Properties must be annotated with `apiLabel` to be included in the generated schema.
+
+### Axiom Annotations
+
+The `apiLabel` annotation goes on the SubClassOf axiom, not the property itself:
+
+```xml
+<owl:Axiom>
+    <owl:annotatedSource rdf:resource="https://example.com/Employee"/>
+    <owl:annotatedProperty rdf:resource="http://www.w3.org/2000/01/rdf-schema#subClassOf"/>
+    <owl:annotatedTarget><!-- blank node reference to the restriction --></owl:annotatedTarget>
+    <www:apiLabel>MyAPIV1.0</www:apiLabel>
+</owl:Axiom>
+```
+
+This allows the same property to be included in different APIs with different configurations.
+
+## Nested Resources
+
+Object properties pointing to other resource classes generate references:
+
+```xml
+<!-- Employee has an employer (also a resource) -->
+<rdfs:subClassOf>
+    <owl:Restriction>
+        <owl:onProperty rdf:resource="https://example.com/employer"/>
+        <owl:someValuesFrom rdf:resource="https://example.com/Employer"/>
+    </owl:Restriction>
+</rdfs:subClassOf>
+```
+
+Generated schema:
+```yaml
+employer:
+  type: string
+  x-grl-model-link: Employer
+  description: Unique identifier of Employer
+  example: Employer-12345
+```
+
+## Non-Resource Object Properties
+
+Object properties pointing to classes that are NOT resources become inline objects:
+
+```xml
+<!-- Address is not a resource (no apiID) -->
+<rdfs:subClassOf>
+    <owl:Restriction>
+        <owl:onProperty rdf:resource="https://example.com/address"/>
+        <owl:someValuesFrom rdf:resource="https://example.com/Address"/>
+    </owl:Restriction>
+</rdfs:subClassOf>
+```
+
+The `Address` class schema is generated inline or as a `$ref` without `x-grl-model-link`.
+
+## Tag Annotations
+
+Use `apiTag` on the `hasResourceSchema` axiom to organize resources:
+
+```xml
+<owl:Axiom>
+    <owl:annotatedSource rdf:resource="https://example.com/MyAPIV1.0"/>
+    <owl:annotatedProperty rdf:resource="http://www.w3.org/2000/01/rdf-schema#subClassOf"/>
+    <owl:annotatedTarget><!-- hasResourceSchema restriction --></owl:annotatedTarget>
+    <www:apitag>Employees</www:apitag>
+</owl:Axiom>
+```
+
+This adds the resource to the specified tag group in the OpenAPI specification.

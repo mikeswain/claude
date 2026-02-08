@@ -1,0 +1,466 @@
+# Taxonomy Patterns
+
+ASG detects and maps four distinct taxonomy patterns from OWL ontologies to OpenAPI schemas. Each pattern represents a different way to model enumerated or categorized values.
+
+## Pattern Overview
+
+| Pattern | OWL Structure | OpenAPI Output | Use Case |
+|---------|---------------|----------------|----------|
+| **A** | `owl:oneOf` with untyped individuals | Inline string enum | Simple, closed enumeration |
+| **B** | `owl:oneOf` with typed individuals | `oneOf` with const objects | Closed enumeration with property graphs |
+| **C** | Named class (no SKOS) | `$ref` to schema | Extensible, hierarchical taxonomy |
+| **D** | SKOS-based class | Inline string enum | Standards-compliant vocabulary |
+
+## Pattern Detection
+
+ASG automatically detects the appropriate pattern based on the OWL structure:
+
+```
+OWL Restriction
+├── owl:oneOf (blank node)?
+│   ├── Individuals have domain class? → Pattern B
+│   └── Untyped individuals only → Pattern A
+└── Named class IRI?
+    ├── Subclass of skos:Concept or has skos:inScheme? → Pattern D
+    └── No object property restrictions? → Pattern C
+```
+
+---
+
+## Pattern A: Inline Enumeration (Untyped Individuals)
+
+Use Pattern A for simple, closed enumerations where you just need a list of valid values.
+
+### When to Use
+
+- Fixed set of values that rarely changes
+- No metadata needed per value
+- Values are simple labels
+
+### OWL Structure
+
+```xml
+<!-- Untyped individuals (only owl:NamedIndividual) -->
+<owl:NamedIndividual rdf:about="https://example.com/Active">
+    <rdfs:label>Active</rdfs:label>
+</owl:NamedIndividual>
+<owl:NamedIndividual rdf:about="https://example.com/Inactive">
+    <rdfs:label>Inactive</rdfs:label>
+</owl:NamedIndividual>
+<owl:NamedIndividual rdf:about="https://example.com/Pending">
+    <rdfs:label>Pending</rdfs:label>
+</owl:NamedIndividual>
+
+<!-- Restriction with owl:oneOf -->
+<rdfs:subClassOf>
+    <owl:Restriction>
+        <owl:onProperty rdf:resource="https://example.com/hasStatus"/>
+        <owl:someValuesFrom>
+            <owl:Class>
+                <owl:oneOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="https://example.com/Active"/>
+                    <rdf:Description rdf:about="https://example.com/Inactive"/>
+                    <rdf:Description rdf:about="https://example.com/Pending"/>
+                </owl:oneOf>
+            </owl:Class>
+        </owl:someValuesFrom>
+    </owl:Restriction>
+</rdfs:subClassOf>
+```
+
+### OpenAPI Output
+
+```yaml
+hasStatus:
+  type: array
+  minItems: 1
+  items:
+    type: string
+    enum:
+      - Active
+      - Inactive
+      - Pending
+```
+
+### Cardinality Variations
+
+| OWL Restriction | OpenAPI Effect |
+|----------------|----------------|
+| `someValuesFrom` | `type: array`, `minItems: 1`, required |
+| `allValuesFrom` | `type: array` (optional) |
+| `qualifiedCardinality(1)` | Non-array, required |
+| `maxQualifiedCardinality(1)` | Non-array (optional) |
+| `minQualifiedCardinality(n)` | `type: array`, `minItems: n`, required |
+
+---
+
+## Pattern B: Typed Individuals with Metadata
+
+Use Pattern B when you need individuals to have a domain class and potentially carry metadata like code values, definitions, or display names.
+
+### When to Use
+
+- Values need to be typed (instances of a specific class)
+- Values may have metadata (codeValue, displayName, definition)
+- You want to query individuals via SPARQL using their type
+
+### OWL Structure
+
+```xml
+<!-- Domain class for the enum values -->
+<owl:Class rdf:about="https://example.com/SensorTypeCode">
+    <skos:prefLabel>Sensor Type Code</skos:prefLabel>
+</owl:Class>
+
+<!-- Typed individuals with metadata -->
+<owl:NamedIndividual rdf:about="https://example.com/SensorTypeAnalog">
+    <rdf:type rdf:resource="https://example.com/SensorTypeCode"/>
+    <skos:prefLabel>Analog</skos:prefLabel>
+    <skos:definition>Analog sensor type.</skos:definition>
+    <example:codeValue>analog</example:codeValue>
+</owl:NamedIndividual>
+<owl:NamedIndividual rdf:about="https://example.com/SensorTypeDigital">
+    <rdf:type rdf:resource="https://example.com/SensorTypeCode"/>
+    <skos:prefLabel>Digital</skos:prefLabel>
+    <skos:definition>Digital sensor type.</skos:definition>
+    <example:codeValue>digital</example:codeValue>
+</owl:NamedIndividual>
+
+<!-- Restriction with owl:oneOf -->
+<rdfs:subClassOf>
+    <owl:Restriction>
+        <owl:onProperty rdf:resource="https://example.com/hasSensorType"/>
+        <owl:someValuesFrom>
+            <owl:Class>
+                <owl:oneOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="https://example.com/SensorTypeAnalog"/>
+                    <rdf:Description rdf:about="https://example.com/SensorTypeDigital"/>
+                </owl:oneOf>
+            </owl:Class>
+        </owl:someValuesFrom>
+    </owl:Restriction>
+</rdfs:subClassOf>
+```
+
+### OpenAPI Output
+
+With `maxIndividualDepth >= 1` (default), Pattern B generates `oneOf` schemas with const objects:
+
+```yaml
+hasSensorType:
+  type: array
+  minItems: 1
+  items:
+    oneOf:
+      - type: object
+        properties:
+          code:
+            const: "analog"
+            type: string
+          displayName:
+            const: "Analog"
+            type: string
+          definition:
+            const: "Analog sensor type."
+            type: string
+      - type: object
+        properties:
+          code:
+            const: "digital"
+            type: string
+          displayName:
+            const: "Digital"
+            type: string
+          definition:
+            const: "Digital sensor type."
+            type: string
+```
+
+### Object Property Assertions
+
+When Pattern B individuals have object property assertions, these are expanded as nested objects (up to `maxIndividualDepth`):
+
+**OWL:**
+```xml
+<owl:NamedIndividual rdf:about="https://example.com/SensorTypeAnalog">
+    <rdf:type rdf:resource="https://example.com/SensorTypeCode"/>
+    <skos:notation>analog</skos:notation>
+    <example:hasCategory rdf:resource="https://example.com/MeasurementCategory"/>
+</owl:NamedIndividual>
+```
+
+**OpenAPI (depth 2):**
+```yaml
+oneOf:
+  - type: object
+    properties:
+      code:
+        const: "analog"
+        type: string
+      hasCategory:
+        type: object
+        properties:
+          code:
+            const: "measurement"
+            type: string
+```
+
+### Cycle Detection
+
+If object property assertions form a cycle (A → B → A), ASG detects this and uses a string reference instead of infinite nesting.
+
+### Legacy Mode
+
+Set `maxIndividualDepth: 0` to generate simple string enums (pre-enhancement behavior):
+
+```yaml
+hasSensorType:
+  type: array
+  minItems: 1
+  items:
+    type: string
+    enum:
+      - analog
+      - digital
+```
+
+### Pattern A vs B Comparison
+
+| Aspect | Pattern A | Pattern B |
+|--------|-----------|-----------|
+| Individual typing | `owl:NamedIndividual` only | Domain class + metadata |
+| OpenAPI output | Simple string enum | `oneOf` with const objects |
+| Property assertions | Not supported | Expanded as nested objects |
+| SPARQL query | Parse `owl:oneOf` | `?x a SensorTypeCode` |
+| Metadata support | `rdfs:label` only | Full annotation + property support |
+
+---
+
+## Pattern C: Class-Based Taxonomy (Extensible)
+
+Use Pattern C for extensible taxonomies where values can be added without modifying the restriction, and optionally support hierarchical structure.
+
+### When to Use
+
+- Values should be discoverable via class membership
+- New values can be added without changing the schema
+- Hierarchical grouping is needed (via subclasses)
+- You want a reusable schema in components/schemas
+
+### OWL Structure
+
+```xml
+<!-- Parent taxonomy class -->
+<owl:Class rdf:about="https://example.com/EnvironmentCode">
+    <skos:prefLabel>Environment Code</skos:prefLabel>
+    <skos:definition>Operating environment classification.</skos:definition>
+</owl:Class>
+
+<!-- Subclasses for hierarchy (optional) -->
+<owl:Class rdf:about="https://example.com/IndoorEnvironment">
+    <rdfs:subClassOf rdf:resource="https://example.com/EnvironmentCode"/>
+    <skos:prefLabel>Indoor Environment</skos:prefLabel>
+</owl:Class>
+<owl:Class rdf:about="https://example.com/OutdoorEnvironment">
+    <rdfs:subClassOf rdf:resource="https://example.com/EnvironmentCode"/>
+    <skos:prefLabel>Outdoor Environment</skos:prefLabel>
+</owl:Class>
+
+<!-- Individuals (instances of subclasses) -->
+<owl:NamedIndividual rdf:about="https://example.com/EnvOffice">
+    <rdf:type rdf:resource="https://example.com/IndoorEnvironment"/>
+    <skos:prefLabel>Office</skos:prefLabel>
+    <example:codeValue>office</example:codeValue>
+</owl:NamedIndividual>
+<owl:NamedIndividual rdf:about="https://example.com/EnvOutdoor">
+    <rdf:type rdf:resource="https://example.com/OutdoorEnvironment"/>
+    <skos:prefLabel>Outdoor</skos:prefLabel>
+    <example:codeValue>outdoor</example:codeValue>
+</owl:NamedIndividual>
+
+<!-- Restriction to named class (NOT owl:oneOf) -->
+<rdfs:subClassOf>
+    <owl:Restriction>
+        <owl:onProperty rdf:resource="https://example.com/hasEnvironment"/>
+        <owl:someValuesFrom rdf:resource="https://example.com/EnvironmentCode"/>
+    </owl:Restriction>
+</rdfs:subClassOf>
+```
+
+### OpenAPI Output
+
+```yaml
+# On the resource
+hasEnvironment:
+  type: array
+  minItems: 1
+  items:
+    $ref: '#/components/schemas/EnvironmentCode'
+
+# In components/schemas
+EnvironmentCode:
+  type: object
+  properties:
+    code:
+      type: string
+      enum:
+        - office
+        - outdoor
+    displayName:
+      type: string
+```
+
+### Flat vs Hierarchical
+
+Pattern C supports both flat taxonomies (direct instances of the class) and hierarchical taxonomies (instances of subclasses).
+
+**Flat Taxonomy:**
+```
+EnvironmentCode
+├── EnvOffice (instance)
+├── EnvWarehouse (instance)
+└── EnvOutdoor (instance)
+```
+
+**Hierarchical Taxonomy:**
+```
+EnvironmentCode
+├── IndoorEnvironment (subclass)
+│   ├── EnvOffice (instance)
+│   └── EnvWarehouse (instance)
+└── OutdoorEnvironment (subclass)
+    └── EnvOutdoor (instance)
+```
+
+### Pattern B vs C Comparison
+
+| Aspect | Pattern B | Pattern C |
+|--------|-----------|-----------|
+| Restriction target | Blank node with `owl:oneOf` | Named class IRI |
+| Set closure | Closed (explicit list) | Open (query instances) |
+| Adding values | Requires changing `owl:oneOf` | Just add instance |
+| Hierarchy | Flat only | Supports subclass hierarchy |
+| OpenAPI output | Inline enum | `$ref` to schema |
+
+---
+
+## Pattern D: SKOS Taxonomy
+
+Use Pattern D for standards-compliant vocabularies using SKOS (Simple Knowledge Organization System), which enables interoperability with terminology servers and FHIR-compatible systems.
+
+### When to Use
+
+- Standards compliance required (SKOS, FHIR)
+- Multi-language support needed (`skos:prefLabel` with `@lang`)
+- Hierarchical relationships (`skos:broader`, `skos:narrower`)
+- External code mapping (`skos:exactMatch`)
+- Terminology server integration
+
+### OWL Structure
+
+```xml
+<!-- SKOS ConceptScheme -->
+<owl:NamedIndividual rdf:about="https://example.com/MeasurementContextScheme">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
+    <skos:prefLabel>Measurement Context Code System</skos:prefLabel>
+</owl:NamedIndividual>
+
+<!-- Bridge class linking to SKOS scheme -->
+<owl:Class rdf:about="https://example.com/MeasurementContextCode">
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+    <owl:equivalentClass>
+        <owl:Restriction>
+            <owl:onProperty rdf:resource="http://www.w3.org/2004/02/skos/core#inScheme"/>
+            <owl:hasValue rdf:resource="https://example.com/MeasurementContextScheme"/>
+        </owl:Restriction>
+    </owl:equivalentClass>
+    <skos:prefLabel>Measurement Context Code</skos:prefLabel>
+</owl:Class>
+
+<!-- SKOS Concepts -->
+<owl:NamedIndividual rdf:about="https://example.com/ContextContinuous">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+    <rdf:type rdf:resource="https://example.com/MeasurementContextCode"/>
+    <skos:inScheme rdf:resource="https://example.com/MeasurementContextScheme"/>
+    <skos:notation>continuous</skos:notation>
+    <skos:prefLabel>Continuous</skos:prefLabel>
+    <skos:definition>Continuous measurement context.</skos:definition>
+</owl:NamedIndividual>
+<owl:NamedIndividual rdf:about="https://example.com/ContextDiscrete">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+    <rdf:type rdf:resource="https://example.com/MeasurementContextCode"/>
+    <skos:inScheme rdf:resource="https://example.com/MeasurementContextScheme"/>
+    <skos:notation>discrete</skos:notation>
+    <skos:prefLabel>Discrete</skos:prefLabel>
+    <skos:definition>Discrete measurement context.</skos:definition>
+    <skos:narrower rdf:resource="https://example.com/ContextTriggered"/>
+</owl:NamedIndividual>
+
+<!-- Restriction to SKOS-based class -->
+<rdfs:subClassOf>
+    <owl:Restriction>
+        <owl:onProperty rdf:resource="https://example.com/hasMeasurementContext"/>
+        <owl:someValuesFrom rdf:resource="https://example.com/MeasurementContextCode"/>
+    </owl:Restriction>
+</rdfs:subClassOf>
+```
+
+### OpenAPI Output
+
+```yaml
+MeasurementContextCode:
+  type: array
+  minItems: 1
+  items:
+    type: string
+    enum:
+      - Continuous
+      - Discrete
+      - Triggered
+```
+
+### SKOS Detection Criteria
+
+ASG detects Pattern D when the target class:
+- Is `rdfs:subClassOf skos:Concept`, OR
+- Has an `owl:equivalentClass` with a `skos:inScheme` restriction
+
+### Pattern C vs D Comparison
+
+| Aspect | Pattern C (Class-based) | Pattern D (SKOS) |
+|--------|-------------------------|------------------|
+| Standard | OWL only | OWL + SKOS |
+| Hierarchy | `rdfs:subClassOf` | `skos:broader/narrower` |
+| Membership | `rdf:type` | `skos:inScheme` |
+| Multi-language | Not native | `skos:prefLabel@en` |
+| External mapping | Not native | `skos:exactMatch` |
+| Discovery | `?x a/rdfs:subClassOf* Class` | `?x skos:inScheme Scheme` |
+
+---
+
+## Cardinality Summary
+
+All patterns support the same cardinality restrictions:
+
+| OWL Restriction | Required? | Array? | minItems | maxItems |
+|-----------------|-----------|--------|----------|----------|
+| `qualifiedCardinality(1)` | Yes | No | - | - |
+| `maxQualifiedCardinality(1)` | No | No | - | - |
+| `someValuesFrom` | Yes | Yes | 1 | - |
+| `allValuesFrom` | No | Yes | - | - |
+| `minQualifiedCardinality(n)` | Yes (if n≥1) | Yes | n | - |
+| `maxQualifiedCardinality(n)` | No | Yes | - | n |
+
+---
+
+## Choosing the Right Pattern
+
+| Requirement | Recommended Pattern |
+|-------------|---------------------|
+| Simple closed list, rarely changes | Pattern A |
+| Typed values with metadata | Pattern B |
+| Extensible, add values without schema change | Pattern C |
+| Hierarchical grouping needed | Pattern C or D |
+| Standards compliance (SKOS, FHIR) | Pattern D |
+| Multi-language support | Pattern D |
+| External terminology mapping | Pattern D |

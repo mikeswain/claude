@@ -1,0 +1,194 @@
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/TaxonomyPatternMapper.java-25-
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/TaxonomyPatternMapper.java-26-/**
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/TaxonomyPatternMapper.java-27- * Maps detected taxonomy patterns to OpenAPI schemas.
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/TaxonomyPatternMapper.java-28- *
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/TaxonomyPatternMapper.java-29- * <p>This mapper generates OpenAPI schemas based on the taxonomy patterns detected
+src/main/java/com/grl/component/mapper/TaxonomyPatternMapper.java:30: * by SchemaVisitor. Each pattern produces a different schema structure:
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/TaxonomyPatternMapper.java-31- *
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/TaxonomyPatternMapper.java-32- * <ul>
+src/main/java/com/grl/component/mapper/TaxonomyPatternMapper.java-33- *   <li><b>Pattern A</b>: Inline StringSchema with enum values</li>
+src/main/java/com/grl/component/mapper/TaxonomyPatternMapper.java-34- *   <li><b>Pattern B</b>: StringSchema with enum values (from codeValue or label)</li>
+src/main/java/com/grl/component/mapper/TaxonomyPatternMapper.java-35- *   <li><b>Pattern C</b>: $ref to schema in components/schemas</li>
+--
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-5-import com.grl.component.owl.Narrow;
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-6-import com.grl.component.owl.OntologyUtil;
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-7-import com.grl.component.owl.WithAnnotation;
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-8-import com.grl.component.schema.PropertyNameResolver;
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-9-import com.grl.component.schema.RestrictionInfo;
+src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java:10:import com.grl.component.schema.SchemaVisitor;
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-11-import com.grl.component.schema.TaxonomyInfo;
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-12-import com.grl.component.schema.TaxonomyPattern;
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-13-import io.swagger.v3.oas.models.SpecVersion;
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-14-import io.swagger.v3.oas.models.media.ObjectSchema;
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-15-import io.swagger.v3.oas.models.media.Schema;
+--
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-54- *   <li><b>Taxonomy properties</b> - mapped to enum schemas based on named individuals</li>
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-55- * </ul>
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-56- *
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-57- * <h2>Processing Pipeline</h2>
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-58- * <pre>
+src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java:59: * OWLClass → SchemaVisitors → Axiom Collection → Restriction Merging
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-60- *                                    ↓
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-61- *         ┌────────────────────────────────────────────┐
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-62- *         │                                            │
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-63- *         ▼                    ▼                       ▼
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-64- *   DataPropertyMapper   ObjectPropertyMapper   TaxonomyPropertyMapper
+--
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-77- * a single OWL class and then discarded.
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-78- *
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-79- * @see DataPropertyMapper
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-80- * @see ObjectPropertyMapper
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-81- * @see TaxonomyPropertyMapper
+src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java:82: * @see SchemaVisitor
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-83- */
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-84-public class ResourceSchemaMapper {
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-85-
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-86-  /**
+src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java:87:   * Holds paired SchemaVisitors for analyzing object and data property restrictions.
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-88-   *
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-89-   * @param objectPropertyVisitor visitor that collects object property restrictions
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-90-   * @param dataPropertyVisitor visitor that collects data property restrictions
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-91-   */
+src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java:92:  private record VisitorPair(SchemaVisitor objectPropertyVisitor, SchemaVisitor dataPropertyVisitor) {}
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-93-
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-94-  /**
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-95-   * Holds categorized axiom collections for the analyzed class.
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-96-   *
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-97-   * @param taxonomy axioms referencing named individuals (enum values)
+--
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-144-   * @return the generated OpenAPI Schema object
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-145-   */
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-146-  private Schema<?> createSchema(OWLClass analyzedClass) {
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-147-    Schema<?> schema = initializeResourceSchema();
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-148-
+src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java:149:    VisitorPair visitors = createSchemaVisitors(analyzedClass);
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-150-    AxiomCollection axioms = collectRelevantAxioms(analyzedClass);
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-151-
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-152-    visitAxiomsWithVisitors(visitors, axioms);
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-153-
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-154-    Map<String, Set<RestrictionInfo>> restrictions = mergeVisitorRestrictions(visitors);
+--
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-179-    resourceSchema.setTitle(getLabel(this.cls));
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-180-    return resourceSchema;
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-181-  }
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-182-
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-183-  /**
+src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java:184:   * Creates paired SchemaVisitors for analyzing object and data property restrictions.
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-185-   *
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-186-   * <p>Both visitors traverse the same class hierarchy but collect different types
+src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-187-   * of restrictions:
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-188-   * <ul>
+src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-189-   *   <li>Object visitor: collects SomeValuesFrom, AllValuesFrom, cardinality on object properties</li>
+--
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-191-   * </ul>
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-192-   *
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-193-   * @param analyzedClass the OWL class to analyze
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-194-   * @return a record containing both configured visitors
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-195-   */
+src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java:196:  private VisitorPair createSchemaVisitors(OWLClass analyzedClass) {
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-197-    OWLDataFactory dataFactory = context.getManager().getOWLDataFactory();
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-198-    OWLClass owlThing = dataFactory.getOWLThing();
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-199-    return new VisitorPair(
+src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java:200:        new SchemaVisitor(analyzedClass, context.getOntology(), owlThing, "", false),
+src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java:201:        new SchemaVisitor(analyzedClass, context.getOntology(), owlThing, "", false));
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-202-  }
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-203-
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-204-  /**
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-205-   * Collects all relevant axioms for the analyzed class from the ontology.
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-206-   *
+--
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-273-   * @return map of property name → set of RestrictionInfo for that property
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-274-   */
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-275-  private Map<String, Set<RestrictionInfo>> mergeVisitorRestrictions(VisitorPair visitors) {
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-276-    Map<String, Set<RestrictionInfo>> restrictions = new HashMap<>();
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-277-    Stream.of(visitors.objectPropertyVisitor(), visitors.dataPropertyVisitor())
+src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java:278:        .map(SchemaVisitor::getRestrictions)
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-279-        .flatMap(map -> map.entrySet().stream())
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-280-        .forEach(entry -> restrictions.computeIfAbsent(entry.getKey(), k -> new LinkedHashSet<>())
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-281-            .addAll(entry.getValue()));
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-282-    return restrictions;
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-283-  }
+--
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-311-  /**
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-312-   * Extracts range type/class names for a property from multiple sources.
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-313-   *
+src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-314-   * <p>Ranges are collected from:
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-315-   * <ol>
+src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java:316:   *   <li>The SchemaVisitor's property range multimap (from restriction fillers)</li>
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-317-   *   <li>The RestrictionInfo objects themselves (via getRangeNames)</li>
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-318-   * </ol>
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-319-   *
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-320-   * @param propertyName the property to extract ranges for
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-321-   * @param rangesFromVisitor multimap of property → range classes/datatypes from visitor
+--
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-374-  }
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-375-
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-376-  /**
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-377-   * Processes all data properties and adds them to the schema.
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-378-   *
+src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java:379:   * <p>For each data property discovered by the SchemaVisitor:
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-380-   * <ol>
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-381-   *   <li>Looks up the OWLDataProperty in the ontology</li>
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-382-   *   <li>Extracts description, label, example, ranges, and enum values</li>
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-383-   *   <li>Creates a DataPropertyMapper to generate the schema</li>
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-384-   *   <li>Adds the property to the resource schema</li>
+--
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-390-   * @param restrictions merged restrictions map
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-391-   * @param subClassAxioms axioms for extracting example annotations
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-392-   */
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-393-  private void processDataProperties(
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-394-      Schema<?> schema,
+src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java:395:      SchemaVisitor dataVisitor,
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-396-      Map<String, Set<RestrictionInfo>> restrictions,
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-397-      List<OWLSubClassOfAxiom> subClassAxioms) {
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-398-
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-399-    Multimap<String, OWLDatatype> dataPropertyRanges = dataVisitor.getDataPropertyRanges();
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-400-    Set<String> dataPropertyNames = dataVisitor.getDataPropertyNames();
+--
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-438-  }
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-439-
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-440-  /**
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-441-   * Processes all object properties and adds them to the schema.
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-442-   *
+src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java:443:   * <p>For each object property discovered by the SchemaVisitor:
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-444-   * <ol>
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-445-   *   <li>Looks up the OWLObjectProperty in the ontology</li>
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-446-   *   <li>Extracts description, label, and range classes</li>
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-447-   *   <li>Creates an ObjectPropertyMapper to generate the schema</li>
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-448-   *   <li>Adds the property to the resource schema</li>
+--
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-453-   * @param objectVisitor visitor containing object property information
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-454-   * @param restrictions merged restrictions map
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-455-   */
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-456-  private void processObjectProperties(
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-457-      Schema<?> schema,
+src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java:458:      SchemaVisitor objectVisitor,
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-459-      Map<String, Set<RestrictionInfo>> restrictions) {
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-460-
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-461-    Multimap<String, OWLClass> objectPropertyRanges = objectVisitor.getObjectPropertyRanges();
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-462-    Set<String> objectPropertyNames = objectVisitor.getObjectPropertyNames();
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-463-
+--
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-485-  }
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-486-
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-487-  /**
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-488-   * Processes taxonomy axioms and adds enum properties to the schema.
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-489-   *
+src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java:490:   * <p>This method first checks for taxonomy patterns detected by SchemaVisitor
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-491-   * (patterns A, B, C, D) and uses TaxonomyPatternMapper for those. Falls back
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-492-   * to existing logic for class-based taxonomies that weren't detected as patterns.
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-493-   *
+src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-494-   * <p>Supported patterns:
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-495-   * <ul>
+--
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-509-      Schema<?> schema,
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-510-      List<OWLSubClassOfAxiom> taxonomyAxioms,
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-511-      VisitorPair visitors,
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-512-      Map<String, Set<RestrictionInfo>> restrictions) {
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-513-
+src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java:514:    // First, process detected taxonomy patterns from SchemaVisitor
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-515-    Set<String> processedProperties = new HashSet<>();
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-516-    Map<String, TaxonomyInfo> taxonomyPatterns = extractTaxonomyPatterns(visitors);
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-517-
+src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-518-    for (Map.Entry<String, TaxonomyInfo> entry : taxonomyPatterns.entrySet()) {
+/home/mike/grl/ASG/src/main/java/com/grl/component/mapper/ResourceSchemaMapper.java-519-      String propertyName = entry.getKey();

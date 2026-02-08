@@ -1,0 +1,13 @@
+extends: ../config_base.yaml
+ontologies:
+  - ${configDir}/../ontologies/value-restrictions-test.owl
+name: value_restrictions_test
+catalogFile: ${configDir}/../imports/business-ontology/NeuASG Test/catalog-v001.xml
+rootClass: https://example.com/valuerestrictions/ValueRestrictionsAPIV1.0
+templates:
+  openapi:
+    openapi: 3.1.0
+    info:
+      description: Value Restrictions Test API
+      title: Value Restrictions Test
+      version: 1.0.0

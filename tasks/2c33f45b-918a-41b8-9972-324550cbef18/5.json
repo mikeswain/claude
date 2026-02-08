@@ -1,0 +1,9 @@
+{
+  "id": "5",
+  "subject": "Remove namespace flattening from OntologyMapper",
+  "description": "Step 5: Remove applyNamespaceMappings call. Remove flat file generation. Find APIRoot by search. Derive x-grl-graph-namespace from ontology IRI. Log warning if namespaceMappings present. Update MappingContext constructor.",
+  "activeForm": "Removing namespace flattening",
+  "status": "pending",
+  "blocks": [],
+  "blockedBy": []
+}

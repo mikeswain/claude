@@ -1,0 +1,9 @@
+{
+  "id": "3",
+  "subject": "Create example puzzle and update CLAUDE.md",
+  "description": "Create puzzles/easy.csv with a verified kakuro puzzle. Update CLAUDE.md with build/run instructions.",
+  "activeForm": "Creating example puzzle",
+  "status": "pending",
+  "blocks": [],
+  "blockedBy": []
+}

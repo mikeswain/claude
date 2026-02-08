@@ -1,0 +1,102 @@
+package regression.features.properties;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import com.grl.TestUtil;
+import com.jayway.jsonpath.ReadContext;
+import java.util.List;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+
+/**
+ * Integration tests for taxonomy (enum) properties.
+ * Tests that object properties pointing to classes with named individuals
+ * are mapped to appropriate OpenAPI schemas.
+ *
+ * <p>Pattern C taxonomies (someValuesFrom named class) generate:
+ * - Property named after the object property (e.g., hasStatus)
+ * - Array type with $ref to taxonomy schema
+ */
+public class TaxonomyPropertyIT {
+
+  private static ReadContext spec;
+
+  @BeforeAll
+  static void setup() {
+    spec = TestUtil.getGeneratedSpec(
+        TestUtil.asFilePath(TaxonomyPropertyIT.class, "/regression/configs/config_taxonomy.yaml"));
+  }
+
+  @Test
+  void statusTaxonomyCreatesProperty() {
+    // The hasStatus property should reference the Status schema
+    assertNotNull(spec.read("$.components.schemas.TaxonomyTest.properties.hasStatus"));
+  }
+
+  @Test
+  void statusTaxonomyHasRefToSchema() {
+    // Pattern C generates $ref to taxonomy schema
+    String ref = spec.read("$.components.schemas.TaxonomyTest.properties.hasStatus.items.$ref");
+    assertNotNull(ref, "Should have $ref to taxonomy schema");
+    assertTrue(ref.contains("Status"), "Should reference Status schema");
+  }
+
+  @Test
+  void priorityTaxonomyCreatesProperty() {
+    // The hasPriority property should reference the Priority schema
+    assertNotNull(spec.read("$.components.schemas.TaxonomyTest.properties.hasPriority"));
+  }
+
+  @Test
+  void priorityTaxonomyHasRefToSchema() {
+    // Pattern C generates $ref to taxonomy schema
+    String ref = spec.read("$.components.schemas.TaxonomyTest.properties.hasPriority.items.$ref");
+    assertNotNull(ref, "Should have $ref to taxonomy schema");
+    assertTrue(ref.contains("Priority"), "Should reference Priority schema");
+  }
+
+  @Test
+  void taxonomyPropertyIsArrayType() {
+    // Taxonomy properties with someValuesFrom generate as arrays
+    assertEquals("array", spec.read("$.components.schemas.TaxonomyTest.properties.hasStatus.type"));
+    assertEquals("array", spec.read("$.components.schemas.TaxonomyTest.properties.hasPriority.type"));
+  }
+
+  @Test
+  void taxonomyPropertyHasMinItems() {
+    // someValuesFrom implies at least one value
+    assertEquals(1, spec.read("$.components.schemas.TaxonomyTest.properties.hasStatus.minItems", Integer.class));
+    assertEquals(1, spec.read("$.components.schemas.TaxonomyTest.properties.hasPriority.minItems", Integer.class));
+  }
+
+  @Test
+  void taxonomyPropertiesAreRequired() {
+    // Taxonomy properties with someValuesFrom should be required
+    List<String> required = spec.read("$.components.schemas.TaxonomyTest.required", List.class);
+    assertTrue(required.contains("hasStatus"), "hasStatus should be required");
+    assertTrue(required.contains("hasPriority"), "hasPriority should be required");
+  }
+
+  @Test
+  void taxonomySchemasExist() {
+    // The referenced taxonomy schemas should exist
+    assertNotNull(spec.read("$.components.schemas.Status"), "Status schema should exist");
+    assertNotNull(spec.read("$.components.schemas.Priority"), "Priority schema should exist");
+  }
+
+  @Test
+  void schemaHasCorrectStructure() {
+    assertEquals("object", spec.read("$.components.schemas.TaxonomyTest.type"));
+    assertEquals("Taxonomy Test", spec.read("$.components.schemas.TaxonomyTest.title"));
+    assertNotNull(spec.read("$.components.schemas.TaxonomyTest.properties.apiID"));
+  }
+
+  @Test
+  void resourceHasCorrectEndpoints() {
+    // Should have collection and single endpoints
+    assertNotNull(spec.read("$.paths['/TaxonomyTest']"));
+    assertNotNull(spec.read("$.paths['/TaxonomyTest/{TaxonomyTestId}']"));
+  }
+}

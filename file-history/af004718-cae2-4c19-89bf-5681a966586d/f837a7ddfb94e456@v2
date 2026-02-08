@@ -1,0 +1,229 @@
+# OpenAPI Templates
+
+ASG uses templates to provide default values for the generated OpenAPI specification. Generated content is merged over these templates.
+
+## Template Structure
+
+```yaml
+templates:
+  openapi:      # Top-level OpenAPI object template
+    ...
+  collectionPathItem:  # Template for collection endpoints (/{Resource})
+    ...
+  singlePathItem:      # Template for single endpoints (/{Resource}/{id})
+    ...
+```
+
+## OpenAPI Template
+
+The `openapi` template provides the base structure for the generated specification.
+
+```yaml
+templates:
+  openapi:
+    openapi: 3.1.0
+    info:
+      title: My API
+      version: 1.0.0
+      description: API description
+      termsOfService: https://example.com/terms
+      contact:
+        name: API Support
+        url: https://example.com/support
+        email: support@example.com
+      license:
+        name: Apache 2.0
+        url: https://www.apache.org/licenses/LICENSE-2.0
+    servers:
+      - url: https://api.example.com/v1
+        description: Production server
+      - url: https://staging-api.example.com/v1
+        description: Staging server
+    externalDocs:
+      description: API Documentation
+      url: https://docs.example.com
+    components:
+      securitySchemes:
+        oauth2:
+          type: oauth2
+          flows:
+            authorizationCode:
+              authorizationUrl: https://auth.example.com/authorize
+              tokenUrl: https://auth.example.com/token
+              scopes:
+                read: Read access
+                write: Write access
+```
+
+### Generated Content
+
+ASG generates and merges the following:
+
+- `info.title` - From the API root class label
+- `info.x-grl-api-label` - API label
+- `info.x-grl-graph-namespace` - Target namespace IRI
+- `tags` - One per resource with descriptions
+- `paths` - All resource endpoints
+- `components.schemas` - All resource schemas
+
+## Collection Path Item Template
+
+Template for collection endpoints (`/{Resource}`).
+
+```yaml
+templates:
+  collectionPathItem:
+    summary: Resource collection
+    description: Operations on the resource collection
+    get:
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '406':
+          description: Not Acceptable
+        '429':
+          description: Too Many Requests
+        '500':
+          description: Internal Server Error
+      parameters:
+        - name: start
+          in: query
+          description: Index of start item
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          description: Maximum items to return
+          schema:
+            type: integer
+    post:
+      responses:
+        '201':
+          description: Created
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '406':
+          description: Not Acceptable
+        '429':
+          description: Too Many Requests
+        '500':
+          description: Internal Server Error
+```
+
+### Generated Collection Methods
+
+| Method | Description |
+|--------|-------------|
+| `GET` | List resources (with pagination) |
+| `POST` | Create a new resource |
+
+## Single Path Item Template
+
+Template for single-resource endpoints (`/{Resource}/{id}`).
+
+```yaml
+templates:
+  singlePathItem:
+    summary: Single resource
+    description: Operations on a single resource
+    get:
+      responses:
+        '200':
+          description: Existing resource
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '406':
+          description: Not Acceptable
+        '429':
+          description: Too Many Requests
+        '500':
+          description: Internal Server Error
+    put:
+      responses:
+        '200':
+          description: Existing resource
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '406':
+          description: Not Acceptable
+        '429':
+          description: Too Many Requests
+        '500':
+          description: Internal Server Error
+    patch:
+      responses:
+        '200':
+          description: Existing resource
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '406':
+          description: Not Acceptable
+        '429':
+          description: Too Many Requests
+        '500':
+          description: Internal Server Error
+    delete:
+      responses:
+        '200':
+          description: Existing resource
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '406':
+          description: Not Acceptable
+        '429':
+          description: Too Many Requests
+        '500':
+          description: Internal Server Error
+```
+
+### Generated Single Methods
+
+| Method | Description |
+|--------|-------------|
+| `GET` | Retrieve a resource by ID |
+| `PUT` | Replace a resource entirely |
+| `PATCH` | Update a resource partially |
+| `DELETE` | Delete a resource |
+
+## Merge Behavior
+
+Templates are merged with generated content using deep merge:
+
+1. Generated values override template values for the same key
+2. Template values are preserved if not generated
+3. Arrays are replaced entirely (not merged)
+4. Objects are merged recursively
+
+## Default Template
+
+ASG includes a built-in default template at `src/main/resources/default.config.yaml`. This provides sensible defaults for response codes and standard parameters.

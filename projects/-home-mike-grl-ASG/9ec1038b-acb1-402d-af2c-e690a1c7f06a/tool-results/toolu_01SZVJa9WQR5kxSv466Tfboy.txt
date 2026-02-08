@@ -1,0 +1,1033 @@
+[[1;34mINFO[m] Scanning for projects...
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m-----------------------< [0;36mcom.grl.component:asg[0;1m >------------------------[m
+[[1;34mINFO[m] [1mBuilding ASG 1.0.0-SNAPSHOT[m
+[[1;34mINFO[m]   from pom.xml
+[[1;34mINFO[m] [1m--------------------------------[ jar ]---------------------------------[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mclean:3.2.0:clean[m [1m(default-clean)[m @ [36masg[0;1m ---[m
+[[1;34mINFO[m] Deleting /home/mike/grl/ASG/target
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mresources:3.3.1:resources[m [1m(default-resources)[m @ [36masg[0;1m ---[m
+[[1;34mINFO[m] Copying 2 resources from src/main/resources to target/classes
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mcompiler:3.13.0:compile[m [1m(default-compile)[m @ [36masg[0;1m ---[m
+[[1;34mINFO[m] Recompiling the module because of [1mchanged source code[m.
+[[1;34mINFO[m] Compiling 24 source files with javac [debug target 21] to target/classes
+[[1;34mINFO[m] Annotation processing is enabled because one or more processors were found
+  on the class path. A future release of javac may disable annotation processing
+  unless at least one processor is specified by name (-processor), or a search
+  path is specified (--processor-path, --processor-module-path), or annotation
+  processing is enabled explicitly (-proc:only, -proc:full).
+  Use -Xlint:-options to suppress this message.
+  Use -proc:none to disable annotation processing.
+[[1;34mINFO[m] /home/mike/grl/ASG/src/main/java/com/grl/component/asg/Asg.java: Some input files use or override a deprecated API.
+[[1;34mINFO[m] /home/mike/grl/ASG/src/main/java/com/grl/component/asg/Asg.java: Recompile with -Xlint:deprecation for details.
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mexec:3.4.1:exec[m [1m(Update ontology imports for regression tests)[m @ [36masg[0;1m ---[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mexec:3.4.1:exec[m [1m(Update ontology imports to specific revision)[m @ [36masg[0;1m ---[m
+Already on 'main'
+M	OpenAPI/base-config-management.yaml
+M	OpenAPI/config_employment.yaml
+M	OpenAPI/config_insuranceCDR.yaml
+M	OpenAPI/config_nzcs1.yaml
+Your branch is up-to-date with 'origin/main'.
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mexec:3.4.1:exec[m [1m(Pull latest)[m @ [36masg[0;1m ---[m
+Already up-to-date.
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mresources:3.3.1:testResources[m [1m(default-testResources)[m @ [36masg[0;1m ---[m
+[[1;34mINFO[m] Copying 464 resources from src/test/resources to target/test-classes
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mcompiler:3.13.0:testCompile[m [1m(default-testCompile)[m @ [36masg[0;1m ---[m
+[[1;34mINFO[m] Recompiling the module because of [1mchanged dependency[m.
+[[1;34mINFO[m] Compiling 25 source files with javac [debug target 21] to target/test-classes
+[[1;34mINFO[m] Annotation processing is enabled because one or more processors were found
+  on the class path. A future release of javac may disable annotation processing
+  unless at least one processor is specified by name (-processor), or a search
+  path is specified (--processor-path, --processor-module-path), or annotation
+  processing is enabled explicitly (-proc:only, -proc:full).
+  Use -Xlint:-options to suppress this message.
+  Use -proc:none to disable annotation processing.
+[[1;34mINFO[m] /home/mike/grl/ASG/src/test/java/regression/LargeApiIT.java: Some input files use unchecked or unsafe operations.
+[[1;34mINFO[m] /home/mike/grl/ASG/src/test/java/regression/LargeApiIT.java: Recompile with -Xlint:unchecked for details.
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32msurefire:3.5.3:test[m [1m(default-test)[m @ [36masg[0;1m ---[m
+[[1;34mINFO[m] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[[1;34mINFO[m] 
+[[1;34mINFO[m] -------------------------------------------------------
+[[1;34mINFO[m]  T E S T S
+[[1;34mINFO[m] -------------------------------------------------------
+[[1;34mINFO[m] Running com.grl.component.mapper.[1mMappingContextTest[m
+[[1;34mINFO[m] Running com.grl.component.mapper.[1mMappingContextTest$ConfigAccess[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m2[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.138 s -- in com.grl.component.mapper.[1mMappingContextTest$ConfigAccess[m
+[[1;34mINFO[m] Running com.grl.component.mapper.[1mMappingContextTest$Getters[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m3[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.008 s -- in com.grl.component.mapper.[1mMappingContextTest$Getters[m
+[[1;34mINFO[m] Running com.grl.component.mapper.[1mMappingContextTest$SchemaCaching[m
+Feb 06, 2026 10:53:27 PM com.grl.component.mapper.ResourceSchemaMapper logMissingPropertiesWarning
+WARNING: No properties with apiLabel annotation found for: <http://example.org/test#Class1>
+Feb 06, 2026 10:53:27 PM com.grl.component.mapper.ResourceSchemaMapper logMissingPropertiesWarning
+WARNING: No properties with apiLabel annotation found for: <http://example.org/test#Class2>
+Feb 06, 2026 10:53:27 PM com.grl.component.mapper.ResourceSchemaMapper logMissingPropertiesWarning
+WARNING: No properties with apiLabel annotation found for: <http://example.org/test#SimpleClass>
+Feb 06, 2026 10:53:27 PM com.grl.component.mapper.ResourceSchemaMapper logMissingPropertiesWarning
+WARNING: No properties with apiLabel annotation found for: <http://example.org/test#CachedClass>
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m4[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.070 s -- in com.grl.component.mapper.[1mMappingContextTest$SchemaCaching[m
+[[1;34mINFO[m] Running com.grl.component.mapper.[1mMappingContextTest$ConstructorAndInitialization[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m3[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.007 s -- in com.grl.component.mapper.[1mMappingContextTest$ConstructorAndInitialization[m
+[[1;34mINFO[m] [1mTests run: [0;1m0[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.237 s -- in com.grl.component.mapper.[1mMappingContextTest[m
+[[1;34mINFO[m] Running com.grl.component.mapper.[1mDataPropertyMapperTest[m
+[[1;34mINFO[m] Running com.grl.component.mapper.[1mDataPropertyMapperTest$SchemaMetadata[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m4[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.006 s -- in com.grl.component.mapper.[1mDataPropertyMapperTest$SchemaMetadata[m
+[[1;34mINFO[m] Running com.grl.component.mapper.[1mDataPropertyMapperTest$MultiTypeHandling[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m2[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.020 s -- in com.grl.component.mapper.[1mDataPropertyMapperTest$MultiTypeHandling[m
+[[1;34mINFO[m] Running com.grl.component.mapper.[1mDataPropertyMapperTest$ExampleValueGeneration[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m6[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.007 s -- in com.grl.component.mapper.[1mDataPropertyMapperTest$ExampleValueGeneration[m
+[[1;34mINFO[m] Running com.grl.component.mapper.[1mDataPropertyMapperTest$EnumHandling[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m2[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.004 s -- in com.grl.component.mapper.[1mDataPropertyMapperTest$EnumHandling[m
+[[1;34mINFO[m] Running com.grl.component.mapper.[1mDataPropertyMapperTest$DefaultValueHandling[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m1[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.001 s -- in com.grl.component.mapper.[1mDataPropertyMapperTest$DefaultValueHandling[m
+[[1;34mINFO[m] Running com.grl.component.mapper.[1mDataPropertyMapperTest$RequirednessHandling[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m5[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.005 s -- in com.grl.component.mapper.[1mDataPropertyMapperTest$RequirednessHandling[m
+[[1;34mINFO[m] Running com.grl.component.mapper.[1mDataPropertyMapperTest$ArraySchemaGeneration[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m9[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.008 s -- in com.grl.component.mapper.[1mDataPropertyMapperTest$ArraySchemaGeneration[m
+[[1;34mINFO[m] Running com.grl.component.mapper.[1mDataPropertyMapperTest$EmptyTypeHandling[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m2[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.001 s -- in com.grl.component.mapper.[1mDataPropertyMapperTest$EmptyTypeHandling[m
+[[1;34mINFO[m] Running com.grl.component.mapper.[1mDataPropertyMapperTest$XsdDataTypeMapping[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m21[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.012 s -- in com.grl.component.mapper.[1mDataPropertyMapperTest$XsdDataTypeMapping[m
+[[1;34mINFO[m] [1mTests run: [0;1m0[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.072 s -- in com.grl.component.mapper.[1mDataPropertyMapperTest[m
+[[1;34mINFO[m] Running com.grl.component.mapper.[1mObjectPropertyMapperTest[m
+[[1;34mINFO[m] Running com.grl.component.mapper.[1mObjectPropertyMapperTest$ArrayWithResourceClass[m
+Feb 06, 2026 10:53:27 PM com.grl.component.mapper.ResourceSchemaMapper logMissingPropertiesWarning
+WARNING: No properties with apiLabel annotation found for: <http://example.org/test#TestResource>
+Feb 06, 2026 10:53:27 PM com.grl.component.mapper.ResourceSchemaMapper lambda$logMissingPropertiesWarning$14
+WARNING: 	Possible property: DataSomeValuesFrom(<http://ontologies.semanticarts.com/o/grlAnnotationProperties/apiID> xsd:string)
+Feb 06, 2026 10:53:27 PM com.grl.component.mapper.ResourceSchemaMapper logMissingPropertiesWarning
+WARNING: No properties with apiLabel annotation found for: <http://example.org/test#TestResource>
+Feb 06, 2026 10:53:27 PM com.grl.component.mapper.ResourceSchemaMapper lambda$logMissingPropertiesWarning$14
+WARNING: 	Possible property: DataSomeValuesFrom(<http://ontologies.semanticarts.com/o/grlAnnotationProperties/apiID> xsd:string)
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m2[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.012 s -- in com.grl.component.mapper.[1mObjectPropertyMapperTest$ArrayWithResourceClass[m
+[[1;34mINFO[m] Running com.grl.component.mapper.[1mObjectPropertyMapperTest$SchemaMetadata[m
+Feb 06, 2026 10:53:27 PM com.grl.component.mapper.ResourceSchemaMapper logMissingPropertiesWarning
+WARNING: No properties with apiLabel annotation found for: <http://example.org/test#RefClass>
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m1[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 s -- in com.grl.component.mapper.[1mObjectPropertyMapperTest$SchemaMetadata[m
+[[1;34mINFO[m] Running com.grl.component.mapper.[1mObjectPropertyMapperTest$MultipleReferenceHandling[m
+Feb 06, 2026 10:53:27 PM com.grl.component.mapper.ResourceSchemaMapper logMissingPropertiesWarning
+WARNING: No properties with apiLabel annotation found for: <http://example.org/test#RefClass1>
+Feb 06, 2026 10:53:27 PM com.grl.component.mapper.ResourceSchemaMapper logMissingPropertiesWarning
+WARNING: No properties with apiLabel annotation found for: <http://example.org/test#RefClass1>
+Feb 06, 2026 10:53:27 PM com.grl.component.mapper.ResourceSchemaMapper logMissingPropertiesWarning
+WARNING: No properties with apiLabel annotation found for: <http://example.org/test#RefClass2>
+Feb 06, 2026 10:53:27 PM com.grl.component.mapper.ResourceSchemaMapper logMissingPropertiesWarning
+WARNING: No properties with apiLabel annotation found for: <http://example.org/test#RefClass2>
+Feb 06, 2026 10:53:27 PM com.grl.component.mapper.ResourceSchemaMapper logMissingPropertiesWarning
+WARNING: No properties with apiLabel annotation found for: <http://example.org/test#RefClass1>
+Feb 06, 2026 10:53:27 PM com.grl.component.mapper.ResourceSchemaMapper logMissingPropertiesWarning
+WARNING: No properties with apiLabel annotation found for: <http://example.org/test#RefClass1>
+Feb 06, 2026 10:53:27 PM com.grl.component.mapper.ResourceSchemaMapper logMissingPropertiesWarning
+WARNING: No properties with apiLabel annotation found for: <http://example.org/test#RefClass2>
+Feb 06, 2026 10:53:27 PM com.grl.component.mapper.ResourceSchemaMapper logMissingPropertiesWarning
+WARNING: No properties with apiLabel annotation found for: <http://example.org/test#RefClass2>
+Feb 06, 2026 10:53:27 PM com.grl.component.mapper.ResourceSchemaMapper logMissingPropertiesWarning
+WARNING: No properties with apiLabel annotation found for: <http://example.org/test#RefClass1>
+Feb 06, 2026 10:53:27 PM com.grl.component.mapper.ResourceSchemaMapper logMissingPropertiesWarning
+WARNING: No properties with apiLabel annotation found for: <http://example.org/test#RefClass1>
+Feb 06, 2026 10:53:27 PM com.grl.component.mapper.ResourceSchemaMapper logMissingPropertiesWarning
+WARNING: No properties with apiLabel annotation found for: <http://example.org/test#RefClass2>
+Feb 06, 2026 10:53:27 PM com.grl.component.mapper.ResourceSchemaMapper logMissingPropertiesWarning
+WARNING: No properties with apiLabel annotation found for: <http://example.org/test#RefClass2>
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m4[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.009 s -- in com.grl.component.mapper.[1mObjectPropertyMapperTest$MultipleReferenceHandling[m
+[[1;34mINFO[m] Running com.grl.component.mapper.[1mObjectPropertyMapperTest$SingleReferenceHandling[m
+Feb 06, 2026 10:53:27 PM com.grl.component.mapper.ResourceSchemaMapper logMissingPropertiesWarning
+WARNING: No properties with apiLabel annotation found for: <http://example.org/test#TestResource>
+Feb 06, 2026 10:53:27 PM com.grl.component.mapper.ResourceSchemaMapper lambda$logMissingPropertiesWarning$14
+WARNING: 	Possible property: DataSomeValuesFrom(<http://ontologies.semanticarts.com/o/grlAnnotationProperties/apiID> xsd:string)
+Feb 06, 2026 10:53:27 PM com.grl.component.mapper.ResourceSchemaMapper logMissingPropertiesWarning
+WARNING: No properties with apiLabel annotation found for: <http://example.org/test#TestResource>
+Feb 06, 2026 10:53:27 PM com.grl.component.mapper.ResourceSchemaMapper lambda$logMissingPropertiesWarning$14
+WARNING: 	Possible property: DataSomeValuesFrom(<http://ontologies.semanticarts.com/o/grlAnnotationProperties/apiID> xsd:string)
+Feb 06, 2026 10:53:27 PM com.grl.component.mapper.ResourceSchemaMapper logMissingPropertiesWarning
+WARNING: No properties with apiLabel annotation found for: <http://example.org/test#TestResource>
+Feb 06, 2026 10:53:27 PM com.grl.component.mapper.ResourceSchemaMapper lambda$logMissingPropertiesWarning$14
+WARNING: 	Possible property: DataSomeValuesFrom(<http://ontologies.semanticarts.com/o/grlAnnotationProperties/apiID> xsd:string)
+Feb 06, 2026 10:53:27 PM com.grl.component.mapper.ResourceSchemaMapper logMissingPropertiesWarning
+WARNING: No properties with apiLabel annotation found for: <http://example.org/test#NonResourceClass>
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m4[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.007 s -- in com.grl.component.mapper.[1mObjectPropertyMapperTest$SingleReferenceHandling[m
+[[1;34mINFO[m] Running com.grl.component.mapper.[1mObjectPropertyMapperTest$ArraySchemaGeneration[m
+Feb 06, 2026 10:53:27 PM com.grl.component.mapper.ResourceSchemaMapper logMissingPropertiesWarning
+WARNING: No properties with apiLabel annotation found for: <http://example.org/test#RefClass>
+Feb 06, 2026 10:53:27 PM com.grl.component.mapper.ResourceSchemaMapper logMissingPropertiesWarning
+WARNING: No properties with apiLabel annotation found for: <http://example.org/test#RefClass>
+Feb 06, 2026 10:53:27 PM com.grl.component.mapper.ResourceSchemaMapper logMissingPropertiesWarning
+WARNING: No properties with apiLabel annotation found for: <http://example.org/test#RefClass>
+Feb 06, 2026 10:53:27 PM com.grl.component.mapper.ResourceSchemaMapper logMissingPropertiesWarning
+WARNING: No properties with apiLabel annotation found for: <http://example.org/test#RefClass>
+Feb 06, 2026 10:53:27 PM com.grl.component.mapper.ResourceSchemaMapper logMissingPropertiesWarning
+WARNING: No properties with apiLabel annotation found for: <http://example.org/test#RefClass>
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m5[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.009 s -- in com.grl.component.mapper.[1mObjectPropertyMapperTest$ArraySchemaGeneration[m
+[[1;34mINFO[m] Running com.grl.component.mapper.[1mObjectPropertyMapperTest$RequirednessHandling[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m4[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.005 s -- in com.grl.component.mapper.[1mObjectPropertyMapperTest$RequirednessHandling[m
+[[1;34mINFO[m] Running com.grl.component.mapper.[1mObjectPropertyMapperTest$ConstructorBehavior[m
+Feb 06, 2026 10:53:27 PM com.grl.component.mapper.ResourceSchemaMapper logMissingPropertiesWarning
+WARNING: No properties with apiLabel annotation found for: <http://example.org/test#RefClass>
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m3[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.003 s -- in com.grl.component.mapper.[1mObjectPropertyMapperTest$ConstructorBehavior[m
+[[1;34mINFO[m] [1mTests run: [0;1m0[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.051 s -- in com.grl.component.mapper.[1mObjectPropertyMapperTest[m
+[[1;34mINFO[m] Running com.grl.component.mapper.[1mTaxonomyPatternMapperTest[m
+[[1;34mINFO[m] Running com.grl.component.mapper.[1mTaxonomyPatternMapperTest$ErrorHandling[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m2[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.003 s -- in com.grl.component.mapper.[1mTaxonomyPatternMapperTest$ErrorHandling[m
+[[1;34mINFO[m] Running com.grl.component.mapper.[1mTaxonomyPatternMapperTest$RequirednessTests[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m2[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 s -- in com.grl.component.mapper.[1mTaxonomyPatternMapperTest$RequirednessTests[m
+[[1;34mINFO[m] Running com.grl.component.mapper.[1mTaxonomyPatternMapperTest$PatternDTests[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m2[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.010 s -- in com.grl.component.mapper.[1mTaxonomyPatternMapperTest$PatternDTests[m
+[[1;34mINFO[m] Running com.grl.component.mapper.[1mTaxonomyPatternMapperTest$PatternCTests[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m3[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.009 s -- in com.grl.component.mapper.[1mTaxonomyPatternMapperTest$PatternCTests[m
+[[1;34mINFO[m] Running com.grl.component.mapper.[1mTaxonomyPatternMapperTest$PatternBTests[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m4[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.007 s -- in com.grl.component.mapper.[1mTaxonomyPatternMapperTest$PatternBTests[m
+[[1;34mINFO[m] Running com.grl.component.mapper.[1mTaxonomyPatternMapperTest$PatternATests[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m3[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.005 s -- in com.grl.component.mapper.[1mTaxonomyPatternMapperTest$PatternATests[m
+[[1;34mINFO[m] [1mTests run: [0;1m0[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.040 s -- in com.grl.component.mapper.[1mTaxonomyPatternMapperTest[m
+[[1;34mINFO[m] Running com.grl.component.mapper.[1mTaxonomyPropertyMapperTest[m
+[[1;34mINFO[m] Running com.grl.component.mapper.[1mTaxonomyPropertyMapperTest$NullRestrictions[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m1[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 s -- in com.grl.component.mapper.[1mTaxonomyPropertyMapperTest$NullRestrictions[m
+[[1;34mINFO[m] Running com.grl.component.mapper.[1mTaxonomyPropertyMapperTest$ArrayMetadata[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m3[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.004 s -- in com.grl.component.mapper.[1mTaxonomyPropertyMapperTest$ArrayMetadata[m
+[[1;34mINFO[m] Running com.grl.component.mapper.[1mTaxonomyPropertyMapperTest$RestrictionApplication[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m3[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.003 s -- in com.grl.component.mapper.[1mTaxonomyPropertyMapperTest$RestrictionApplication[m
+[[1;34mINFO[m] Running com.grl.component.mapper.[1mTaxonomyPropertyMapperTest$RequirednessHandling[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m4[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.007 s -- in com.grl.component.mapper.[1mTaxonomyPropertyMapperTest$RequirednessHandling[m
+[[1;34mINFO[m] Running com.grl.component.mapper.[1mTaxonomyPropertyMapperTest$ArrayGeneration[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m4[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.004 s -- in com.grl.component.mapper.[1mTaxonomyPropertyMapperTest$ArrayGeneration[m
+[[1;34mINFO[m] Running com.grl.component.mapper.[1mTaxonomyPropertyMapperTest$BasicSchemaGeneration[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m4[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.003 s -- in com.grl.component.mapper.[1mTaxonomyPropertyMapperTest$BasicSchemaGeneration[m
+[[1;34mINFO[m] [1mTests run: [0;1m0[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.027 s -- in com.grl.component.mapper.[1mTaxonomyPropertyMapperTest[m
+[[1;34mINFO[m] Running com.grl.component.schema.[1mSchemaVisitorTaxonomyDetectionTest[m
+[[1;34mINFO[m] Running com.grl.component.schema.[1mSchemaVisitorTaxonomyDetectionTest$NoPatternDetection[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m2[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.005 s -- in com.grl.component.schema.[1mSchemaVisitorTaxonomyDetectionTest$NoPatternDetection[m
+[[1;34mINFO[m] Running com.grl.component.schema.[1mSchemaVisitorTaxonomyDetectionTest$PatternDDetection[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m2[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.007 s -- in com.grl.component.schema.[1mSchemaVisitorTaxonomyDetectionTest$PatternDDetection[m
+[[1;34mINFO[m] Running com.grl.component.schema.[1mSchemaVisitorTaxonomyDetectionTest$PatternCDetection[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m3[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.009 s -- in com.grl.component.schema.[1mSchemaVisitorTaxonomyDetectionTest$PatternCDetection[m
+[[1;34mINFO[m] Running com.grl.component.schema.[1mSchemaVisitorTaxonomyDetectionTest$PatternBDetection[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m6[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.009 s -- in com.grl.component.schema.[1mSchemaVisitorTaxonomyDetectionTest$PatternBDetection[m
+[[1;34mINFO[m] Running com.grl.component.schema.[1mSchemaVisitorTaxonomyDetectionTest$PatternADetection[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m3[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.005 s -- in com.grl.component.schema.[1mSchemaVisitorTaxonomyDetectionTest$PatternADetection[m
+[[1;34mINFO[m] [1mTests run: [0;1m0[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.037 s -- in com.grl.component.schema.[1mSchemaVisitorTaxonomyDetectionTest[m
+[[1;34mINFO[m] Running com.grl.component.schema.[1mSchemaVisitorTest[m
+[[1;34mINFO[m] Running com.grl.component.schema.[1mSchemaVisitorTest$EdgeCases[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m5[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.005 s -- in com.grl.component.schema.[1mSchemaVisitorTest$EdgeCases[m
+[[1;34mINFO[m] Running com.grl.component.schema.[1mSchemaVisitorTest$UnmodifiableReturns[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m4[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.004 s -- in com.grl.component.schema.[1mSchemaVisitorTest$UnmodifiableReturns[m
+[[1;34mINFO[m] Running com.grl.component.schema.[1mSchemaVisitorTest$PropertyRanges[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m3[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.004 s -- in com.grl.component.schema.[1mSchemaVisitorTest$PropertyRanges[m
+[[1;34mINFO[m] Running com.grl.component.schema.[1mSchemaVisitorTest$HierarchyTraversal[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m2[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.003 s -- in com.grl.component.schema.[1mSchemaVisitorTest$HierarchyTraversal[m
+[[1;34mINFO[m] Running com.grl.component.schema.[1mSchemaVisitorTest$AdditionalDataRestrictions[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m3[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.005 s -- in com.grl.component.schema.[1mSchemaVisitorTest$AdditionalDataRestrictions[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m11[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.036 s -- in com.grl.component.schema.[1mSchemaVisitorTest[m
+[[1;34mINFO[m] Running com.grl.component.schema.[1mRestrictionInfoTest[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m15[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.007 s -- in com.grl.component.schema.[1mRestrictionInfoTest[m
+[[1;34mINFO[m] Running com.grl.component.schema.[1mPropertyNameResolverTest[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m9[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.003 s -- in com.grl.component.schema.[1mPropertyNameResolverTest[m
+[[1;34mINFO[m] Running com.grl.component.schema.[1mTaxonomyPatternDetectorTest[m
+[[1;34mINFO[m] Running com.grl.component.schema.[1mTaxonomyPatternDetectorTest$ConstructorTests[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m1[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 s -- in com.grl.component.schema.[1mTaxonomyPatternDetectorTest$ConstructorTests[m
+[[1;34mINFO[m] Running com.grl.component.schema.[1mTaxonomyPatternDetectorTest$NoPatternDetection[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m2[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 s -- in com.grl.component.schema.[1mTaxonomyPatternDetectorTest$NoPatternDetection[m
+[[1;34mINFO[m] Running com.grl.component.schema.[1mTaxonomyPatternDetectorTest$PatternDDetection[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m3[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.003 s -- in com.grl.component.schema.[1mTaxonomyPatternDetectorTest$PatternDDetection[m
+[[1;34mINFO[m] Running com.grl.component.schema.[1mTaxonomyPatternDetectorTest$PatternCDetection[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m4[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.005 s -- in com.grl.component.schema.[1mTaxonomyPatternDetectorTest$PatternCDetection[m
+[[1;34mINFO[m] Running com.grl.component.schema.[1mTaxonomyPatternDetectorTest$PatternBDetection[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m6[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.009 s -- in com.grl.component.schema.[1mTaxonomyPatternDetectorTest$PatternBDetection[m
+[[1;34mINFO[m] Running com.grl.component.schema.[1mTaxonomyPatternDetectorTest$PatternADetection[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m2[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.001 s -- in com.grl.component.schema.[1mTaxonomyPatternDetectorTest$PatternADetection[m
+[[1;34mINFO[m] [1mTests run: [0;1m0[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.025 s -- in com.grl.component.schema.[1mTaxonomyPatternDetectorTest[m
+[[1;34mINFO[m] Running com.grl.component.owl.[1mWithIRITest[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m11[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.004 s -- in com.grl.component.owl.[1mWithIRITest[m
+[[1;34mINFO[m] Running com.grl.component.owl.[1mNarrowTest[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m6[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.001 s -- in com.grl.component.owl.[1mNarrowTest[m
+[[1;34mINFO[m] Running com.grl.component.owl.[1mWithAnnotationTest[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m8[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.004 s -- in com.grl.component.owl.[1mWithAnnotationTest[m
+[[1;34mINFO[m] Running com.grl.component.owl.[1mOntologyUtilTest[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m9[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.008 s -- in com.grl.component.owl.[1mOntologyUtilTest[m
+[[1;34mINFO[m] Running com.grl.component.asg.[1mAsgTest[m
+log4j:WARN No appenders could be found for logger (org.jboss.logging).
+log4j:WARN Please initialize the log4j system properly.
+log4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more info.
+[2026-02-06 22:53:27] [SEVERE ] No content to map due to end-of-input
+ at [Source: (StringReader); line: 1, column: 1] 
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+WARNING: A Java agent has been loaded dynamically (/home/mike/.m2/repository/net/bytebuddy/byte-buddy-agent/1.14.12/byte-buddy-agent-1.14.12.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m2[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.855 s -- in com.grl.component.asg.[1mAsgTest[m
+[[1;34mINFO[m] Running com.grl.component.asg.configuration.[1mYamlConfigTest[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m2[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.030 s -- in com.grl.component.asg.configuration.[1mYamlConfigTest[m
+[[1;34mINFO[m] Running com.grl.component.asg.configuration.[1mConfigTest[m
+[2026-02-06 22:53:28] [SEVERE ] Name must be alphanumeric with underscores only: bad%name 
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m4[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.067 s -- in com.grl.component.asg.configuration.[1mConfigTest[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] Results:
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1;32mTests run: 250, Failures: 0, Errors: 0, Skipped: 0[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mjar:3.1.2:jar[m [1m(default-jar)[m @ [36masg[0;1m ---[m
+[[1;34mINFO[m] Building jar: /home/mike/grl/ASG/target/asg-1.0.0-SNAPSHOT.jar
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mshade:3.6.0:shade[m [1m(default)[m @ [36masg[0;1m ---[m
+[[1;34mINFO[m] Including org.slf4j:slf4j-jdk14:jar:2.0.13 in the shaded jar.
+[[1;34mINFO[m] Including org.slf4j:slf4j-api:jar:2.0.13 in the shaded jar.
+[[1;34mINFO[m] Including com.fasterxml.jackson.core:jackson-core:jar:2.18.0 in the shaded jar.
+[[1;34mINFO[m] Including com.fasterxml.jackson.core:jackson-databind:jar:2.18.0 in the shaded jar.
+[[1;34mINFO[m] Including com.fasterxml.jackson.core:jackson-annotations:jar:2.18.0 in the shaded jar.
+[[1;34mINFO[m] Including org.json:json:jar:20240303 in the shaded jar.
+[[1;34mINFO[m] Including edu.stanford.protege:org.protege.xmlcatalog:jar:1.0.5 in the shaded jar.
+[[1;34mINFO[m] Including log4j:log4j:jar:1.2.17 in the shaded jar.
+[[1;34mINFO[m] Including xml-resolver:xml-resolver:jar:1.2 in the shaded jar.
+[[1;34mINFO[m] Including net.sourceforge.owlapi:owlapi-osgidistribution:jar:5.1.20 in the shaded jar.
+[[1;34mINFO[m] Including com.google.code.findbugs:jsr305:jar:3.0.2 in the shaded jar.
+[[1;34mINFO[m] Including org.apache.commons:commons-rdf-api:jar:0.3.0-incubating in the shaded jar.
+[[1;34mINFO[m] Including org.tukaani:xz:jar:1.6 in the shaded jar.
+[[1;34mINFO[m] Including org.slf4j:jcl-over-slf4j:jar:1.7.30 in the shaded jar.
+[[1;34mINFO[m] Including org.eclipse.rdf4j:rdf4j-model:jar:3.7.4 in the shaded jar.
+[[1;34mINFO[m] Including org.eclipse.rdf4j:rdf4j-model-api:jar:3.7.4 in the shaded jar.
+[[1;34mINFO[m] Including org.eclipse.rdf4j:rdf4j-model-vocabulary:jar:3.7.4 in the shaded jar.
+[[1;34mINFO[m] Including org.eclipse.rdf4j:rdf4j-rio-api:jar:3.7.4 in the shaded jar.
+[[1;34mINFO[m] Including org.eclipse.rdf4j:rdf4j-rio-languages:jar:3.7.4 in the shaded jar.
+[[1;34mINFO[m] Including org.eclipse.rdf4j:rdf4j-rio-datatypes:jar:3.7.4 in the shaded jar.
+[[1;34mINFO[m] Including org.eclipse.rdf4j:rdf4j-rio-binary:jar:3.7.4 in the shaded jar.
+[[1;34mINFO[m] Including org.eclipse.rdf4j:rdf4j-rio-n3:jar:3.7.4 in the shaded jar.
+[[1;34mINFO[m] Including org.eclipse.rdf4j:rdf4j-rio-nquads:jar:3.7.4 in the shaded jar.
+[[1;34mINFO[m] Including org.eclipse.rdf4j:rdf4j-rio-ntriples:jar:3.7.4 in the shaded jar.
+[[1;34mINFO[m] Including org.eclipse.rdf4j:rdf4j-rio-rdfjson:jar:3.7.4 in the shaded jar.
+[[1;34mINFO[m] Including org.eclipse.rdf4j:rdf4j-rio-jsonld:jar:3.7.4 in the shaded jar.
+[[1;34mINFO[m] Including org.eclipse.rdf4j:rdf4j-rio-rdfxml:jar:3.7.4 in the shaded jar.
+[[1;34mINFO[m] Including org.eclipse.rdf4j:rdf4j-rio-trix:jar:3.7.4 in the shaded jar.
+[[1;34mINFO[m] Including org.eclipse.rdf4j:rdf4j-rio-turtle:jar:3.7.4 in the shaded jar.
+[[1;34mINFO[m] Including org.eclipse.rdf4j:rdf4j-rio-trig:jar:3.7.4 in the shaded jar.
+[[1;34mINFO[m] Including org.eclipse.rdf4j:rdf4j-rio-hdt:jar:3.7.4 in the shaded jar.
+[[1;34mINFO[m] Including org.eclipse.rdf4j:rdf4j-util:jar:3.7.4 in the shaded jar.
+[[1;34mINFO[m] Including com.github.jsonld-java:jsonld-java:jar:0.13.0 in the shaded jar.
+[[1;34mINFO[m] Including org.apache.httpcomponents:httpclient-osgi:jar:4.5.10 in the shaded jar.
+[[1;34mINFO[m] Including org.apache.httpcomponents:httpmime:jar:4.5.10 in the shaded jar.
+[[1;34mINFO[m] Including org.apache.httpcomponents:fluent-hc:jar:4.5.10 in the shaded jar.
+[[1;34mINFO[m] Including org.apache.httpcomponents:httpcore-osgi:jar:4.4.12 in the shaded jar.
+[[1;34mINFO[m] Including org.apache.httpcomponents:httpcore-nio:jar:4.4.12 in the shaded jar.
+[[1;34mINFO[m] Including org.apache.httpcomponents:httpclient:jar:4.5.13 in the shaded jar.
+[[1;34mINFO[m] Including org.apache.httpcomponents:httpclient-cache:jar:4.5.13 in the shaded jar.
+[[1;34mINFO[m] Including org.apache.httpcomponents:httpcore:jar:4.4.5 in the shaded jar.
+[[1;34mINFO[m] Including commons-codec:commons-codec:jar:1.10 in the shaded jar.
+[[1;34mINFO[m] Including commons-logging:commons-logging:jar:1.2 in the shaded jar.
+[[1;34mINFO[m] Including commons-io:commons-io:jar:2.7 in the shaded jar.
+[[1;34mINFO[m] Including com.github.vsonnier:hppcrt:jar:0.7.5 in the shaded jar.
+[[1;34mINFO[m] Including com.github.ben-manes.caffeine:caffeine:jar:2.8.6 in the shaded jar.
+[[1;34mINFO[m] Including org.apache.servicemix.bundles:org.apache.servicemix.bundles.javax-inject:jar:1_2 in the shaded jar.
+[[1;34mINFO[m] Including net.sourceforge.owlapi:owlapi-api:jar:5.1.20 in the shaded jar.
+[[1;34mINFO[m] Including javax.inject:javax.inject:jar:1 in the shaded jar.
+[[1;34mINFO[m] Including net.sourceforge.owlapi:owlapi-apibinding:jar:5.1.20 in the shaded jar.
+[[1;34mINFO[m] Including net.sourceforge.owlapi:owlapi-impl:jar:5.1.20 in the shaded jar.
+[[1;34mINFO[m] Including net.sourceforge.owlapi:owlapi-parsers:jar:5.1.20 in the shaded jar.
+[[1;34mINFO[m] Including net.sourceforge.owlapi:owlapi-oboformat:jar:5.1.20 in the shaded jar.
+[[1;34mINFO[m] Including net.sourceforge.owlapi:owlapi-tools:jar:5.1.20 in the shaded jar.
+[[1;34mINFO[m] Including net.sourceforge.owlapi:owlapi-rio:jar:5.1.20 in the shaded jar.
+[[1;34mINFO[m] Including net.sourceforge.owlapi:owlapi-compatibility:jar:5.1.20 in the shaded jar.
+[[1;34mINFO[m] Including org.openapitools:openapi-generator:jar:7.8.0 in the shaded jar.
+[[1;34mINFO[m] Including io.swagger.parser.v3:swagger-parser:jar:2.1.22 in the shaded jar.
+[[1;34mINFO[m] Including io.swagger.parser.v3:swagger-parser-v2-converter:jar:2.1.22 in the shaded jar.
+[[1;34mINFO[m] Including io.swagger:swagger-core:jar:1.6.14 in the shaded jar.
+[[1;34mINFO[m] Including io.swagger:swagger-models:jar:1.6.14 in the shaded jar.
+[[1;34mINFO[m] Including io.swagger:swagger-annotations:jar:1.6.14 in the shaded jar.
+[[1;34mINFO[m] Including io.swagger:swagger-parser:jar:1.0.70 in the shaded jar.
+[[1;34mINFO[m] Including io.swagger:swagger-parser-safe-url-resolver:jar:1.0.70 in the shaded jar.
+[[1;34mINFO[m] Including io.swagger:swagger-compat-spec-parser:jar:1.0.70 in the shaded jar.
+[[1;34mINFO[m] Including com.github.java-json-tools:json-patch:jar:1.13 in the shaded jar.
+[[1;34mINFO[m] Including io.swagger.parser.v3:swagger-parser-core:jar:2.1.22 in the shaded jar.
+[[1;34mINFO[m] Including io.swagger.parser.v3:swagger-parser-v3:jar:2.1.22 in the shaded jar.
+[[1;34mINFO[m] Including io.swagger.core.v3:swagger-core:jar:2.2.21 in the shaded jar.
+[[1;34mINFO[m] Including com.fasterxml.jackson.datatype:jackson-datatype-jsr310:jar:2.16.2 in the shaded jar.
+[[1;34mINFO[m] Including io.swagger.parser.v3:swagger-parser-safe-url-resolver:jar:2.1.22 in the shaded jar.
+[[1;34mINFO[m] Including org.yaml:snakeyaml:jar:2.2 in the shaded jar.
+[[1;34mINFO[m] Including com.samskivert:jmustache:jar:1.15 in the shaded jar.
+[[1;34mINFO[m] Including com.github.jknack:handlebars:jar:4.3.1 in the shaded jar.
+[[1;34mINFO[m] Including com.github.jknack:handlebars-jackson2:jar:4.3.1 in the shaded jar.
+[[1;34mINFO[m] Including org.slf4j:slf4j-ext:jar:1.7.36 in the shaded jar.
+[[1;34mINFO[m] Including org.slf4j:slf4j-simple:jar:1.7.36 in the shaded jar.
+[[1;34mINFO[m] Including org.apache.maven.resolver:maven-resolver-util:jar:1.9.18 in the shaded jar.
+[[1;34mINFO[m] Including org.apache.maven.resolver:maven-resolver-api:jar:1.9.18 in the shaded jar.
+[[1;34mINFO[m] Including com.fasterxml.jackson.datatype:jackson-datatype-guava:jar:2.17.1 in the shaded jar.
+[[1;34mINFO[m] Including org.commonmark:commonmark:jar:0.21.0 in the shaded jar.
+[[1;34mINFO[m] Including com.github.mifmif:generex:jar:1.0.2 in the shaded jar.
+[[1;34mINFO[m] Including dk.brics.automaton:automaton:jar:1.11-8 in the shaded jar.
+[[1;34mINFO[m] Including com.github.curious-odd-man:rgxgen:jar:1.4 in the shaded jar.
+[[1;34mINFO[m] Including com.fasterxml.jackson.datatype:jackson-datatype-joda:jar:2.17.1 in the shaded jar.
+[[1;34mINFO[m] Including joda-time:joda-time:jar:2.10.14 in the shaded jar.
+[[1;34mINFO[m] Including com.github.joschi.jackson:jackson-datatype-threetenbp:jar:2.15.2 in the shaded jar.
+[[1;34mINFO[m] Including org.threeten:threetenbp:jar:1.6.8 in the shaded jar.
+[[1;34mINFO[m] Including org.openapitools:openapi-generator-core:jar:7.8.0 in the shaded jar.
+[[1;34mINFO[m] Including net.java.dev.jna:jna:jar:5.12.1 in the shaded jar.
+[[1;34mINFO[m] Including org.projectlombok:lombok:jar:1.18.30 in the shaded jar.
+[[1;34mINFO[m] Including org.apache.maven.plugins:maven-dependency-plugin:jar:3.7.0 in the shaded jar.
+[[1;34mINFO[m] Including org.apache.maven.doxia:doxia-sink-api:jar:1.12.0 in the shaded jar.
+[[1;34mINFO[m] Including org.apache.maven.doxia:doxia-logging-api:jar:1.12.0 in the shaded jar.
+[[1;34mINFO[m] Including org.apache.maven.reporting:maven-reporting-api:jar:3.1.1 in the shaded jar.
+[[1;34mINFO[m] Including org.apache.maven.reporting:maven-reporting-impl:jar:3.2.0 in the shaded jar.
+[[1;34mINFO[m] Including org.apache.maven.doxia:doxia-decoration-model:jar:1.11.1 in the shaded jar.
+[[1;34mINFO[m] Including org.apache.maven.doxia:doxia-core:jar:1.11.1 in the shaded jar.
+[[1;34mINFO[m] Including org.apache.maven.doxia:doxia-integration-tools:jar:1.11.1 in the shaded jar.
+[[1;34mINFO[m] Including org.codehaus.plexus:plexus-interpolation:jar:1.26 in the shaded jar.
+[[1;34mINFO[m] Including org.apache.maven.doxia:doxia-site-renderer:jar:1.11.1 in the shaded jar.
+[[1;34mINFO[m] Including org.apache.maven.doxia:doxia-skin-model:jar:1.11.1 in the shaded jar.
+[[1;34mINFO[m] Including org.apache.maven.doxia:doxia-module-xhtml:jar:1.11.1 in the shaded jar.
+[[1;34mINFO[m] Including org.apache.maven.doxia:doxia-module-xhtml5:jar:1.11.1 in the shaded jar.
+[[1;34mINFO[m] Including org.codehaus.plexus:plexus-velocity:jar:1.2 in the shaded jar.
+[[1;34mINFO[m] Including org.apache.velocity:velocity:jar:1.7 in the shaded jar.
+[[1;34mINFO[m] Including commons-lang:commons-lang:jar:2.4 in the shaded jar.
+[[1;34mINFO[m] Including org.apache.velocity:velocity-tools:jar:2.0 in the shaded jar.
+[[1;34mINFO[m] Including commons-beanutils:commons-beanutils:jar:1.7.0 in the shaded jar.
+[[1;34mINFO[m] Including commons-digester:commons-digester:jar:1.8 in the shaded jar.
+[[1;34mINFO[m] Including commons-chain:commons-chain:jar:1.1 in the shaded jar.
+[[1;34mINFO[m] Including dom4j:dom4j:jar:1.1 in the shaded jar.
+[[1;34mINFO[m] Including oro:oro:jar:2.0.8 in the shaded jar.
+[[1;34mINFO[m] Including commons-collections:commons-collections:jar:3.2.2 in the shaded jar.
+[[1;34mINFO[m] Including org.codehaus.plexus:plexus-archiver:jar:4.9.2 in the shaded jar.
+[[1;34mINFO[m] Including org.apache.commons:commons-compress:jar:1.26.1 in the shaded jar.
+[[1;34mINFO[m] Including org.iq80.snappy:snappy:jar:0.4 in the shaded jar.
+[[1;34mINFO[m] Including com.github.luben:zstd-jni:jar:1.5.5-11 in the shaded jar.
+[[1;34mINFO[m] Including org.codehaus.plexus:plexus-utils:jar:4.0.1 in the shaded jar.
+[[1;34mINFO[m] Including org.codehaus.plexus:plexus-xml:jar:3.0.0 in the shaded jar.
+[[1;34mINFO[m] Including org.codehaus.plexus:plexus-io:jar:3.4.2 in the shaded jar.
+[[1;34mINFO[m] Including org.codehaus.plexus:plexus-i18n:jar:1.0-beta-10 in the shaded jar.
+[[1;34mINFO[m] Including org.apache.maven.shared:maven-dependency-analyzer:jar:1.14.1 in the shaded jar.
+[[1;34mINFO[m] Including org.ow2.asm:asm:jar:9.7 in the shaded jar.
+[[1;34mINFO[m] Including org.apache.maven.shared:maven-dependency-tree:jar:3.3.0 in the shaded jar.
+[[1;34mINFO[m] Including org.apache.maven.shared:maven-common-artifact-filters:jar:3.3.2 in the shaded jar.
+[[1;34mINFO[m] Including org.apache.maven.shared:maven-artifact-transfer:jar:0.13.1 in the shaded jar.
+[[1;34mINFO[m] Including org.codehaus.plexus:plexus-component-annotations:jar:2.0.0 in the shaded jar.
+[[1;34mINFO[m] Including org.apache.maven.shared:maven-shared-utils:jar:3.4.2 in the shaded jar.
+[[1;34mINFO[m] Including org.sonatype.plexus:plexus-build-api:jar:0.0.7 in the shaded jar.
+[[1;34mINFO[m] Including commons-cli:commons-cli:jar:1.5.0 in the shaded jar.
+[[1;34mINFO[m] Including com.google.guava:guava:jar:33.2.1-jre in the shaded jar.
+[[1;34mINFO[m] Including com.google.guava:failureaccess:jar:1.0.2 in the shaded jar.
+[[1;34mINFO[m] Including com.google.guava:listenablefuture:jar:9999.0-empty-to-avoid-conflict-with-guava in the shaded jar.
+[[1;34mINFO[m] Including org.checkerframework:checker-qual:jar:3.42.0 in the shaded jar.
+[[1;34mINFO[m] Including com.google.errorprone:error_prone_annotations:jar:2.26.1 in the shaded jar.
+[[1;34mINFO[m] Including com.google.j2objc:j2objc-annotations:jar:3.0.0 in the shaded jar.
+[[1;34mINFO[m] Including org.apache.commons:commons-lang3:jar:3.17.0 in the shaded jar.
+[[1;34mINFO[m] Including org.apache.commons:commons-text:jar:1.12.0 in the shaded jar.
+[[1;34mINFO[m] Including com.jayway.jsonpath:json-path:jar:2.9.0 in the shaded jar.
+[[1;34mINFO[m] Including net.minidev:json-smart:jar:2.5.0 in the shaded jar.
+[[1;34mINFO[m] Including net.minidev:accessors-smart:jar:2.5.0 in the shaded jar.
+[[1;34mINFO[m] Including io.swagger:swagger-inflector:jar:2.0.12 in the shaded jar.
+[[1;34mINFO[m] Including io.swagger.core.v3:swagger-jaxrs2:jar:2.2.21 in the shaded jar.
+[[1;34mINFO[m] Including io.github.classgraph:classgraph:jar:4.8.165 in the shaded jar.
+[[1;34mINFO[m] Including org.javassist:javassist:jar:3.30.2-GA in the shaded jar.
+[[1;34mINFO[m] Including io.swagger.core.v3:swagger-models:jar:2.2.21 in the shaded jar.
+[[1;34mINFO[m] Including io.swagger.core.v3:swagger-annotations:jar:2.2.21 in the shaded jar.
+[[1;34mINFO[m] Including io.swagger.core.v3:swagger-integration:jar:2.2.21 in the shaded jar.
+[[1;34mINFO[m] Including org.glassfish.jersey.inject:jersey-hk2:jar:2.42 in the shaded jar.
+[[1;34mINFO[m] Including org.glassfish.jersey.core:jersey-common:jar:2.42 in the shaded jar.
+[[1;34mINFO[m] Including org.glassfish.hk2:osgi-resource-locator:jar:1.0.3 in the shaded jar.
+[[1;34mINFO[m] Including org.glassfish.hk2:hk2-locator:jar:2.6.1 in the shaded jar.
+[[1;34mINFO[m] Including org.glassfish.hk2.external:aopalliance-repackaged:jar:2.6.1 in the shaded jar.
+[[1;34mINFO[m] Including org.glassfish.hk2:hk2-api:jar:2.6.1 in the shaded jar.
+[[1;34mINFO[m] Including org.glassfish.hk2:hk2-utils:jar:2.6.1 in the shaded jar.
+[[1;34mINFO[m] Including org.glassfish.jersey.core:jersey-server:jar:2.42 in the shaded jar.
+[[1;34mINFO[m] Including jakarta.ws.rs:jakarta.ws.rs-api:jar:2.1.6 in the shaded jar.
+[[1;34mINFO[m] Including jakarta.annotation:jakarta.annotation-api:jar:1.3.5 in the shaded jar.
+[[1;34mINFO[m] Including org.glassfish.hk2.external:jakarta.inject:jar:2.6.1 in the shaded jar.
+[[1;34mINFO[m] Including org.glassfish.jersey.containers:jersey-container-servlet-core:jar:2.42 in the shaded jar.
+[[1;34mINFO[m] Including org.glassfish.jersey.media:jersey-media-multipart:jar:2.42 in the shaded jar.
+[[1;34mINFO[m] Including org.jvnet.mimepull:mimepull:jar:1.9.15 in the shaded jar.
+[[1;34mINFO[m] Including org.glassfish.jersey.core:jersey-client:jar:2.42 in the shaded jar.
+[[1;34mINFO[m] Including ch.qos.logback:logback-core:jar:1.5.3 in the shaded jar.
+[[1;34mINFO[m] Including org.apache.commons:commons-csv:jar:1.10.0 in the shaded jar.
+[[1;34mINFO[m] Including com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:jar:2.17.0 in the shaded jar.
+[[1;34mINFO[m] Including com.fasterxml.jackson.jaxrs:jackson-jaxrs-base:jar:2.17.0 in the shaded jar.
+[[1;34mINFO[m] Including com.fasterxml.jackson.module:jackson-module-jaxb-annotations:jar:2.17.0 in the shaded jar.
+[[1;34mINFO[m] Including jakarta.xml.bind:jakarta.xml.bind-api:jar:2.3.3 in the shaded jar.
+[[1;34mINFO[m] Including jakarta.activation:jakarta.activation-api:jar:1.2.2 in the shaded jar.
+[[1;34mINFO[m] Including com.fasterxml.jackson.jaxrs:jackson-jaxrs-yaml-provider:jar:2.17.0 in the shaded jar.
+[[1;34mINFO[m] Including com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:jar:2.17.0 in the shaded jar.
+[[1;34mINFO[m] Including com.fasterxml.jackson.jaxrs:jackson-jaxrs-xml-provider:jar:2.17.0 in the shaded jar.
+[[1;34mINFO[m] Including com.fasterxml.jackson.dataformat:jackson-dataformat-xml:jar:2.17.0 in the shaded jar.
+[[1;34mINFO[m] Including org.codehaus.woodstox:stax2-api:jar:4.2.2 in the shaded jar.
+[[1;34mINFO[m] Including com.fasterxml.woodstox:woodstox-core:jar:6.6.1 in the shaded jar.
+[[1;34mINFO[m] Including com.github.java-json-tools:json-schema-validator:jar:2.2.14 in the shaded jar.
+[[1;34mINFO[m] Including com.github.java-json-tools:jackson-coreutils-equivalence:jar:1.0 in the shaded jar.
+[[1;34mINFO[m] Including com.github.java-json-tools:jackson-coreutils:jar:2.0 in the shaded jar.
+[[1;34mINFO[m] Including com.github.java-json-tools:msg-simple:jar:1.2 in the shaded jar.
+[[1;34mINFO[m] Including com.github.java-json-tools:btf:jar:1.3 in the shaded jar.
+[[1;34mINFO[m] Including com.github.java-json-tools:json-schema-core:jar:1.2.14 in the shaded jar.
+[[1;34mINFO[m] Including com.github.java-json-tools:uri-template:jar:0.10 in the shaded jar.
+[[1;34mINFO[m] Including org.mozilla:rhino:jar:1.7.7.2 in the shaded jar.
+[[1;34mINFO[m] Including com.sun.mail:mailapi:jar:1.6.2 in the shaded jar.
+[[1;34mINFO[m] Including com.googlecode.libphonenumber:libphonenumber:jar:8.11.1 in the shaded jar.
+[[1;34mINFO[m] Including net.sf.jopt-simple:jopt-simple:jar:5.0.4 in the shaded jar.
+[[1;34mINFO[m] Including commons-fileupload:commons-fileupload:jar:1.5 in the shaded jar.
+[[1;34mINFO[m] Including org.hibernate.validator:hibernate-validator:jar:8.0.2.Final in the shaded jar.
+[[1;34mINFO[m] Including jakarta.validation:jakarta.validation-api:jar:3.0.2 in the shaded jar.
+[[1;34mINFO[m] Including com.fasterxml:classmate:jar:1.5.1 in the shaded jar.
+[[1;34mINFO[m] Including org.glassfish.expressly:expressly:jar:6.0.0 in the shaded jar.
+[[1;34mINFO[m] Including jakarta.el:jakarta.el-api:jar:6.0.1 in the shaded jar.
+[[1;34mINFO[m] Including org.jboss.logging:jboss-logging:jar:3.6.1.Final in the shaded jar.
+[[1;33mWARNING[m] Discovered module-info.class. Shading will break its strong encapsulation.
+[[1;33mWARNING[m] Discovered module-info.class. Shading will break its strong encapsulation.
+[[1;33mWARNING[m] Discovered module-info.class. Shading will break its strong encapsulation.
+[[1;33mWARNING[m] Discovered module-info.class. Shading will break its strong encapsulation.
+[[1;33mWARNING[m] Discovered module-info.class. Shading will break its strong encapsulation.
+[[1;33mWARNING[m] Discovered module-info.class. Shading will break its strong encapsulation.
+[[1;33mWARNING[m] Discovered module-info.class. Shading will break its strong encapsulation.
+[[1;33mWARNING[m] Discovered module-info.class. Shading will break its strong encapsulation.
+[[1;33mWARNING[m] Discovered module-info.class. Shading will break its strong encapsulation.
+[[1;33mWARNING[m] Discovered module-info.class. Shading will break its strong encapsulation.
+[[1;33mWARNING[m] Discovered module-info.class. Shading will break its strong encapsulation.
+[[1;33mWARNING[m] Discovered module-info.class. Shading will break its strong encapsulation.
+[[1;33mWARNING[m] Discovered module-info.class. Shading will break its strong encapsulation.
+[[1;33mWARNING[m] Discovered module-info.class. Shading will break its strong encapsulation.
+[[1;33mWARNING[m] Discovered module-info.class. Shading will break its strong encapsulation.
+[[1;33mWARNING[m] Discovered module-info.class. Shading will break its strong encapsulation.
+[[1;33mWARNING[m] httpcore-4.4.5.jar, httpcore-osgi-4.4.12.jar define 255 overlapping classes and resources: 
+[[1;33mWARNING[m]   - META-INF/maven/org.apache.httpcomponents/httpcore/pom.properties
+[[1;33mWARNING[m]   - META-INF/maven/org.apache.httpcomponents/httpcore/pom.xml
+[[1;33mWARNING[m]   - org.apache.http.ConnectionClosedException
+[[1;33mWARNING[m]   - org.apache.http.ConnectionReuseStrategy
+[[1;33mWARNING[m]   - org.apache.http.Consts
+[[1;33mWARNING[m]   - org.apache.http.ContentTooLongException
+[[1;33mWARNING[m]   - org.apache.http.ExceptionLogger
+[[1;33mWARNING[m]   - org.apache.http.ExceptionLogger$1
+[[1;33mWARNING[m]   - org.apache.http.ExceptionLogger$2
+[[1;33mWARNING[m]   - org.apache.http.FormattedHeader
+[[1;33mWARNING[m]   - 245 more...
+[[1;33mWARNING[m] jersey-common-2.42.jar, jersey-server-2.42.jar define 1 overlapping resource: 
+[[1;33mWARNING[m]   - META-INF/NOTICE.markdown
+[[1;33mWARNING[m] jakarta.inject-2.6.1.jar, javax.inject-1.jar, org.apache.servicemix.bundles.javax-inject-1_2.jar define 6 overlapping classes: 
+[[1;33mWARNING[m]   - javax.inject.Inject
+[[1;33mWARNING[m]   - javax.inject.Named
+[[1;33mWARNING[m]   - javax.inject.Provider
+[[1;33mWARNING[m]   - javax.inject.Qualifier
+[[1;33mWARNING[m]   - javax.inject.Scope
+[[1;33mWARNING[m]   - javax.inject.Singleton
+[[1;33mWARNING[m] commons-beanutils-1.7.0.jar, commons-collections-3.2.2.jar define 10 overlapping classes: 
+[[1;33mWARNING[m]   - org.apache.commons.collections.ArrayStack
+[[1;33mWARNING[m]   - org.apache.commons.collections.Buffer
+[[1;33mWARNING[m]   - org.apache.commons.collections.BufferUnderflowException
+[[1;33mWARNING[m]   - org.apache.commons.collections.FastHashMap
+[[1;33mWARNING[m]   - org.apache.commons.collections.FastHashMap$1
+[[1;33mWARNING[m]   - org.apache.commons.collections.FastHashMap$CollectionView
+[[1;33mWARNING[m]   - org.apache.commons.collections.FastHashMap$CollectionView$CollectionViewIterator
+[[1;33mWARNING[m]   - org.apache.commons.collections.FastHashMap$EntrySet
+[[1;33mWARNING[m]   - org.apache.commons.collections.FastHashMap$KeySet
+[[1;33mWARNING[m]   - org.apache.commons.collections.FastHashMap$Values
+[[1;33mWARNING[m] btf-1.3.jar, caffeine-2.8.6.jar, classmate-1.5.1.jar, commons-rdf-api-0.3.0-incubating.jar, doxia-core-1.11.1.jar, doxia-decoration-model-1.11.1.jar, doxia-integration-tools-1.11.1.jar, doxia-logging-api-1.12.0.jar, doxia-module-xhtml-1.11.1.jar, doxia-module-xhtml5-1.11.1.jar, doxia-sink-api-1.12.0.jar, doxia-site-renderer-1.11.1.jar, doxia-skin-model-1.11.1.jar, fluent-hc-4.5.10.jar, guava-33.2.1-jre.jar, httpclient-4.5.13.jar, httpclient-cache-4.5.13.jar, httpclient-osgi-4.5.10.jar, httpcore-4.4.5.jar, httpcore-nio-4.4.12.jar, httpcore-osgi-4.4.12.jar, httpmime-4.5.10.jar, jackson-annotations-2.18.0.jar, jackson-core-2.18.0.jar, jackson-coreutils-2.0.jar, jackson-databind-2.18.0.jar, jackson-dataformat-xml-2.17.0.jar, jackson-dataformat-yaml-2.17.0.jar, jackson-datatype-guava-2.17.1.jar, jackson-datatype-joda-2.17.1.jar, jackson-datatype-jsr310-2.16.2.jar, jackson-datatype-threetenbp-2.15.2.jar, jackson-jaxrs-base-2.17.0.jar, jackson-jaxrs-json-provider-2.17.0.jar, jackson-jaxrs-xml-provider-2.17.0.jar, jackson-jaxrs-yaml-provider-2.17.0.jar, jackson-module-jaxb-annotations-2.17.0.jar, jna-5.12.1.jar, json-patch-1.13.jar, json-schema-core-1.2.14.jar, json-schema-validator-2.2.14.jar, log4j-1.2.17.jar, maven-artifact-transfer-0.13.1.jar, maven-common-artifact-filters-3.3.2.jar, maven-dependency-analyzer-1.14.1.jar, maven-dependency-plugin-3.7.0.jar, maven-dependency-tree-3.3.0.jar, maven-reporting-api-3.1.1.jar, maven-reporting-impl-3.2.0.jar, maven-resolver-api-1.9.18.jar, maven-resolver-util-1.9.18.jar, maven-shared-utils-3.4.2.jar, msg-simple-1.2.jar, org.apache.servicemix.bundles.javax-inject-1_2.jar, oro-2.0.8.jar, plexus-utils-4.0.1.jar, plexus-xml-3.0.0.jar, stax2-api-4.2.2.jar, swagger-annotations-2.2.21.jar, swagger-core-2.2.21.jar, swagger-integration-2.2.21.jar, swagger-jaxrs2-2.2.21.jar, swagger-models-2.2.21.jar, uri-template-0.10.jar, velocity-1.7.jar, velocity-tools-2.0.jar, woodstox-core-6.6.1.jar define 1 overlapping resource: 
+[[1;33mWARNING[m]   - META-INF/LICENSE
+[[1;33mWARNING[m] swagger-parser-safe-url-resolver-1.0.70.jar, swagger-parser-safe-url-resolver-2.1.22.jar define 5 overlapping classes: 
+[[1;33mWARNING[m]   - io.swagger.v3.parser.urlresolver.PermittedUrlsChecker
+[[1;33mWARNING[m]   - io.swagger.v3.parser.urlresolver.exceptions.HostDeniedException
+[[1;33mWARNING[m]   - io.swagger.v3.parser.urlresolver.matchers.UrlPatternMatcher
+[[1;33mWARNING[m]   - io.swagger.v3.parser.urlresolver.models.ResolvedUrl
+[[1;33mWARNING[m]   - io.swagger.v3.parser.urlresolver.utils.NetUtils
+[[1;33mWARNING[m] maven-artifact-transfer-0.13.1.jar, maven-resolver-util-1.9.18.jar define 10 overlapping classes: 
+[[1;33mWARNING[m]   - org.eclipse.aether.util.artifact.SubArtifact
+[[1;33mWARNING[m]   - org.eclipse.aether.util.filter.AbstractPatternDependencyFilter
+[[1;33mWARNING[m]   - org.eclipse.aether.util.filter.AndDependencyFilter
+[[1;33mWARNING[m]   - org.eclipse.aether.util.filter.DependencyFilterUtils
+[[1;33mWARNING[m]   - org.eclipse.aether.util.filter.ExclusionsDependencyFilter
+[[1;33mWARNING[m]   - org.eclipse.aether.util.filter.NotDependencyFilter
+[[1;33mWARNING[m]   - org.eclipse.aether.util.filter.OrDependencyFilter
+[[1;33mWARNING[m]   - org.eclipse.aether.util.filter.PatternExclusionsDependencyFilter
+[[1;33mWARNING[m]   - org.eclipse.aether.util.filter.PatternInclusionsDependencyFilter
+[[1;33mWARNING[m]   - org.eclipse.aether.util.filter.ScopeDependencyFilter
+[[1;33mWARNING[m] checker-qual-3.42.0.jar, commonmark-0.21.0.jar, commons-beanutils-1.7.0.jar, commons-chain-1.1.jar, commons-cli-1.5.0.jar, commons-codec-1.10.jar, commons-collections-3.2.2.jar, commons-compress-1.26.1.jar, commons-csv-1.10.0.jar, commons-digester-1.8.jar, commons-fileupload-1.5.jar, commons-io-2.7.jar, commons-lang-2.4.jar, commons-lang3-3.17.0.jar, commons-logging-1.2.jar, commons-text-1.12.0.jar, handlebars-4.3.1.jar, httpclient-osgi-4.5.10.jar, joda-time-2.10.14.jar, mailapi-1.6.2.jar, slf4j-api-2.0.13.jar, slf4j-jdk14-2.0.13.jar, threetenbp-1.6.8.jar define 1 overlapping resource: 
+[[1;33mWARNING[m]   - META-INF/LICENSE.txt
+[[1;33mWARNING[m] httpclient-osgi-4.5.10.jar, httpmime-4.5.10.jar define 26 overlapping classes and resources: 
+[[1;33mWARNING[m]   - META-INF/maven/org.apache.httpcomponents/httpmime/pom.properties
+[[1;33mWARNING[m]   - META-INF/maven/org.apache.httpcomponents/httpmime/pom.xml
+[[1;33mWARNING[m]   - org.apache.http.entity.mime.AbstractMultipartForm
+[[1;33mWARNING[m]   - org.apache.http.entity.mime.FormBodyPart
+[[1;33mWARNING[m]   - org.apache.http.entity.mime.FormBodyPartBuilder
+[[1;33mWARNING[m]   - org.apache.http.entity.mime.Header
+[[1;33mWARNING[m]   - org.apache.http.entity.mime.HttpBrowserCompatibleMultipart
+[[1;33mWARNING[m]   - org.apache.http.entity.mime.HttpMultipart
+[[1;33mWARNING[m]   - org.apache.http.entity.mime.HttpMultipart$1
+[[1;33mWARNING[m]   - org.apache.http.entity.mime.HttpMultipartMode
+[[1;33mWARNING[m]   - 16 more...
+[[1;33mWARNING[m] httpcore-nio-4.4.12.jar, httpcore-osgi-4.4.12.jar define 244 overlapping classes and resources: 
+[[1;33mWARNING[m]   - META-INF/maven/org.apache.httpcomponents/httpcore-nio/pom.properties
+[[1;33mWARNING[m]   - META-INF/maven/org.apache.httpcomponents/httpcore-nio/pom.xml
+[[1;33mWARNING[m]   - org.apache.http.impl.nio.DefaultClientIOEventDispatch
+[[1;33mWARNING[m]   - org.apache.http.impl.nio.DefaultHttpClientIODispatch
+[[1;33mWARNING[m]   - org.apache.http.impl.nio.DefaultHttpServerIODispatch
+[[1;33mWARNING[m]   - org.apache.http.impl.nio.DefaultNHttpClientConnection
+[[1;33mWARNING[m]   - org.apache.http.impl.nio.DefaultNHttpClientConnectionFactory
+[[1;33mWARNING[m]   - org.apache.http.impl.nio.DefaultNHttpServerConnection
+[[1;33mWARNING[m]   - org.apache.http.impl.nio.DefaultNHttpServerConnectionFactory
+[[1;33mWARNING[m]   - org.apache.http.impl.nio.DefaultServerIOEventDispatch
+[[1;33mWARNING[m]   - 234 more...
+[[1;33mWARNING[m] maven-dependency-analyzer-1.14.1.jar, maven-dependency-plugin-3.7.0.jar, maven-dependency-tree-3.3.0.jar, plexus-archiver-4.9.2.jar, plexus-io-3.4.2.jar define 1 overlapping resource: 
+[[1;33mWARNING[m]   - META-INF/sisu/javax.inject.Named
+[[1;33mWARNING[m] commons-text-1.12.0.jar, handlebars-4.3.1.jar define 2 overlapping resources: 
+[[1;33mWARNING[m]   - META-INF/maven/org.apache.commons/commons-text/pom.properties
+[[1;33mWARNING[m]   - META-INF/maven/org.apache.commons/commons-text/pom.xml
+[[1;33mWARNING[m] json-schema-core-1.2.14.jar, json-schema-validator-2.2.14.jar define 2 overlapping resources: 
+[[1;33mWARNING[m]   - draftv3/schema
+[[1;33mWARNING[m]   - draftv4/schema
+[[1;33mWARNING[m] commons-codec-1.10.jar, httpclient-osgi-4.5.10.jar define 222 overlapping classes and resources: 
+[[1;33mWARNING[m]   - META-INF/maven/commons-codec/commons-codec/pom.properties
+[[1;33mWARNING[m]   - META-INF/maven/commons-codec/commons-codec/pom.xml
+[[1;33mWARNING[m]   - org.apache.commons.codec.BinaryDecoder
+[[1;33mWARNING[m]   - org.apache.commons.codec.BinaryEncoder
+[[1;33mWARNING[m]   - org.apache.commons.codec.CharEncoding
+[[1;33mWARNING[m]   - org.apache.commons.codec.Charsets
+[[1;33mWARNING[m]   - org.apache.commons.codec.Decoder
+[[1;33mWARNING[m]   - org.apache.commons.codec.DecoderException
+[[1;33mWARNING[m]   - org.apache.commons.codec.Encoder
+[[1;33mWARNING[m]   - org.apache.commons.codec.EncoderException
+[[1;33mWARNING[m]   - 212 more...
+[[1;33mWARNING[m] owlapi-apibinding-5.1.20.jar, owlapi-osgidistribution-5.1.20.jar define 6 overlapping classes and resources: 
+[[1;33mWARNING[m]   - META-INF/maven/net.sourceforge.owlapi/owlapi-apibinding/pom.properties
+[[1;33mWARNING[m]   - META-INF/maven/net.sourceforge.owlapi/owlapi-apibinding/pom.xml
+[[1;33mWARNING[m]   - org.semanticweb.owlapi.apibinding.OWLFunctionalSyntaxFactory
+[[1;33mWARNING[m]   - org.semanticweb.owlapi.apibinding.OWLManager
+[[1;33mWARNING[m]   - org.semanticweb.owlapi.apibinding.OWLManager$InjectorConstants
+[[1;33mWARNING[m]   - org.semanticweb.owlapi.apibinding.package-info
+[[1;33mWARNING[m] owlapi-osgidistribution-5.1.20.jar, owlapi-rio-5.1.20.jar define 74 overlapping classes and resources: 
+[[1;33mWARNING[m]   - META-INF/maven/net.sourceforge.owlapi/owlapi-rio/pom.properties
+[[1;33mWARNING[m]   - META-INF/maven/net.sourceforge.owlapi/owlapi-rio/pom.xml
+[[1;33mWARNING[m]   - org.semanticweb.owlapi.formats.AbstractRioRDFDocumentFormatFactory
+[[1;33mWARNING[m]   - org.semanticweb.owlapi.formats.BinaryRDFDocumentFormat
+[[1;33mWARNING[m]   - org.semanticweb.owlapi.formats.BinaryRDFDocumentFormatFactory
+[[1;33mWARNING[m]   - org.semanticweb.owlapi.formats.HDTRDFDocumentFormat
+[[1;33mWARNING[m]   - org.semanticweb.owlapi.formats.HDTRDFDocumentFormatFactory
+[[1;33mWARNING[m]   - org.semanticweb.owlapi.formats.N3DocumentFormat
+[[1;33mWARNING[m]   - org.semanticweb.owlapi.formats.N3DocumentFormatFactory
+[[1;33mWARNING[m]   - org.semanticweb.owlapi.formats.NQuadsDocumentFormat
+[[1;33mWARNING[m]   - 64 more...
+[[1;33mWARNING[m] classmate-1.5.1.jar, commons-rdf-api-0.3.0-incubating.jar, doxia-core-1.11.1.jar, doxia-decoration-model-1.11.1.jar, doxia-integration-tools-1.11.1.jar, doxia-logging-api-1.12.0.jar, doxia-module-xhtml-1.11.1.jar, doxia-module-xhtml5-1.11.1.jar, doxia-sink-api-1.12.0.jar, doxia-site-renderer-1.11.1.jar, doxia-skin-model-1.11.1.jar, fluent-hc-4.5.10.jar, httpclient-4.5.13.jar, httpclient-cache-4.5.13.jar, httpclient-osgi-4.5.10.jar, httpcore-4.4.5.jar, httpcore-nio-4.4.12.jar, httpcore-osgi-4.4.12.jar, httpmime-4.5.10.jar, jackson-annotations-2.18.0.jar, jackson-core-2.18.0.jar, jackson-databind-2.18.0.jar, jackson-dataformat-xml-2.17.0.jar, jackson-dataformat-yaml-2.17.0.jar, jackson-datatype-jsr310-2.16.2.jar, jackson-datatype-threetenbp-2.15.2.jar, jackson-jaxrs-json-provider-2.17.0.jar, jackson-jaxrs-xml-provider-2.17.0.jar, jackson-jaxrs-yaml-provider-2.17.0.jar, jackson-module-jaxb-annotations-2.17.0.jar, log4j-1.2.17.jar, maven-artifact-transfer-0.13.1.jar, maven-common-artifact-filters-3.3.2.jar, maven-dependency-analyzer-1.14.1.jar, maven-dependency-plugin-3.7.0.jar, maven-dependency-tree-3.3.0.jar, maven-reporting-api-3.1.1.jar, maven-reporting-impl-3.2.0.jar, maven-resolver-api-1.9.18.jar, maven-resolver-util-1.9.18.jar, maven-shared-utils-3.4.2.jar, org.apache.servicemix.bundles.javax-inject-1_2.jar, plexus-utils-4.0.1.jar, plexus-xml-3.0.0.jar, swagger-annotations-2.2.21.jar, swagger-core-2.2.21.jar, swagger-integration-2.2.21.jar, swagger-jaxrs2-2.2.21.jar, swagger-models-2.2.21.jar, velocity-1.7.jar, velocity-tools-2.0.jar define 1 overlapping resource: 
+[[1;33mWARNING[m]   - META-INF/NOTICE
+[[1;33mWARNING[m] jackson-jaxrs-base-2.17.0.jar, jackson-jaxrs-json-provider-2.17.0.jar, jackson-jaxrs-xml-provider-2.17.0.jar, jackson-jaxrs-yaml-provider-2.17.0.jar define 1 overlapping classes: 
+[[1;33mWARNING[m]   - META-INF.versions.11.module-info
+[[1;33mWARNING[m] owlapi-oboformat-5.1.20.jar, owlapi-osgidistribution-5.1.20.jar define 80 overlapping classes and resources: 
+[[1;33mWARNING[m]   - META-INF/maven/net.sourceforge.owlapi/owlapi-oboformat/pom.properties
+[[1;33mWARNING[m]   - META-INF/maven/net.sourceforge.owlapi/owlapi-oboformat/pom.xml
+[[1;33mWARNING[m]   - org.obolibrary.macro.AbstractDataVisitorEx
+[[1;33mWARNING[m]   - org.obolibrary.macro.AbstractMacroExpansionVisitor
+[[1;33mWARNING[m]   - org.obolibrary.macro.AbstractMacroExpansionVisitor$AbstractClassExpressionVisitorEx
+[[1;33mWARNING[m]   - org.obolibrary.macro.MacroExpansionGCIVisitor
+[[1;33mWARNING[m]   - org.obolibrary.macro.MacroExpansionGCIVisitor$GCIVisitor
+[[1;33mWARNING[m]   - org.obolibrary.macro.MacroExpansionGCIVisitor$GCIVisitor$ClassVisitor
+[[1;33mWARNING[m]   - org.obolibrary.macro.MacroExpansionGCIVisitor$MacroExpansions
+[[1;33mWARNING[m]   - org.obolibrary.macro.MacroExpansionVisitor
+[[1;33mWARNING[m]   - 70 more...
+[[1;33mWARNING[m] aopalliance-repackaged-2.6.1.jar, hk2-api-2.6.1.jar, hk2-locator-2.6.1.jar, hk2-utils-2.6.1.jar, jakarta.activation-api-1.2.2.jar, jakarta.annotation-api-1.3.5.jar, jakarta.el-api-6.0.1.jar, jakarta.inject-2.6.1.jar, jakarta.ws.rs-api-2.1.6.jar, jakarta.xml.bind-api-2.3.3.jar, jersey-client-2.42.jar, jersey-common-2.42.jar, jersey-container-servlet-core-2.42.jar, jersey-hk2-2.42.jar, jersey-media-multipart-2.42.jar, jersey-server-2.42.jar, mimepull-1.9.15.jar define 2 overlapping resources: 
+[[1;33mWARNING[m]   - META-INF/LICENSE.md
+[[1;33mWARNING[m]   - META-INF/NOTICE.md
+[[1;33mWARNING[m] fluent-hc-4.5.10.jar, httpclient-osgi-4.5.10.jar define 16 overlapping classes and resources: 
+[[1;33mWARNING[m]   - META-INF/maven/org.apache.httpcomponents/fluent-hc/pom.properties
+[[1;33mWARNING[m]   - META-INF/maven/org.apache.httpcomponents/fluent-hc/pom.xml
+[[1;33mWARNING[m]   - org.apache.http.client.fluent.Async
+[[1;33mWARNING[m]   - org.apache.http.client.fluent.Async$ExecRunnable
+[[1;33mWARNING[m]   - org.apache.http.client.fluent.Content
+[[1;33mWARNING[m]   - org.apache.http.client.fluent.ContentResponseHandler
+[[1;33mWARNING[m]   - org.apache.http.client.fluent.Executor
+[[1;33mWARNING[m]   - org.apache.http.client.fluent.Form
+[[1;33mWARNING[m]   - org.apache.http.client.fluent.HttpHeader
+[[1;33mWARNING[m]   - org.apache.http.client.fluent.InternalByteArrayEntity
+[[1;33mWARNING[m]   - 6 more...
+[[1;33mWARNING[m] commons-beanutils-1.7.0.jar, commons-chain-1.1.jar, commons-cli-1.5.0.jar, commons-codec-1.10.jar, commons-collections-3.2.2.jar, commons-compress-1.26.1.jar, commons-csv-1.10.0.jar, commons-digester-1.8.jar, commons-fileupload-1.5.jar, commons-io-2.7.jar, commons-lang-2.4.jar, commons-lang3-3.17.0.jar, commons-logging-1.2.jar, commons-text-1.12.0.jar, handlebars-4.3.1.jar, httpclient-osgi-4.5.10.jar, joda-time-2.10.14.jar define 1 overlapping resource: 
+[[1;33mWARNING[m]   - META-INF/NOTICE.txt
+[[1;33mWARNING[m] owlapi-impl-5.1.20.jar, owlapi-osgidistribution-5.1.20.jar define 202 overlapping classes and resources: 
+[[1;33mWARNING[m]   - META-INF/maven/net.sourceforge.owlapi/owlapi-impl/pom.properties
+[[1;33mWARNING[m]   - META-INF/maven/net.sourceforge.owlapi/owlapi-impl/pom.xml
+[[1;33mWARNING[m]   - org.semanticweb.owlapi.reasoner.impl.DefaultNode
+[[1;33mWARNING[m]   - org.semanticweb.owlapi.reasoner.impl.DefaultNodeSet
+[[1;33mWARNING[m]   - org.semanticweb.owlapi.reasoner.impl.NodeFactory
+[[1;33mWARNING[m]   - org.semanticweb.owlapi.reasoner.impl.OWLClassNode
+[[1;33mWARNING[m]   - org.semanticweb.owlapi.reasoner.impl.OWLClassNodeSet
+[[1;33mWARNING[m]   - org.semanticweb.owlapi.reasoner.impl.OWLDataPropertyNode
+[[1;33mWARNING[m]   - org.semanticweb.owlapi.reasoner.impl.OWLDataPropertyNodeSet
+[[1;33mWARNING[m]   - org.semanticweb.owlapi.reasoner.impl.OWLDatatypeNode
+[[1;33mWARNING[m]   - 192 more...
+[[1;33mWARNING[m] commons-logging-1.2.jar, jcl-over-slf4j-1.7.30.jar define 6 overlapping classes: 
+[[1;33mWARNING[m]   - org.apache.commons.logging.Log
+[[1;33mWARNING[m]   - org.apache.commons.logging.LogConfigurationException
+[[1;33mWARNING[m]   - org.apache.commons.logging.LogFactory
+[[1;33mWARNING[m]   - org.apache.commons.logging.impl.NoOpLog
+[[1;33mWARNING[m]   - org.apache.commons.logging.impl.SimpleLog
+[[1;33mWARNING[m]   - org.apache.commons.logging.impl.SimpleLog$1
+[[1;33mWARNING[m] plexus-utils-4.0.1.jar, plexus-xml-3.0.0.jar define 3 overlapping resources: 
+[[1;33mWARNING[m]   - licenses/extreme.indiana.edu.license.TXT
+[[1;33mWARNING[m]   - licenses/javolution.license.TXT
+[[1;33mWARNING[m]   - licenses/thoughtworks.TXT
+[[1;33mWARNING[m] owlapi-osgidistribution-5.1.20.jar, owlapi-parsers-5.1.20.jar define 464 overlapping classes and resources: 
+[[1;33mWARNING[m]   - META-INF/maven/net.sourceforge.owlapi/owlapi-parsers/pom.properties
+[[1;33mWARNING[m]   - META-INF/maven/net.sourceforge.owlapi/owlapi-parsers/pom.xml
+[[1;33mWARNING[m]   - org.semanticweb.owlapi.dlsyntax.package-info
+[[1;33mWARNING[m]   - org.semanticweb.owlapi.dlsyntax.parser.DLSyntaxOWLParser
+[[1;33mWARNING[m]   - org.semanticweb.owlapi.dlsyntax.parser.DLSyntaxOWLParserFactory
+[[1;33mWARNING[m]   - org.semanticweb.owlapi.dlsyntax.parser.DLSyntaxParser
+[[1;33mWARNING[m]   - org.semanticweb.owlapi.dlsyntax.parser.DLSyntaxParser$1
+[[1;33mWARNING[m]   - org.semanticweb.owlapi.dlsyntax.parser.DLSyntaxParser$JJCalls
+[[1;33mWARNING[m]   - org.semanticweb.owlapi.dlsyntax.parser.DLSyntaxParser$LookaheadSuccess
+[[1;33mWARNING[m]   - org.semanticweb.owlapi.dlsyntax.parser.DLSyntaxParserConstants
+[[1;33mWARNING[m]   - 454 more...
+[[1;33mWARNING[m] owlapi-api-5.1.20.jar, owlapi-osgidistribution-5.1.20.jar define 922 overlapping classes and resources: 
+[[1;33mWARNING[m]   - META-INF/maven/net.sourceforge.owlapi/owlapi-api/pom.properties
+[[1;33mWARNING[m]   - META-INF/maven/net.sourceforge.owlapi/owlapi-api/pom.xml
+[[1;33mWARNING[m]   - org.semanticweb.owlapi.annotations.HasPriority
+[[1;33mWARNING[m]   - org.semanticweb.owlapi.change.AbstractCompositeOntologyChange
+[[1;33mWARNING[m]   - org.semanticweb.owlapi.change.AddAxiomData
+[[1;33mWARNING[m]   - org.semanticweb.owlapi.change.AddClassExpressionClosureAxiom
+[[1;33mWARNING[m]   - org.semanticweb.owlapi.change.AddClassExpressionClosureAxiom$FillerCollector
+[[1;33mWARNING[m]   - org.semanticweb.owlapi.change.AddImportData
+[[1;33mWARNING[m]   - org.semanticweb.owlapi.change.AddOntologyAnnotationData
+[[1;33mWARNING[m]   - org.semanticweb.owlapi.change.AmalgamateSubClassAxioms
+[[1;33mWARNING[m]   - 912 more...
+[[1;33mWARNING[m] classgraph-4.8.165.jar, commons-compress-1.26.1.jar, commons-lang3-3.17.0.jar, commons-text-1.12.0.jar, error_prone_annotations-2.26.1.jar, j2objc-annotations-3.0.0.jar, jackson-core-2.18.0.jar, jackson-databind-2.18.0.jar, jackson-dataformat-xml-2.17.0.jar, jackson-dataformat-yaml-2.17.0.jar, jackson-datatype-guava-2.17.1.jar, jackson-datatype-joda-2.17.1.jar, jackson-datatype-jsr310-2.16.2.jar, jackson-datatype-threetenbp-2.15.2.jar, jackson-module-jaxb-annotations-2.17.0.jar, json-20240303.jar, slf4j-api-2.0.13.jar, slf4j-jdk14-2.0.13.jar, snakeyaml-2.2.jar define 1 overlapping classes: 
+[[1;33mWARNING[m]   - META-INF.versions.9.module-info
+[[1;33mWARNING[m] commons-lang3-3.17.0.jar, handlebars-4.3.1.jar define 2 overlapping resources: 
+[[1;33mWARNING[m]   - META-INF/maven/org.apache.commons/commons-lang3/pom.properties
+[[1;33mWARNING[m]   - META-INF/maven/org.apache.commons/commons-lang3/pom.xml
+[[1;33mWARNING[m] owlapi-compatibility-5.1.20.jar, owlapi-osgidistribution-5.1.20.jar define 103 overlapping classes and resources: 
+[[1;33mWARNING[m]   - META-INF/maven/net.sourceforge.owlapi/owlapi-compatibility/pom.properties
+[[1;33mWARNING[m]   - META-INF/maven/net.sourceforge.owlapi/owlapi-compatibility/pom.xml
+[[1;33mWARNING[m]   - de.uulm.ecs.ai.owlapi.krssparser.KRSS2OntologyFormat
+[[1;33mWARNING[m]   - org.coode.owl.krssparser.KRSSOntologyFormat
+[[1;33mWARNING[m]   - org.coode.owlapi.latex.LatexAxiomsListOntologyFormat
+[[1;33mWARNING[m]   - org.coode.owlapi.latex.LatexOntologyFormat
+[[1;33mWARNING[m]   - org.coode.owlapi.latex.package-info
+[[1;33mWARNING[m]   - org.coode.owlapi.manchesterowlsyntax.ManchesterOWLSyntax
+[[1;33mWARNING[m]   - org.coode.owlapi.manchesterowlsyntax.ManchesterOWLSyntaxClassExpressionParser
+[[1;33mWARNING[m]   - org.coode.owlapi.manchesterowlsyntax.ManchesterOWLSyntaxClassFrameParser
+[[1;33mWARNING[m]   - 93 more...
+[[1;33mWARNING[m] owlapi-osgidistribution-5.1.20.jar, owlapi-tools-5.1.20.jar define 164 overlapping classes and resources: 
+[[1;33mWARNING[m]   - META-INF/maven/net.sourceforge.owlapi/owlapi-tools/pom.properties
+[[1;33mWARNING[m]   - META-INF/maven/net.sourceforge.owlapi/owlapi-tools/pom.xml
+[[1;33mWARNING[m]   - com.clarkparsia.owlapi.explanation.AxiomConverter
+[[1;33mWARNING[m]   - com.clarkparsia.owlapi.explanation.BlackBoxExplanation
+[[1;33mWARNING[m]   - com.clarkparsia.owlapi.explanation.DefaultExplanationGenerator
+[[1;33mWARNING[m]   - com.clarkparsia.owlapi.explanation.ExplanationGenerator
+[[1;33mWARNING[m]   - com.clarkparsia.owlapi.explanation.HSTExplanationGenerator
+[[1;33mWARNING[m]   - com.clarkparsia.owlapi.explanation.MultipleExplanationGenerator
+[[1;33mWARNING[m]   - com.clarkparsia.owlapi.explanation.SatisfiabilityConverter
+[[1;33mWARNING[m]   - com.clarkparsia.owlapi.explanation.SingleExplanationGenerator
+[[1;33mWARNING[m]   - 154 more...
+[[1;33mWARNING[m] btf-1.3.jar, jackson-coreutils-2.0.jar, json-patch-1.13.jar, json-schema-core-1.2.14.jar, json-schema-validator-2.2.14.jar, msg-simple-1.2.jar, uri-template-0.10.jar define 2 overlapping resources: 
+[[1;33mWARNING[m]   - META-INF/ASL-2.0.txt
+[[1;33mWARNING[m]   - META-INF/LGPL-3.0.txt
+[[1;33mWARNING[m] doxia-core-1.11.1.jar, doxia-decoration-model-1.11.1.jar, doxia-integration-tools-1.11.1.jar, doxia-logging-api-1.12.0.jar, doxia-module-xhtml-1.11.1.jar, doxia-module-xhtml5-1.11.1.jar, doxia-sink-api-1.12.0.jar, doxia-site-renderer-1.11.1.jar, doxia-skin-model-1.11.1.jar, fluent-hc-4.5.10.jar, httpclient-4.5.13.jar, httpclient-cache-4.5.13.jar, httpclient-osgi-4.5.10.jar, httpcore-4.4.5.jar, httpcore-nio-4.4.12.jar, httpcore-osgi-4.4.12.jar, httpmime-4.5.10.jar, maven-artifact-transfer-0.13.1.jar, maven-common-artifact-filters-3.3.2.jar, maven-dependency-analyzer-1.14.1.jar, maven-dependency-plugin-3.7.0.jar, maven-dependency-tree-3.3.0.jar, maven-reporting-api-3.1.1.jar, maven-reporting-impl-3.2.0.jar, maven-resolver-api-1.9.18.jar, maven-resolver-util-1.9.18.jar, maven-shared-utils-3.4.2.jar, org.apache.servicemix.bundles.javax-inject-1_2.jar define 1 overlapping resource: 
+[[1;33mWARNING[m]   - META-INF/DEPENDENCIES
+[[1;33mWARNING[m] doxia-core-1.11.1.jar, doxia-decoration-model-1.11.1.jar, doxia-integration-tools-1.11.1.jar, doxia-module-xhtml-1.11.1.jar, doxia-module-xhtml5-1.11.1.jar, doxia-site-renderer-1.11.1.jar, maven-artifact-transfer-0.13.1.jar, plexus-build-api-0.0.7.jar, plexus-i18n-1.0-beta-10.jar, plexus-velocity-1.2.jar define 1 overlapping resource: 
+[[1;33mWARNING[m]   - META-INF/plexus/components.xml
+[[1;33mWARNING[m] httpclient-cache-4.5.13.jar, httpclient-osgi-4.5.10.jar define 85 overlapping classes and resources: 
+[[1;33mWARNING[m]   - META-INF/maven/org.apache.httpcomponents/httpclient-cache/pom.properties
+[[1;33mWARNING[m]   - META-INF/maven/org.apache.httpcomponents/httpclient-cache/pom.xml
+[[1;33mWARNING[m]   - org.apache.http.client.cache.CacheResponseStatus
+[[1;33mWARNING[m]   - org.apache.http.client.cache.HeaderConstants
+[[1;33mWARNING[m]   - org.apache.http.client.cache.HttpCacheContext
+[[1;33mWARNING[m]   - org.apache.http.client.cache.HttpCacheEntry
+[[1;33mWARNING[m]   - org.apache.http.client.cache.HttpCacheEntrySerializationException
+[[1;33mWARNING[m]   - org.apache.http.client.cache.HttpCacheEntrySerializer
+[[1;33mWARNING[m]   - org.apache.http.client.cache.HttpCacheInvalidator
+[[1;33mWARNING[m]   - org.apache.http.client.cache.HttpCacheStorage
+[[1;33mWARNING[m]   - 75 more...
+[[1;33mWARNING[m] httpclient-4.5.13.jar, httpclient-osgi-4.5.10.jar define 472 overlapping classes and resources: 
+[[1;33mWARNING[m]   - META-INF/maven/org.apache.httpcomponents/httpclient/pom.properties
+[[1;33mWARNING[m]   - META-INF/maven/org.apache.httpcomponents/httpclient/pom.xml
+[[1;33mWARNING[m]   - mozilla/public-suffix-list.txt
+[[1;33mWARNING[m]   - org.apache.http.auth.AUTH
+[[1;33mWARNING[m]   - org.apache.http.auth.AuthOption
+[[1;33mWARNING[m]   - org.apache.http.auth.AuthProtocolState
+[[1;33mWARNING[m]   - org.apache.http.auth.AuthScheme
+[[1;33mWARNING[m]   - org.apache.http.auth.AuthSchemeFactory
+[[1;33mWARNING[m]   - org.apache.http.auth.AuthSchemeProvider
+[[1;33mWARNING[m]   - org.apache.http.auth.AuthSchemeRegistry
+[[1;33mWARNING[m]   - 462 more...
+[[1;33mWARNING[m] accessors-smart-2.5.0.jar, aopalliance-repackaged-2.6.1.jar, asg-1.0.0-SNAPSHOT.jar, asm-9.7.jar, automaton-1.11-8.jar, btf-1.3.jar, caffeine-2.8.6.jar, checker-qual-3.42.0.jar, classgraph-4.8.165.jar, classmate-1.5.1.jar, commonmark-0.21.0.jar, commons-beanutils-1.7.0.jar, commons-chain-1.1.jar, commons-cli-1.5.0.jar, commons-codec-1.10.jar, commons-collections-3.2.2.jar, commons-compress-1.26.1.jar, commons-csv-1.10.0.jar, commons-digester-1.8.jar, commons-fileupload-1.5.jar, commons-io-2.7.jar, commons-lang-2.4.jar, commons-lang3-3.17.0.jar, commons-logging-1.2.jar, commons-rdf-api-0.3.0-incubating.jar, commons-text-1.12.0.jar, dom4j-1.1.jar, doxia-core-1.11.1.jar, doxia-decoration-model-1.11.1.jar, doxia-integration-tools-1.11.1.jar, doxia-logging-api-1.12.0.jar, doxia-module-xhtml-1.11.1.jar, doxia-module-xhtml5-1.11.1.jar, doxia-sink-api-1.12.0.jar, doxia-site-renderer-1.11.1.jar, doxia-skin-model-1.11.1.jar, error_prone_annotations-2.26.1.jar, expressly-6.0.0.jar, failureaccess-1.0.2.jar, fluent-hc-4.5.10.jar, generex-1.0.2.jar, guava-33.2.1-jre.jar, handlebars-4.3.1.jar, handlebars-jackson2-4.3.1.jar, hibernate-validator-8.0.2.Final.jar, hk2-api-2.6.1.jar, hk2-locator-2.6.1.jar, hk2-utils-2.6.1.jar, hppcrt-0.7.5.jar, httpclient-4.5.13.jar, httpclient-cache-4.5.13.jar, httpclient-osgi-4.5.10.jar, httpcore-4.4.5.jar, httpcore-nio-4.4.12.jar, httpcore-osgi-4.4.12.jar, httpmime-4.5.10.jar, j2objc-annotations-3.0.0.jar, jackson-annotations-2.18.0.jar, jackson-core-2.18.0.jar, jackson-coreutils-2.0.jar, jackson-coreutils-equivalence-1.0.jar, jackson-databind-2.18.0.jar, jackson-dataformat-xml-2.17.0.jar, jackson-dataformat-yaml-2.17.0.jar, jackson-datatype-guava-2.17.1.jar, jackson-datatype-joda-2.17.1.jar, jackson-datatype-jsr310-2.16.2.jar, jackson-datatype-threetenbp-2.15.2.jar, jackson-jaxrs-base-2.17.0.jar, jackson-jaxrs-json-provider-2.17.0.jar, jackson-jaxrs-xml-provider-2.17.0.jar, jackson-jaxrs-yaml-provider-2.17.0.jar, jackson-module-jaxb-annotations-2.17.0.jar, jakarta.activation-api-1.2.2.jar, jakarta.annotation-api-1.3.5.jar, jakarta.el-api-6.0.1.jar, jakarta.inject-2.6.1.jar, jakarta.validation-api-3.0.2.jar, jakarta.ws.rs-api-2.1.6.jar, jakarta.xml.bind-api-2.3.3.jar, javassist-3.30.2-GA.jar, jboss-logging-3.6.1.Final.jar, jcl-over-slf4j-1.7.30.jar, jersey-client-2.42.jar, jersey-common-2.42.jar, jersey-container-servlet-core-2.42.jar, jersey-hk2-2.42.jar, jersey-media-multipart-2.42.jar, jersey-server-2.42.jar, jmustache-1.15.jar, jna-5.12.1.jar, joda-time-2.10.14.jar, jopt-simple-5.0.4.jar, json-20240303.jar, json-patch-1.13.jar, json-path-2.9.0.jar, json-schema-core-1.2.14.jar, json-schema-validator-2.2.14.jar, json-smart-2.5.0.jar, jsonld-java-0.13.0.jar, jsr305-3.0.2.jar, libphonenumber-8.11.1.jar, listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar, log4j-1.2.17.jar, logback-core-1.5.3.jar, lombok-1.18.30.jar, mailapi-1.6.2.jar, maven-artifact-transfer-0.13.1.jar, maven-common-artifact-filters-3.3.2.jar, maven-dependency-analyzer-1.14.1.jar, maven-dependency-plugin-3.7.0.jar, maven-dependency-tree-3.3.0.jar, maven-reporting-api-3.1.1.jar, maven-reporting-impl-3.2.0.jar, maven-resolver-api-1.9.18.jar, maven-resolver-util-1.9.18.jar, maven-shared-utils-3.4.2.jar, mimepull-1.9.15.jar, msg-simple-1.2.jar, openapi-generator-7.8.0.jar, openapi-generator-core-7.8.0.jar, org.apache.servicemix.bundles.javax-inject-1_2.jar, org.protege.xmlcatalog-1.0.5.jar, oro-2.0.8.jar, osgi-resource-locator-1.0.3.jar, owlapi-api-5.1.20.jar, owlapi-apibinding-5.1.20.jar, owlapi-compatibility-5.1.20.jar, owlapi-impl-5.1.20.jar, owlapi-oboformat-5.1.20.jar, owlapi-osgidistribution-5.1.20.jar, owlapi-parsers-5.1.20.jar, owlapi-rio-5.1.20.jar, owlapi-tools-5.1.20.jar, plexus-archiver-4.9.2.jar, plexus-build-api-0.0.7.jar, plexus-component-annotations-2.0.0.jar, plexus-i18n-1.0-beta-10.jar, plexus-interpolation-1.26.jar, plexus-io-3.4.2.jar, plexus-utils-4.0.1.jar, plexus-velocity-1.2.jar, plexus-xml-3.0.0.jar, rdf4j-model-3.7.4.jar, rdf4j-model-api-3.7.4.jar, rdf4j-model-vocabulary-3.7.4.jar, rdf4j-rio-api-3.7.4.jar, rdf4j-rio-binary-3.7.4.jar, rdf4j-rio-datatypes-3.7.4.jar, rdf4j-rio-hdt-3.7.4.jar, rdf4j-rio-jsonld-3.7.4.jar, rdf4j-rio-languages-3.7.4.jar, rdf4j-rio-n3-3.7.4.jar, rdf4j-rio-nquads-3.7.4.jar, rdf4j-rio-ntriples-3.7.4.jar, rdf4j-rio-rdfjson-3.7.4.jar, rdf4j-rio-rdfxml-3.7.4.jar, rdf4j-rio-trig-3.7.4.jar, rdf4j-rio-trix-3.7.4.jar, rdf4j-rio-turtle-3.7.4.jar, rdf4j-util-3.7.4.jar, rgxgen-1.4.jar, rhino-1.7.7.2.jar, slf4j-api-2.0.13.jar, slf4j-ext-1.7.36.jar, slf4j-jdk14-2.0.13.jar, slf4j-simple-1.7.36.jar, snakeyaml-2.2.jar, snappy-0.4.jar, stax2-api-4.2.2.jar, swagger-annotations-1.6.14.jar, swagger-annotations-2.2.21.jar, swagger-compat-spec-parser-1.0.70.jar, swagger-core-1.6.14.jar, swagger-core-2.2.21.jar, swagger-inflector-2.0.12.jar, swagger-integration-2.2.21.jar, swagger-jaxrs2-2.2.21.jar, swagger-models-1.6.14.jar, swagger-models-2.2.21.jar, swagger-parser-1.0.70.jar, swagger-parser-2.1.22.jar, swagger-parser-core-2.1.22.jar, swagger-parser-safe-url-resolver-1.0.70.jar, swagger-parser-safe-url-resolver-2.1.22.jar, swagger-parser-v2-converter-2.1.22.jar, swagger-parser-v3-2.1.22.jar, threetenbp-1.6.8.jar, uri-template-0.10.jar, velocity-1.7.jar, velocity-tools-2.0.jar, woodstox-core-6.6.1.jar, xml-resolver-1.2.jar, xz-1.6.jar, zstd-jni-1.5.5-11.jar define 1 overlapping resource: 
+[[1;33mWARNING[m]   - META-INF/MANIFEST.MF
+[[1;33mWARNING[m] maven-shade-plugin has detected that some files are
+[[1;33mWARNING[m] present in two or more JARs. When this happens, only one
+[[1;33mWARNING[m] single version of the file is copied to the uber jar.
+[[1;33mWARNING[m] Usually this is not harmful and you can skip these warnings,
+[[1;33mWARNING[m] otherwise try to manually exclude artifacts based on
+[[1;33mWARNING[m] mvn dependency:tree -Ddetail=true and the above output.
+[[1;33mWARNING[m] See https://maven.apache.org/plugins/maven-shade-plugin/
+[[1;34mINFO[m] Attaching shaded artifact.
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mfailsafe:3.2.5:integration-test[m [1m(default)[m @ [36masg[0;1m ---[m
+[[1;34mINFO[m] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[[1;34mINFO[m] 
+[[1;34mINFO[m] -------------------------------------------------------
+[[1;34mINFO[m]  T E S T S
+[[1;34mINFO[m] -------------------------------------------------------
+[[1;34mINFO[m] Running regression.features.datatypes.[1mDatatypeMappingsIT[m
+log4j:WARN No appenders could be found for logger (org.jboss.logging).
+log4j:WARN Please initialize the log4j system properly.
+log4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more info.
+[2026-02-06 22:53:33] [INFO   ] Preparing ontology and generating api 
+[2026-02-06 22:53:35] [INFO   ] Notice: root element does not have an xml:base. Relative IRIs will be resolved against https://w3id.org/semanticarts/ontology/gistCore13.0.0 
+[2026-02-06 22:53:36] [INFO   ] Ontologies merged 
+[2026-02-06 22:53:36] [INFO   ] API will be inferred from items annotated with apiLabel of DatatypesTestAPIV1.0 
+[2026-02-06 22:53:36] [WARNING] No oauth securitySchemeName or oauth securityScheme in template components - auth scopes will not be added 
+[2026-02-06 22:53:36] [INFO   ] Successfully generated and validated /home/mike/grl/ASG/target/test-classes/regression/../../test-output/datatypes_test/openapi.yaml 
+[2026-02-06 22:53:36] [INFO   ] Successfully generated and validated /home/mike/grl/ASG/target/test-classes/regression/../../test-output/datatypes_test/openapi.json 
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m14[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.385 s -- in regression.features.datatypes.[1mDatatypeMappingsIT[m
+[[1;34mINFO[m] Running regression.features.restrictions.[1mValueRestrictionsIT[m
+[2026-02-06 22:53:36] [INFO   ] Preparing ontology and generating api 
+[2026-02-06 22:53:37] [INFO   ] Notice: root element does not have an xml:base. Relative IRIs will be resolved against https://w3id.org/semanticarts/ontology/gistCore13.0.0 
+[2026-02-06 22:53:37] [INFO   ] Ontologies merged 
+[2026-02-06 22:53:37] [INFO   ] API will be inferred from items annotated with apiLabel of EmploymentAPIV1.0.1 
+[2026-02-06 22:53:37] [WARNING] No properties with apiLabel annotation found for: <https://www.graphresearchlabs.com/base/Company> 
+[2026-02-06 22:53:37] [WARNING] 	Possible property: ObjectMinCardinality(1 <https://w3id.org/semanticarts/ns/ontology/gist/isCategorizedBy> <https://www.graphresearchlabs.com/base/CompanyCategory>) 
+[2026-02-06 22:53:37] [WARNING] 	Possible property: ObjectSomeValuesFrom(<https://w3id.org/semanticarts/ns/ontology/gist/hasAddress> <https://w3id.org/semanticarts/ns/ontology/gist/Address>) 
+[2026-02-06 22:53:37] [WARNING] 	Possible property: DataExactCardinality(1 <https://www.graphresearchlabs.com/base/foundationDate> xsd:dateTime) 
+[2026-02-06 22:53:37] [WARNING] 	Possible property: ObjectMinCardinality(0 <https://w3id.org/semanticarts/ns/ontology/gist/owns> <https://www.graphresearchlabs.com/base/Company>) 
+[2026-02-06 22:53:37] [WARNING] 	Possible property: DataExactCardinality(1 <https://www.graphresearchlabs.com/base/liquidationDate> xsd:dateTime) 
+[2026-02-06 22:53:37] [WARNING] 	Possible property: ObjectSomeValuesFrom(<https://w3id.org/semanticarts/ns/ontology/gist/isCategorizedBy> <https://www.graphresearchlabs.com/base/OrganisationIdentifierType>) 
+[2026-02-06 22:53:37] [WARNING] 	Possible property: DataExactCardinality(1 <https://w3id.org/semanticarts/ns/ontology/gist/name> xsd:string) 
+[2026-02-06 22:53:37] [WARNING] 	Possible property: ObjectMinCardinality(0 <https://w3id.org/semanticarts/ns/ontology/gist/hasUnitOfMeasure> <https://w3id.org/semanticarts/ns/ontology/gist/Magnitude>) 
+[2026-02-06 22:53:37] [WARNING] 	Possible property: ObjectSomeValuesFrom(<https://www.graphresearchlabs.com/base/operatesIn> <https://www.graphresearchlabs.com/base/CountryName>) 
+[2026-02-06 22:53:37] [WARNING] 	Possible property: ObjectMinCardinality(0 <https://www.graphresearchlabs.com/base/hasSubOrganization> <https://w3id.org/semanticarts/ns/ontology/gist/Organization>) 
+[2026-02-06 22:53:37] [WARNING] 	Possible property: ObjectExactCardinality(1 <https://www.graphresearchlabs.com/base/alsoIdentifiedBy> <https://www.graphresearchlabs.com/base/TaxNumber>) 
+[2026-02-06 22:53:37] [WARNING] 	Possible property: DataExactCardinality(1 <https://w3id.org/semanticarts/ns/ontology/gist/description> xsd:string) 
+[2026-02-06 22:53:37] [WARNING] No oauth securitySchemeName or oauth securityScheme in template components - auth scopes will not be added 
+[2026-02-06 22:53:37] [INFO   ] Successfully generated and validated /home/mike/grl/ASG/target/test-classes/regression/../../test-output/employment/openapi.yaml 
+[2026-02-06 22:53:37] [INFO   ] Successfully generated and validated /home/mike/grl/ASG/target/test-classes/regression/../../test-output/employment/openapi.json 
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m5[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.464 s -- in regression.features.restrictions.[1mValueRestrictionsIT[m
+[[1;34mINFO[m] Running regression.features.restrictions.[1mCardinalityRestrictionsIT[m
+[2026-02-06 22:53:37] [INFO   ] Preparing ontology and generating api 
+[2026-02-06 22:53:38] [INFO   ] Notice: root element does not have an xml:base. Relative IRIs will be resolved against https://w3id.org/semanticarts/ontology/gistCore13.0.0 
+[2026-02-06 22:53:38] [INFO   ] Ontologies merged 
+[2026-02-06 22:53:38] [INFO   ] API will be inferred from items annotated with apiLabel of CardinalityTestAPIV1.0 
+[2026-02-06 22:53:38] [WARNING] No oauth securitySchemeName or oauth securityScheme in template components - auth scopes will not be added 
+[2026-02-06 22:53:38] [INFO   ] Successfully generated and validated /home/mike/grl/ASG/target/test-classes/regression/../../test-output/cardinality_test/openapi.yaml 
+[2026-02-06 22:53:38] [INFO   ] Successfully generated and validated /home/mike/grl/ASG/target/test-classes/regression/../../test-output/cardinality_test/openapi.json 
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m8[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.230 s -- in regression.features.restrictions.[1mCardinalityRestrictionsIT[m
+[[1;34mINFO[m] Running regression.features.properties.[1mTaxonomyPatternsIT[m
+[2026-02-06 22:53:39] [INFO   ] Preparing ontology and generating api 
+[2026-02-06 22:53:39] [INFO   ] Notice: root element does not have an xml:base. Relative IRIs will be resolved against https://w3id.org/semanticarts/ontology/gistCore13.0.0 
+[2026-02-06 22:53:40] [INFO   ] Ontologies merged 
+[2026-02-06 22:53:40] [INFO   ] API will be inferred from items annotated with apiLabel of TaxonomyPatternsAPIV1.0 
+[2026-02-06 22:53:40] [WARNING] No properties with apiLabel annotation found for: <https://example.com/taxonomy-patterns/MeasurementContextCode> 
+[2026-02-06 22:53:40] [WARNING] 	Possible property: <http://www.w3.org/2004/02/skos/core#Concept> 
+[2026-02-06 22:53:40] [WARNING] No properties with apiLabel annotation found for: <https://example.com/taxonomy-patterns/EnvironmentCode> 
+[2026-02-06 22:53:40] [WARNING] No oauth securitySchemeName or oauth securityScheme in template components - auth scopes will not be added 
+[2026-02-06 22:53:40] [INFO   ] Successfully generated and validated /home/mike/grl/ASG/target/test-classes/regression/../../test-output/taxonomy_patterns_test/openapi.yaml 
+[2026-02-06 22:53:40] [INFO   ] Successfully generated and validated /home/mike/grl/ASG/target/test-classes/regression/../../test-output/taxonomy_patterns_test/openapi.json 
+[[1;34mINFO[m] Running regression.features.properties.[1mTaxonomyPatternsIT$EndpointTests[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m3[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.001 s -- in regression.features.properties.[1mTaxonomyPatternsIT$EndpointTests[m
+[[1;34mINFO[m] Running regression.features.properties.[1mTaxonomyPatternsIT$PatternDTests[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m6[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.003 s -- in regression.features.properties.[1mTaxonomyPatternsIT$PatternDTests[m
+[[1;34mINFO[m] Running regression.features.properties.[1mTaxonomyPatternsIT$PatternCTests[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m6[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.003 s -- in regression.features.properties.[1mTaxonomyPatternsIT$PatternCTests[m
+[[1;34mINFO[m] Running regression.features.properties.[1mTaxonomyPatternsIT$PatternBTests[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m8[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.005 s -- in regression.features.properties.[1mTaxonomyPatternsIT$PatternBTests[m
+[[1;34mINFO[m] Running regression.features.properties.[1mTaxonomyPatternsIT$PatternATests[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m5[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 s -- in regression.features.properties.[1mTaxonomyPatternsIT$PatternATests[m
+[[1;34mINFO[m] [1mTests run: [0;1m0[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.243 s -- in regression.features.properties.[1mTaxonomyPatternsIT[m
+[[1;34mINFO[m] Running regression.features.properties.[1mTaxonomyPropertyIT[m
+[2026-02-06 22:53:40] [INFO   ] Preparing ontology and generating api 
+[2026-02-06 22:53:40] [INFO   ] Notice: root element does not have an xml:base. Relative IRIs will be resolved against https://w3id.org/semanticarts/ontology/gistCore13.0.0 
+[2026-02-06 22:53:41] [INFO   ] Ontologies merged 
+[2026-02-06 22:53:41] [INFO   ] API will be inferred from items annotated with apiLabel of TaxonomyTestAPIV1.0 
+[2026-02-06 22:53:41] [WARNING] No properties with apiLabel annotation found for: <https://example.com/taxonomy/Status> 
+[2026-02-06 22:53:41] [WARNING] No properties with apiLabel annotation found for: <https://example.com/taxonomy/Priority> 
+[2026-02-06 22:53:41] [WARNING] No oauth securitySchemeName or oauth securityScheme in template components - auth scopes will not be added 
+[2026-02-06 22:53:41] [INFO   ] Successfully generated and validated /home/mike/grl/ASG/target/test-classes/regression/../../test-output/taxonomy_test/openapi.yaml 
+[2026-02-06 22:53:41] [INFO   ] Successfully generated and validated /home/mike/grl/ASG/target/test-classes/regression/../../test-output/taxonomy_test/openapi.json 
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m10[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.176 s -- in regression.features.properties.[1mTaxonomyPropertyIT[m
+[[1;34mINFO[m] Running regression.[1mSimpleApiIT[m
+[[1;31mERROR[m] [1;31mTests [0;1mrun: [0;1m10[m, [1;31mFailures: [0;1;31m1[m, Errors: 0, Skipped: 0, Time elapsed: 0.018 s[1;31m <<< FAILURE![m -- in regression.[1mSimpleApiIT[m
+[[1;31mERROR[m] regression.SimpleApiIT.withEmployeeTagsCorrect -- Time elapsed: 0.004 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: expected: <Employee> but was: <Employer>
+	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
+	at org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
+	at org.junit.jupiter.api.AssertEquals.failNotEqual(AssertEquals.java:197)
+	at org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:182)
+	at org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:177)
+	at org.junit.jupiter.api.Assertions.assertEquals(Assertions.java:1145)
+	at regression.SimpleApiIT.withEmployeeTagsCorrect(SimpleApiIT.java:48)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[[1;34mINFO[m] Running regression.[1mLargeApiIT[m
+[2026-02-06 22:53:41] [INFO   ] Preparing ontology and generating api 
+[2026-02-06 22:53:41] [WARNING] Illegal redeclarations of entities: reuse of entity https://w3id.org/semanticarts/ns/ontology/gist/conversionFactor in punning not allowed [Declaration(AnnotationProperty(<https://w3id.org/semanticarts/ns/ontology/gist/conversionFactor>)), Declaration(DataProperty(<https://w3id.org/semanticarts/ns/ontology/gist/conversionFactor>))] 
+[2026-02-06 22:53:41] [WARNING] Illegal redeclarations of entities: reuse of entity https://w3id.org/semanticarts/ns/ontology/gist/hasAspect in punning not allowed [Declaration(ObjectProperty(<https://w3id.org/semanticarts/ns/ontology/gist/hasAspect>)), Declaration(AnnotationProperty(<https://w3id.org/semanticarts/ns/ontology/gist/hasAspect>))] 
+[2026-02-06 22:53:41] [WARNING] Illegal redeclarations of entities: reuse of entity https://w3id.org/semanticarts/ns/ontology/gist/hasUnitGroup in punning not allowed [Declaration(AnnotationProperty(<https://w3id.org/semanticarts/ns/ontology/gist/hasUnitGroup>)), Declaration(ObjectProperty(<https://w3id.org/semanticarts/ns/ontology/gist/hasUnitGroup>))] 
+[2026-02-06 22:53:41] [WARNING] Illegal redeclarations of entities: reuse of entity https://w3id.org/semanticarts/ns/ontology/gist/isPartOf in punning not allowed [Declaration(ObjectProperty(<https://w3id.org/semanticarts/ns/ontology/gist/isPartOf>)), Declaration(AnnotationProperty(<https://w3id.org/semanticarts/ns/ontology/gist/isPartOf>))] 
+[2026-02-06 22:53:41] [WARNING] Illegal redeclarations of entities: reuse of entity https://w3id.org/semanticarts/ns/ontology/gist/idText in punning not allowed [Declaration(AnnotationProperty(<https://w3id.org/semanticarts/ns/ontology/gist/idText>)), Declaration(DataProperty(<https://w3id.org/semanticarts/ns/ontology/gist/idText>))] 
+[2026-02-06 22:53:41] [WARNING] Illegal redeclarations of entities: reuse of entity https://w3id.org/semanticarts/ns/ontology/gist/conversionFactor in punning not allowed [Declaration(AnnotationProperty(<https://w3id.org/semanticarts/ns/ontology/gist/conversionFactor>)), Declaration(DataProperty(<https://w3id.org/semanticarts/ns/ontology/gist/conversionFactor>))] 
+[2026-02-06 22:53:41] [WARNING] Illegal redeclarations of entities: reuse of entity https://w3id.org/semanticarts/ns/ontology/gist/hasAspect in punning not allowed [Declaration(ObjectProperty(<https://w3id.org/semanticarts/ns/ontology/gist/hasAspect>)), Declaration(AnnotationProperty(<https://w3id.org/semanticarts/ns/ontology/gist/hasAspect>))] 
+[2026-02-06 22:53:41] [WARNING] Illegal redeclarations of entities: reuse of entity https://w3id.org/semanticarts/ns/ontology/gist/hasUnitGroup in punning not allowed [Declaration(AnnotationProperty(<https://w3id.org/semanticarts/ns/ontology/gist/hasUnitGroup>)), Declaration(ObjectProperty(<https://w3id.org/semanticarts/ns/ontology/gist/hasUnitGroup>))] 
+[2026-02-06 22:53:41] [WARNING] Illegal redeclarations of entities: reuse of entity https://w3id.org/semanticarts/ns/ontology/gist/isPartOf in punning not allowed [Declaration(AnnotationProperty(<https://w3id.org/semanticarts/ns/ontology/gist/isPartOf>)), Declaration(ObjectProperty(<https://w3id.org/semanticarts/ns/ontology/gist/isPartOf>))] 
+[2026-02-06 22:53:41] [WARNING] Illegal redeclarations of entities: reuse of entity https://w3id.org/semanticarts/ns/ontology/gist/idText in punning not allowed [Declaration(AnnotationProperty(<https://w3id.org/semanticarts/ns/ontology/gist/idText>)), Declaration(DataProperty(<https://w3id.org/semanticarts/ns/ontology/gist/idText>))] 
+[2026-02-06 22:53:41] [INFO   ] Ontologies merged 
+[2026-02-06 22:53:41] [INFO   ] API will be inferred from items annotated with apiLabel of NZCS1APIV1.0.0 
+[2026-02-06 22:53:41] [WARNING] No properties with apiLabel annotation found for: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/GreenhouseGasEmissionsTargetType> 
+[2026-02-06 22:53:41] [WARNING] 	Possible property: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedFinancialDisclosureCategories> 
+[2026-02-06 22:53:41] [WARNING] No properties with apiLabel annotation found for: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/GreenhouseGasEmissionOffsetSchemeType> 
+[2026-02-06 22:53:41] [WARNING] 	Possible property: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedFinancialDisclosureCategories> 
+[2026-02-06 22:53:41] [WARNING] No properties with apiLabel annotation found for: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRiskAssessmentBoundaries> 
+[2026-02-06 22:53:41] [WARNING] 	Possible property: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedFinancialDisclosureCategories> 
+[2026-02-06 22:53:41] [WARNING] No properties with apiLabel annotation found for: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRiskAssessmentBoundaries> 
+[2026-02-06 22:53:41] [WARNING] 	Possible property: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedFinancialDisclosureCategories> 
+[2026-02-06 22:53:41] [WARNING] No properties with apiLabel annotation found for: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedPlanningHorizonPeriodType> 
+[2026-02-06 22:53:41] [WARNING] 	Possible property: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedFinancialDisclosureCategories> 
+[2026-02-06 22:53:41] [WARNING] No properties with apiLabel annotation found for: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedPlanningHorizonPeriodType> 
+[2026-02-06 22:53:41] [WARNING] 	Possible property: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedFinancialDisclosureCategories> 
+[2026-02-06 22:53:41] [WARNING] No properties with apiLabel annotation found for: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedScenario/ClimateRelatedScenarioTemperatureAlignment> 
+[2026-02-06 22:53:41] [WARNING] 	Possible property: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedFinancialDisclosureCategories> 
+[2026-02-06 22:53:41] [WARNING] No properties with apiLabel annotation found for: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedScenario/ClimateRelatedScenarioTemperatureAlignment> 
+[2026-02-06 22:53:41] [WARNING] 	Possible property: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedFinancialDisclosureCategories> 
+[2026-02-06 22:53:41] [WARNING] No properties with apiLabel annotation found for: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ScenarioAnalysisMethodType> 
+[2026-02-06 22:53:41] [WARNING] 	Possible property: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedFinancialDisclosureCategories> 
+[2026-02-06 22:53:41] [WARNING] No properties with apiLabel annotation found for: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ScenarioAnalysisMethodType> 
+[2026-02-06 22:53:41] [WARNING] 	Possible property: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedFinancialDisclosureCategories> 
+[2026-02-06 22:53:41] [WARNING] No properties with apiLabel annotation found for: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedScenarioEndpointType> 
+[2026-02-06 22:53:41] [WARNING] 	Possible property: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedFinancialDisclosureCategories> 
+[2026-02-06 22:53:41] [WARNING] No properties with apiLabel annotation found for: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedScenarioEndpointType> 
+[2026-02-06 22:53:41] [WARNING] 	Possible property: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedFinancialDisclosureCategories> 
+[2026-02-06 22:53:41] [WARNING] No properties with apiLabel annotation found for: <https://www.graphresearchlabs.com/base/BusinessRule> 
+[2026-02-06 22:53:41] [WARNING] 	Possible property: <https://w3id.org/semanticarts/ns/ontology/gist/Restriction> 
+[2026-02-06 22:53:41] [WARNING] 	Possible property: ObjectSomeValuesFrom(<https://w3id.org/semanticarts/ns/ontology/gist/isBasedOn> <https://www.graphresearchlabs.com/base/BusinessPolicy>) 
+[2026-02-06 22:53:41] [WARNING] 	Possible property: ObjectSomeValuesFrom(<https://w3id.org/semanticarts/ns/ontology/gist/isCategorizedBy> ObjectOneOf(<https://www.graphresearchlabs.com/base/_Category_BusinessMotivationModel>)) 
+[2026-02-06 22:53:41] [WARNING] 	Possible property: ObjectSomeValuesFrom(<https://w3id.org/semanticarts/ns/ontology/gist/hasBroader> <https://www.graphresearchlabs.com/base/BusinessModelDirective>) 
+[2026-02-06 22:53:41] [WARNING] No properties with apiLabel annotation found for: <https://www.graphresearchlabs.com/base/BusinessPolicy> 
+[2026-02-06 22:53:41] [WARNING] 	Possible property: ObjectSomeValuesFrom(<https://w3id.org/semanticarts/ns/ontology/gist/hasBroader> <https://www.graphresearchlabs.com/base/BusinessModelDirective>) 
+[2026-02-06 22:53:41] [WARNING] 	Possible property: <https://w3id.org/semanticarts/ns/ontology/gist/Restriction> 
+[2026-02-06 22:53:41] [WARNING] 	Possible property: ObjectSomeValuesFrom(<https://w3id.org/semanticarts/ns/ontology/gist/isCategorizedBy> ObjectOneOf(<https://www.graphresearchlabs.com/base/_Category_BusinessMotivationModel>)) 
+[2026-02-06 22:53:41] [WARNING] No properties with apiLabel annotation found for: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ProcessFrequency> 
+[2026-02-06 22:53:41] [WARNING] 	Possible property: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedFinancialDisclosureCategories> 
+[2026-02-06 22:53:41] [WARNING] No properties with apiLabel annotation found for: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRiskTaxonomy/ClimateRiskType> 
+[2026-02-06 22:53:41] [WARNING] 	Possible property: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedFinancialDisclosureCategories> 
+[2026-02-06 22:53:41] [WARNING] No properties with apiLabel annotation found for: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/CapitalPlanningType> 
+[2026-02-06 22:53:41] [WARNING] 	Possible property: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedFinancialDisclosureCategories> 
+[2026-02-06 22:53:41] [WARNING] No properties with apiLabel annotation found for: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ProcessType> 
+[2026-02-06 22:53:41] [WARNING] 	Possible property: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedFinancialDisclosureCategories> 
+[2026-02-06 22:53:41] [WARNING] No properties with apiLabel annotation found for: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ProcessType> 
+[2026-02-06 22:53:41] [WARNING] 	Possible property: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedFinancialDisclosureCategories> 
+[2026-02-06 22:53:41] [WARNING] No properties with apiLabel annotation found for: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ProcessFrequency> 
+[2026-02-06 22:53:41] [WARNING] 	Possible property: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedFinancialDisclosureCategories> 
+[2026-02-06 22:53:41] [WARNING] No properties with apiLabel annotation found for: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/GreenhouseGasEmissionsAccountingStandard> 
+[2026-02-06 22:53:41] [WARNING] 	Possible property: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedFinancialDisclosureCategories> 
+[2026-02-06 22:53:41] [WARNING] No properties with apiLabel annotation found for: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/GreenhouseGasEmissionsAccountingStandard> 
+[2026-02-06 22:53:41] [WARNING] 	Possible property: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedFinancialDisclosureCategories> 
+[2026-02-06 22:53:41] [WARNING] No properties with apiLabel annotation found for: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/GreenhouseGasEmissionsConsolidationApproach> 
+[2026-02-06 22:53:41] [WARNING] 	Possible property: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedFinancialDisclosureCategories> 
+[2026-02-06 22:53:41] [WARNING] No properties with apiLabel annotation found for: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/GreenhouseGasEmissionsConsolidationApproach> 
+[2026-02-06 22:53:41] [WARNING] 	Possible property: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedFinancialDisclosureCategories> 
+[2026-02-06 22:53:41] [WARNING] No properties with apiLabel annotation found for: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedPlanningHorizonPeriodType> 
+[2026-02-06 22:53:41] [WARNING] 	Possible property: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedFinancialDisclosureCategories> 
+[2026-02-06 22:53:41] [WARNING] No properties with apiLabel annotation found for: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ProcessFrequency> 
+[2026-02-06 22:53:41] [WARNING] 	Possible property: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedFinancialDisclosureCategories> 
+[2026-02-06 22:53:41] [WARNING] No properties with apiLabel annotation found for: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedRiskManagementProcessType> 
+[2026-02-06 22:53:41] [WARNING] 	Possible property: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedFinancialDisclosureCategories> 
+[2026-02-06 22:53:41] [WARNING] No properties with apiLabel annotation found for: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedRiskManagementProcessType> 
+[2026-02-06 22:53:41] [WARNING] 	Possible property: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedFinancialDisclosureCategories> 
+[2026-02-06 22:53:41] [WARNING] No properties with apiLabel annotation found for: <https://www.graphresearchlabs.com/base/OrganisationIdentifierType> 
+[2026-02-06 22:53:41] [WARNING] 	Possible property: <https://w3id.org/semanticarts/ns/ontology/gist/Category> 
+[2026-02-06 22:53:41] [WARNING] No properties with apiLabel annotation found for: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedScenario/ClimateRelatedScenarioAnalysisMethodType> 
+[2026-02-06 22:53:41] [WARNING] 	Possible property: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedFinancialDisclosureCategories> 
+[2026-02-06 22:53:41] [WARNING] No properties with apiLabel annotation found for: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/BusinessPriority> 
+[2026-02-06 22:53:41] [WARNING] 	Possible property: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedFinancialDisclosureCategories> 
+[2026-02-06 22:53:41] [WARNING] No properties with apiLabel annotation found for: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/BusinessPriority> 
+[2026-02-06 22:53:41] [WARNING] 	Possible property: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedFinancialDisclosureCategories> 
+[2026-02-06 22:53:41] [WARNING] No properties with apiLabel annotation found for: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedPlanningHorizonPeriodType> 
+[2026-02-06 22:53:41] [WARNING] 	Possible property: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedFinancialDisclosureCategories> 
+[2026-02-06 22:53:41] [WARNING] No properties with apiLabel annotation found for: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedFinancialImpactType> 
+[2026-02-06 22:53:41] [WARNING] 	Possible property: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedFinancialDisclosureCategories> 
+[2026-02-06 22:53:41] [WARNING] No properties with apiLabel annotation found for: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedFinancialImpactType> 
+[2026-02-06 22:53:41] [WARNING] 	Possible property: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedFinancialDisclosureCategories> 
+[2026-02-06 22:53:41] [WARNING] No properties with apiLabel annotation found for: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/LikelihoodofOccuring> 
+[2026-02-06 22:53:41] [WARNING] 	Possible property: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedFinancialDisclosureCategories> 
+[2026-02-06 22:53:41] [WARNING] No properties with apiLabel annotation found for: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/LikelihoodofOccuring> 
+[2026-02-06 22:53:41] [WARNING] 	Possible property: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedFinancialDisclosureCategories> 
+[2026-02-06 22:53:41] [WARNING] No properties with apiLabel annotation found for: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRiskTaxonomy/ClimateOpportunityType> 
+[2026-02-06 22:53:41] [WARNING] 	Possible property: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedFinancialDisclosureCategories> 
+[2026-02-06 22:53:41] [WARNING] No properties with apiLabel annotation found for: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRiskTaxonomy/ClimateOpportunityType> 
+[2026-02-06 22:53:41] [WARNING] 	Possible property: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedFinancialDisclosureCategories> 
+[2026-02-06 22:53:41] [WARNING] No properties with apiLabel annotation found for: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedPlanningHorizonPeriodType> 
+[2026-02-06 22:53:41] [WARNING] 	Possible property: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedFinancialDisclosureCategories> 
+[2026-02-06 22:53:41] [WARNING] No properties with apiLabel annotation found for: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/BusinessPriority> 
+[2026-02-06 22:53:41] [WARNING] 	Possible property: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedFinancialDisclosureCategories> 
+[2026-02-06 22:53:41] [WARNING] No properties with apiLabel annotation found for: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/LikelihoodofOccuring> 
+[2026-02-06 22:53:41] [WARNING] 	Possible property: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedFinancialDisclosureCategories> 
+[2026-02-06 22:53:41] [WARNING] No properties with apiLabel annotation found for: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedFinancialImpactType> 
+[2026-02-06 22:53:41] [WARNING] 	Possible property: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedFinancialDisclosureCategories> 
+[2026-02-06 22:53:41] [WARNING] No properties with apiLabel annotation found for: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRiskTaxonomy/ClimateRiskType> 
+[2026-02-06 22:53:41] [WARNING] 	Possible property: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedFinancialDisclosureCategories> 
+[2026-02-06 22:53:41] [WARNING] No properties with apiLabel annotation found for: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedPlanningHorizonPeriodType> 
+[2026-02-06 22:53:41] [WARNING] 	Possible property: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedFinancialDisclosureCategories> 
+[2026-02-06 22:53:41] [WARNING] No properties with apiLabel annotation found for: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ProcessFrequency> 
+[2026-02-06 22:53:41] [WARNING] 	Possible property: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedFinancialDisclosureCategories> 
+[2026-02-06 22:53:41] [WARNING] No properties with apiLabel annotation found for: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedRiskManagementProcessType> 
+[2026-02-06 22:53:41] [WARNING] 	Possible property: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedFinancialDisclosureCategories> 
+[2026-02-06 22:53:41] [WARNING] No properties with apiLabel annotation found for: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedPlanningHorizonPeriodType> 
+[2026-02-06 22:53:41] [WARNING] 	Possible property: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedFinancialDisclosureCategories> 
+[2026-02-06 22:53:41] [WARNING] No properties with apiLabel annotation found for: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/BusinessPriority> 
+[2026-02-06 22:53:41] [WARNING] 	Possible property: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedFinancialDisclosureCategories> 
+[2026-02-06 22:53:41] [WARNING] No properties with apiLabel annotation found for: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/LikelihoodofOccuring> 
+[2026-02-06 22:53:41] [WARNING] 	Possible property: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedFinancialDisclosureCategories> 
+[2026-02-06 22:53:41] [WARNING] No properties with apiLabel annotation found for: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedFinancialImpactType> 
+[2026-02-06 22:53:41] [WARNING] 	Possible property: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedFinancialDisclosureCategories> 
+[2026-02-06 22:53:41] [WARNING] No properties with apiLabel annotation found for: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRiskTaxonomy/ClimateRiskType> 
+[2026-02-06 22:53:41] [WARNING] 	Possible property: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedFinancialDisclosureCategories> 
+[2026-02-06 22:53:41] [WARNING] No properties with apiLabel annotation found for: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/GreenhouseGasEmissionsAccountingStandard> 
+[2026-02-06 22:53:41] [WARNING] 	Possible property: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedFinancialDisclosureCategories> 
+[2026-02-06 22:53:41] [WARNING] No properties with apiLabel annotation found for: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/GreenhouseGasEmissionsConsolidationApproach> 
+[2026-02-06 22:53:41] [WARNING] 	Possible property: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedFinancialDisclosureCategories> 
+[2026-02-06 22:53:41] [WARNING] No properties with apiLabel annotation found for: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedPlanningHorizonPeriodType> 
+[2026-02-06 22:53:41] [WARNING] 	Possible property: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedFinancialDisclosureCategories> 
+[2026-02-06 22:53:41] [WARNING] No properties with apiLabel annotation found for: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateImpactType> 
+[2026-02-06 22:53:41] [WARNING] 	Possible property: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedFinancialDisclosureCategories> 
+[2026-02-06 22:53:41] [WARNING] No properties with apiLabel annotation found for: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateImpactType> 
+[2026-02-06 22:53:41] [WARNING] 	Possible property: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedFinancialDisclosureCategories> 
+[2026-02-06 22:53:41] [WARNING] No properties with apiLabel annotation found for: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ProcessType> 
+[2026-02-06 22:53:41] [WARNING] 	Possible property: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedFinancialDisclosureCategories> 
+[2026-02-06 22:53:41] [WARNING] No properties with apiLabel annotation found for: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ProcessFrequency> 
+[2026-02-06 22:53:41] [WARNING] 	Possible property: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedFinancialDisclosureCategories> 
+[2026-02-06 22:53:41] [WARNING] No properties with apiLabel annotation found for: <https://www.graphresearchlabs.com/base/RecordStatus> 
+[2026-02-06 22:53:41] [WARNING] 	Possible property: DataExactCardinality(1 <https://w3id.org/semanticarts/ns/ontology/gist/uniqueText> xsd:string) 
+[2026-02-06 22:53:41] [WARNING] 	Possible property: DataExactCardinality(1 <https://www.graphresearchlabs.com/base/note> xsd:string) 
+[2026-02-06 22:53:41] [WARNING] 	Possible property: DataExactCardinality(1 <https://www.graphresearchlabs.com/base/validityStart> xsd:dateTime) 
+[2026-02-06 22:53:41] [WARNING] 	Possible property: DataExactCardinality(1 <https://www.graphresearchlabs.com/base/validityEnd> xsd:dateTime) 
+[2026-02-06 22:53:41] [WARNING] 	Possible property: <https://w3id.org/semanticarts/ns/ontology/gist/Category> 
+[2026-02-06 22:53:41] [WARNING] No properties with apiLabel annotation found for: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/BusinessPriority> 
+[2026-02-06 22:53:41] [WARNING] 	Possible property: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedFinancialDisclosureCategories> 
+[2026-02-06 22:53:41] [WARNING] No properties with apiLabel annotation found for: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedPlanningHorizonPeriodType> 
+[2026-02-06 22:53:41] [WARNING] 	Possible property: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedFinancialDisclosureCategories> 
+[2026-02-06 22:53:41] [WARNING] No properties with apiLabel annotation found for: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedFinancialImpactType> 
+[2026-02-06 22:53:41] [WARNING] 	Possible property: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedFinancialDisclosureCategories> 
+[2026-02-06 22:53:41] [WARNING] No properties with apiLabel annotation found for: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/LikelihoodofOccuring> 
+[2026-02-06 22:53:41] [WARNING] 	Possible property: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedFinancialDisclosureCategories> 
+[2026-02-06 22:53:41] [WARNING] No properties with apiLabel annotation found for: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRiskTaxonomy/ClimateOpportunityType> 
+[2026-02-06 22:53:41] [WARNING] 	Possible property: <https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/ClimateRelatedFinancialDisclosureCategories> 
+[2026-02-06 22:53:42] [INFO   ] Successfully generated and validated /home/mike/grl/ASG/target/test-classes/regression/../../test-output/nzcs1/openapi.yaml 
+[2026-02-06 22:53:42] [INFO   ] Successfully generated and validated /home/mike/grl/ASG/target/test-classes/regression/../../test-output/nzcs1/openapi.json 
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m14[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.778 s -- in regression.[1mLargeApiIT[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] Results:
+[[1;34mINFO[m] 
+[[1;31mERROR[m] [1;31mFailures: [m
+[[1;31mERROR[m] [1;31m  SimpleApiIT.withEmployeeTagsCorrect:48 expected: <Employee> but was: <Employer>[m
+[[1;34mINFO[m] 
+[[1;31mERROR[m] [1;31mTests run: 89, Failures: 1, Errors: 0, Skipped: 0[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m>>> [0;32msource:3.3.1:jar[m [1m(attach-sources)[0;1m > [0;1mgenerate-sources[m @ [36masg[0;1m >>>[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m<<< [0;32msource:3.3.1:jar[m [1m(attach-sources)[0;1m < [0;1mgenerate-sources[m @ [36masg[0;1m <<<[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32msource:3.3.1:jar[m [1m(attach-sources)[m @ [36masg[0;1m ---[m
+[[1;34mINFO[m] Building jar: /home/mike/grl/ASG/target/asg-1.0.0-SNAPSHOT-sources.jar
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+[[1;34mINFO[m] [1;32mBUILD SUCCESS[m
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+[[1;34mINFO[m] Total time:  25.471 s
+[[1;34mINFO[m] Finished at: 2026-02-06T22:53:42+13:00
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m

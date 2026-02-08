@@ -1,0 +1,45 @@
+2026-02-05T09:14:48.659Z [DEBUG] [init] configureGlobalMTLS starting
+2026-02-05T09:14:48.659Z [DEBUG] [init] configureGlobalMTLS complete
+2026-02-05T09:14:48.659Z [DEBUG] [init] configureGlobalAgents starting
+2026-02-05T09:14:48.659Z [DEBUG] [init] configureGlobalAgents complete
+2026-02-05T09:14:48.661Z [DEBUG] [STARTUP] Loading MCP configs...
+2026-02-05T09:14:48.663Z [DEBUG] [ToolSearch:optimistic] mode=tst-auto, ENABLE_TOOL_SEARCH=undefined, result=true
+2026-02-05T09:14:48.663Z [DEBUG] [STARTUP] Running setup()...
+2026-02-05T09:14:48.663Z [DEBUG] Found 0 plugins (0 enabled, 0 disabled)
+2026-02-05T09:14:48.664Z [DEBUG] Loading skills from: managed=/etc/claude-code/.claude/skills, user=/home/mike/.claude/skills, project=[]
+2026-02-05T09:14:48.664Z [DEBUG] Passes: Cache stale, returning cached data and refreshing in background
+2026-02-05T09:14:48.664Z [DEBUG] Error log sink initialized
+2026-02-05T09:14:48.665Z [DEBUG] getPluginSkills: Processing 0 enabled plugins
+2026-02-05T09:14:48.665Z [DEBUG] Total plugin skills loaded: 0
+2026-02-05T09:14:48.665Z [DEBUG] Total plugin commands loaded: 0
+2026-02-05T09:14:48.665Z [DEBUG] Registered 0 hooks from 0 plugins
+2026-02-05T09:14:48.666Z [DEBUG] [STARTUP] setup() completed in 3ms
+2026-02-05T09:14:48.666Z [DEBUG] [STARTUP] Loading commands and agents...
+2026-02-05T09:14:48.670Z [DEBUG] Total plugin agents loaded: 0
+2026-02-05T09:14:48.670Z [DEBUG] Loaded 0 unique skills (managed: 0, user: 0, project: 0, legacy commands: 0)
+2026-02-05T09:14:48.670Z [DEBUG] getSkills returning: 0 skill dir commands, 0 plugin skills, 2 bundled skills
+2026-02-05T09:14:48.671Z [DEBUG] [STARTUP] Commands and agents loaded in 5ms
+2026-02-05T09:14:48.671Z [DEBUG] [STARTUP] Running showSetupScreens()...
+2026-02-05T09:14:48.671Z [DEBUG] [render] initLayout starting
+2026-02-05T09:14:48.671Z [DEBUG] Layout engine: yoga
+2026-02-05T09:14:48.690Z [DEBUG] Cannot acquire lock for 2.1.31 - held by PID 1385963
+2026-02-05T09:14:48.690Z [ERROR] Error: Error: NON-FATAL: Lock acquisition failed for /home/mike/.local/share/claude/versions/2.1.31 (expected in multi-process scenarios)
+    at dZ$ (/$bunfs/root/claude:3618:2098)
+    at hjA (/$bunfs/root/claude:3618:1209)
+    at processTicksAndRejections (native:7:39)
+2026-02-05T09:14:48.693Z [DEBUG] [render] initLayout complete
+2026-02-05T09:14:48.696Z [DEBUG] [keybindings] KeybindingSetup initialized with 100 bindings, 0 warnings
+2026-02-05T09:14:48.707Z [DEBUG] [render] first ink render: 268ms since process start
+2026-02-05T09:14:48.708Z [DEBUG] [Claude in Chrome] Found brave profiles: Default
+2026-02-05T09:14:48.708Z [DEBUG] [keybindings] Watching for changes to /home/mike/.claude/keybindings.json
+2026-02-05T09:14:48.725Z [DEBUG] [Claude in Chrome] Extension not found in any browser
+2026-02-05T09:14:48.972Z [DEBUG] Failed to fetch and cache passes eligibility
+2026-02-05T09:14:48.972Z [ERROR] AxiosError: Error
+    at vj (/$bunfs/root/claude:42:1144)
+    at <anonymous> (/$bunfs/root/claude:47:10089)
+    at emit (node:events:92:22)
+    at endReadableNT (internal:streams/readable:862:50)
+    at processTicksAndRejections (native:7:39)
+    at request (/$bunfs/root/claude:49:2149)
+    at processTicksAndRejections (native:7:39)
+2026-02-05T09:15:01.401Z [DEBUG] Skipping SessionEnd:other hook execution - workspace trust not accepted

@@ -1,0 +1,311 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns="https://example.com/datatypes/"
+     xml:base="https://example.com/datatypes/"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+     xmlns:base="https://www.graphresearchlabs.com/base/"
+     xmlns:api="https://www.graphresearchlabs.com/">
+
+    <owl:Ontology rdf:about="https://example.com/datatypes/">
+        <owl:imports rdf:resource="https://www.graphresearchlabs.com/base/V1.0.2"/>
+        <rdfs:comment>Test ontology for XSD datatype mappings.</rdfs:comment>
+    </owl:Ontology>
+
+    <!-- APIRoot links to API specification -->
+    <rdf:Description rdf:about="https://www.graphresearchlabs.com/base/APIRoot">
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="https://www.graphresearchlabs.com/base/hasAPI"/>
+                <owl:someValuesFrom rdf:resource="https://example.com/datatypes/DatatypesTestAPIV1.0"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </rdf:Description>
+
+    <!-- API Specification Class -->
+    <owl:Class rdf:about="https://example.com/datatypes/DatatypesTestAPIV1.0">
+        <rdfs:subClassOf rdf:resource="https://www.graphresearchlabs.com/base/GRLAPISpecifications"/>
+        <rdfs:subClassOf rdf:nodeID="hasDatatypesResource"/>
+        <skos:prefLabel>Datatypes Test API V1.0</skos:prefLabel>
+        <api:apiDisplayLabel>DatatypesTestAPIV1.0</api:apiDisplayLabel>
+    </owl:Class>
+
+    <owl:Restriction rdf:nodeID="hasDatatypesResource">
+        <owl:onProperty rdf:resource="https://www.graphresearchlabs.com/base/hasResourceSchema"/>
+        <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+        <owl:onClass rdf:resource="https://example.com/datatypes/DatatypesTest"/>
+    </owl:Restriction>
+    <owl:Axiom>
+        <owl:annotatedSource rdf:resource="https://example.com/datatypes/DatatypesTestAPIV1.0"/>
+        <owl:annotatedProperty rdf:resource="http://www.w3.org/2000/01/rdf-schema#subClassOf"/>
+        <owl:annotatedTarget rdf:nodeID="hasDatatypesResource"/>
+        <api:apitag>DatatypesTest</api:apitag>
+    </owl:Axiom>
+
+    <!-- Data Properties -->
+    <owl:DatatypeProperty rdf:about="https://example.com/datatypes/stringProp">
+        <skos:prefLabel>String Prop</skos:prefLabel>
+    </owl:DatatypeProperty>
+
+    <owl:DatatypeProperty rdf:about="https://example.com/datatypes/integerProp">
+        <skos:prefLabel>Integer Prop</skos:prefLabel>
+    </owl:DatatypeProperty>
+
+    <owl:DatatypeProperty rdf:about="https://example.com/datatypes/decimalProp">
+        <skos:prefLabel>Decimal Prop</skos:prefLabel>
+    </owl:DatatypeProperty>
+
+    <owl:DatatypeProperty rdf:about="https://example.com/datatypes/booleanProp">
+        <skos:prefLabel>Boolean Prop</skos:prefLabel>
+    </owl:DatatypeProperty>
+
+    <owl:DatatypeProperty rdf:about="https://example.com/datatypes/dateTimeProp">
+        <skos:prefLabel>Date Time Prop</skos:prefLabel>
+    </owl:DatatypeProperty>
+
+    <owl:DatatypeProperty rdf:about="https://example.com/datatypes/dateProp">
+        <skos:prefLabel>Date Prop</skos:prefLabel>
+    </owl:DatatypeProperty>
+
+    <owl:DatatypeProperty rdf:about="https://example.com/datatypes/timeProp">
+        <skos:prefLabel>Time Prop</skos:prefLabel>
+    </owl:DatatypeProperty>
+
+    <owl:DatatypeProperty rdf:about="https://example.com/datatypes/anyURIProp">
+        <skos:prefLabel>Any URI Prop</skos:prefLabel>
+    </owl:DatatypeProperty>
+
+    <owl:DatatypeProperty rdf:about="https://example.com/datatypes/doubleProp">
+        <skos:prefLabel>Double Prop</skos:prefLabel>
+    </owl:DatatypeProperty>
+
+    <owl:DatatypeProperty rdf:about="https://example.com/datatypes/floatProp">
+        <skos:prefLabel>Float Prop</skos:prefLabel>
+    </owl:DatatypeProperty>
+
+    <owl:DatatypeProperty rdf:about="https://example.com/datatypes/longProp">
+        <skos:prefLabel>Long Prop</skos:prefLabel>
+    </owl:DatatypeProperty>
+
+    <owl:DatatypeProperty rdf:about="https://example.com/datatypes/durationProp">
+        <skos:prefLabel>Duration Prop</skos:prefLabel>
+    </owl:DatatypeProperty>
+
+    <!-- DatatypesTest Resource Class -->
+    <owl:Class rdf:about="https://example.com/datatypes/DatatypesTest">
+        <skos:prefLabel>Datatypes Test</skos:prefLabel>
+        <skos:definition>Resource class to test XSD datatype mappings.</skos:definition>
+
+        <!-- apiID -->
+        <rdfs:subClassOf rdf:nodeID="dtApiId"/>
+
+        <!-- String -->
+        <rdfs:subClassOf rdf:nodeID="stringRestr"/>
+
+        <!-- Integer -->
+        <rdfs:subClassOf rdf:nodeID="integerRestr"/>
+
+        <!-- Decimal -->
+        <rdfs:subClassOf rdf:nodeID="decimalRestr"/>
+
+        <!-- Boolean -->
+        <rdfs:subClassOf rdf:nodeID="booleanRestr"/>
+
+        <!-- DateTime -->
+        <rdfs:subClassOf rdf:nodeID="dateTimeRestr"/>
+
+        <!-- Date -->
+        <rdfs:subClassOf rdf:nodeID="dateRestr"/>
+
+        <!-- Time -->
+        <rdfs:subClassOf rdf:nodeID="timeRestr"/>
+
+        <!-- AnyURI -->
+        <rdfs:subClassOf rdf:nodeID="anyURIRestr"/>
+
+        <!-- Double -->
+        <rdfs:subClassOf rdf:nodeID="doubleRestr"/>
+
+        <!-- Float -->
+        <rdfs:subClassOf rdf:nodeID="floatRestr"/>
+
+        <!-- Long -->
+        <rdfs:subClassOf rdf:nodeID="longRestr"/>
+
+        <!-- Duration -->
+        <rdfs:subClassOf rdf:nodeID="durationRestr"/>
+    </owl:Class>
+
+    <!-- apiID restriction -->
+    <owl:Restriction rdf:nodeID="dtApiId">
+        <owl:onProperty rdf:resource="https://www.graphresearchlabs.com/base/apiID"/>
+        <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+        <owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:Restriction>
+    <owl:Axiom>
+        <owl:annotatedSource rdf:resource="https://example.com/datatypes/DatatypesTest"/>
+        <owl:annotatedProperty rdf:resource="http://www.w3.org/2000/01/rdf-schema#subClassOf"/>
+        <owl:annotatedTarget rdf:nodeID="dtApiId"/>
+        <api:apiLabel>DatatypesTestAPIV1.0</api:apiLabel>
+    </owl:Axiom>
+
+    <!-- string restriction -->
+    <owl:Restriction rdf:nodeID="stringRestr">
+        <owl:onProperty rdf:resource="https://example.com/datatypes/stringProp"/>
+        <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+        <owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:Restriction>
+    <owl:Axiom>
+        <owl:annotatedSource rdf:resource="https://example.com/datatypes/DatatypesTest"/>
+        <owl:annotatedProperty rdf:resource="http://www.w3.org/2000/01/rdf-schema#subClassOf"/>
+        <owl:annotatedTarget rdf:nodeID="stringRestr"/>
+        <api:apiLabel>DatatypesTestAPIV1.0</api:apiLabel>
+    </owl:Axiom>
+
+    <!-- integer restriction -->
+    <owl:Restriction rdf:nodeID="integerRestr">
+        <owl:onProperty rdf:resource="https://example.com/datatypes/integerProp"/>
+        <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+        <owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+    </owl:Restriction>
+    <owl:Axiom>
+        <owl:annotatedSource rdf:resource="https://example.com/datatypes/DatatypesTest"/>
+        <owl:annotatedProperty rdf:resource="http://www.w3.org/2000/01/rdf-schema#subClassOf"/>
+        <owl:annotatedTarget rdf:nodeID="integerRestr"/>
+        <api:apiLabel>DatatypesTestAPIV1.0</api:apiLabel>
+    </owl:Axiom>
+
+    <!-- decimal restriction -->
+    <owl:Restriction rdf:nodeID="decimalRestr">
+        <owl:onProperty rdf:resource="https://example.com/datatypes/decimalProp"/>
+        <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+        <owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
+    </owl:Restriction>
+    <owl:Axiom>
+        <owl:annotatedSource rdf:resource="https://example.com/datatypes/DatatypesTest"/>
+        <owl:annotatedProperty rdf:resource="http://www.w3.org/2000/01/rdf-schema#subClassOf"/>
+        <owl:annotatedTarget rdf:nodeID="decimalRestr"/>
+        <api:apiLabel>DatatypesTestAPIV1.0</api:apiLabel>
+    </owl:Axiom>
+
+    <!-- boolean restriction -->
+    <owl:Restriction rdf:nodeID="booleanRestr">
+        <owl:onProperty rdf:resource="https://example.com/datatypes/booleanProp"/>
+        <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+        <owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
+    </owl:Restriction>
+    <owl:Axiom>
+        <owl:annotatedSource rdf:resource="https://example.com/datatypes/DatatypesTest"/>
+        <owl:annotatedProperty rdf:resource="http://www.w3.org/2000/01/rdf-schema#subClassOf"/>
+        <owl:annotatedTarget rdf:nodeID="booleanRestr"/>
+        <api:apiLabel>DatatypesTestAPIV1.0</api:apiLabel>
+    </owl:Axiom>
+
+    <!-- dateTime restriction -->
+    <owl:Restriction rdf:nodeID="dateTimeRestr">
+        <owl:onProperty rdf:resource="https://example.com/datatypes/dateTimeProp"/>
+        <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+        <owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#dateTime"/>
+    </owl:Restriction>
+    <owl:Axiom>
+        <owl:annotatedSource rdf:resource="https://example.com/datatypes/DatatypesTest"/>
+        <owl:annotatedProperty rdf:resource="http://www.w3.org/2000/01/rdf-schema#subClassOf"/>
+        <owl:annotatedTarget rdf:nodeID="dateTimeRestr"/>
+        <api:apiLabel>DatatypesTestAPIV1.0</api:apiLabel>
+    </owl:Axiom>
+
+    <!-- date restriction -->
+    <owl:Restriction rdf:nodeID="dateRestr">
+        <owl:onProperty rdf:resource="https://example.com/datatypes/dateProp"/>
+        <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+        <owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#date"/>
+    </owl:Restriction>
+    <owl:Axiom>
+        <owl:annotatedSource rdf:resource="https://example.com/datatypes/DatatypesTest"/>
+        <owl:annotatedProperty rdf:resource="http://www.w3.org/2000/01/rdf-schema#subClassOf"/>
+        <owl:annotatedTarget rdf:nodeID="dateRestr"/>
+        <api:apiLabel>DatatypesTestAPIV1.0</api:apiLabel>
+    </owl:Axiom>
+
+    <!-- time restriction -->
+    <owl:Restriction rdf:nodeID="timeRestr">
+        <owl:onProperty rdf:resource="https://example.com/datatypes/timeProp"/>
+        <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+        <owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#time"/>
+    </owl:Restriction>
+    <owl:Axiom>
+        <owl:annotatedSource rdf:resource="https://example.com/datatypes/DatatypesTest"/>
+        <owl:annotatedProperty rdf:resource="http://www.w3.org/2000/01/rdf-schema#subClassOf"/>
+        <owl:annotatedTarget rdf:nodeID="timeRestr"/>
+        <api:apiLabel>DatatypesTestAPIV1.0</api:apiLabel>
+    </owl:Axiom>
+
+    <!-- anyURI restriction -->
+    <owl:Restriction rdf:nodeID="anyURIRestr">
+        <owl:onProperty rdf:resource="https://example.com/datatypes/anyURIProp"/>
+        <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+        <owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#anyURI"/>
+    </owl:Restriction>
+    <owl:Axiom>
+        <owl:annotatedSource rdf:resource="https://example.com/datatypes/DatatypesTest"/>
+        <owl:annotatedProperty rdf:resource="http://www.w3.org/2000/01/rdf-schema#subClassOf"/>
+        <owl:annotatedTarget rdf:nodeID="anyURIRestr"/>
+        <api:apiLabel>DatatypesTestAPIV1.0</api:apiLabel>
+    </owl:Axiom>
+
+    <!-- double restriction -->
+    <owl:Restriction rdf:nodeID="doubleRestr">
+        <owl:onProperty rdf:resource="https://example.com/datatypes/doubleProp"/>
+        <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+        <owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#double"/>
+    </owl:Restriction>
+    <owl:Axiom>
+        <owl:annotatedSource rdf:resource="https://example.com/datatypes/DatatypesTest"/>
+        <owl:annotatedProperty rdf:resource="http://www.w3.org/2000/01/rdf-schema#subClassOf"/>
+        <owl:annotatedTarget rdf:nodeID="doubleRestr"/>
+        <api:apiLabel>DatatypesTestAPIV1.0</api:apiLabel>
+    </owl:Axiom>
+
+    <!-- float restriction -->
+    <owl:Restriction rdf:nodeID="floatRestr">
+        <owl:onProperty rdf:resource="https://example.com/datatypes/floatProp"/>
+        <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+        <owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#float"/>
+    </owl:Restriction>
+    <owl:Axiom>
+        <owl:annotatedSource rdf:resource="https://example.com/datatypes/DatatypesTest"/>
+        <owl:annotatedProperty rdf:resource="http://www.w3.org/2000/01/rdf-schema#subClassOf"/>
+        <owl:annotatedTarget rdf:nodeID="floatRestr"/>
+        <api:apiLabel>DatatypesTestAPIV1.0</api:apiLabel>
+    </owl:Axiom>
+
+    <!-- long restriction -->
+    <owl:Restriction rdf:nodeID="longRestr">
+        <owl:onProperty rdf:resource="https://example.com/datatypes/longProp"/>
+        <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+        <owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#long"/>
+    </owl:Restriction>
+    <owl:Axiom>
+        <owl:annotatedSource rdf:resource="https://example.com/datatypes/DatatypesTest"/>
+        <owl:annotatedProperty rdf:resource="http://www.w3.org/2000/01/rdf-schema#subClassOf"/>
+        <owl:annotatedTarget rdf:nodeID="longRestr"/>
+        <api:apiLabel>DatatypesTestAPIV1.0</api:apiLabel>
+    </owl:Axiom>
+
+    <!-- duration restriction -->
+    <owl:Restriction rdf:nodeID="durationRestr">
+        <owl:onProperty rdf:resource="https://example.com/datatypes/durationProp"/>
+        <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+        <owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#duration"/>
+    </owl:Restriction>
+    <owl:Axiom>
+        <owl:annotatedSource rdf:resource="https://example.com/datatypes/DatatypesTest"/>
+        <owl:annotatedProperty rdf:resource="http://www.w3.org/2000/01/rdf-schema#subClassOf"/>
+        <owl:annotatedTarget rdf:nodeID="durationRestr"/>
+        <api:apiLabel>DatatypesTestAPIV1.0</api:apiLabel>
+    </owl:Axiom>
+
+</rdf:RDF>

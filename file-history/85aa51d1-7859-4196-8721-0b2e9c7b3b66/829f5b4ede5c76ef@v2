@@ -1,0 +1,335 @@
+package com.grl.component.schema;
+
+import com.grl.component.asg.OntologyConstants;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.OWLClassExpression;
+import org.semanticweb.owlapi.model.OWLDatatype;
+import org.semanticweb.owlapi.model.OWLIndividual;
+import org.semanticweb.owlapi.model.OWLLiteral;
+import org.semanticweb.owlapi.model.OWLNamedIndividual;
+import org.semanticweb.owlapi.model.OWLObjectHasValue;
+import org.semanticweb.owlapi.model.OWLObjectOneOf;
+import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.search.EntitySearcher;
+
+/**
+ * Detects taxonomy patterns in OWL class expressions.
+ *
+ * <p>This class identifies four taxonomy patterns used in ontologies:
+ * <ul>
+ *   <li><b>Pattern A</b>: Inline enum with untyped individuals (owl:oneOf with no rdf:type)</li>
+ *   <li><b>Pattern B</b>: Typed individuals with metadata (owl:oneOf with rdf:type and annotations)</li>
+ *   <li><b>Pattern C</b>: Class-based taxonomy (named class without object property restrictions)</li>
+ *   <li><b>Pattern D</b>: SKOS taxonomy (subclass of skos:Concept or has skos:inScheme)</li>
+ * </ul>
+ *
+ * <p>Thread safety: This class is thread-safe if the underlying OWLOntology is not modified
+ * during detection.
+ *
+ * @see TaxonomyInfo
+ * @see TaxonomyPattern
+ */
+public class TaxonomyPatternDetector {
+
+  private final OWLOntology ontology;
+  private final PropertyNameResolver nameResolver;
+
+  /**
+   * Creates a new detector for the given ontology.
+   *
+   * @param ontology the ontology to analyze
+   */
+  public TaxonomyPatternDetector(OWLOntology ontology) {
+    this.ontology = ontology;
+    this.nameResolver = new PropertyNameResolver();
+  }
+
+  /**
+   * Creates a new detector with a shared name resolver.
+   *
+   * @param ontology     the ontology to analyze
+   * @param nameResolver the resolver for property/class names
+   */
+  public TaxonomyPatternDetector(OWLOntology ontology, PropertyNameResolver nameResolver) {
+    this.ontology = ontology;
+    this.nameResolver = nameResolver;
+  }
+
+  /**
+   * Detects if a filler class expression represents a taxonomy pattern.
+   *
+   * @param propertyName the property name this restriction is associated with
+   * @param filler       the filler class expression from a restriction
+   * @return detected taxonomy info, or empty if no taxonomy pattern found
+   */
+  public Optional<TaxonomyInfo> detect(String propertyName, OWLClassExpression filler) {
+    if (filler instanceof OWLObjectOneOf oneOf) {
+      return detectOneOfPattern(propertyName, oneOf);
+    } else if (filler.isNamed() && filler instanceof OWLClass targetClass) {
+      return detectClassPattern(propertyName, targetClass);
+    }
+    return Optional.empty();
+  }
+
+  /**
+   * Detects Pattern A or B from an owl:oneOf expression.
+   */
+  private Optional<TaxonomyInfo> detectOneOfPattern(String propertyName, OWLObjectOneOf oneOf) {
+    List<OWLNamedIndividual> individuals = oneOf.individuals()
+        .filter(ind -> ind instanceof OWLNamedIndividual)
+        .map(ind -> (OWLNamedIndividual) ind)
+        .toList();
+
+    if (individuals.isEmpty()) {
+      return Optional.empty();
+    }
+
+    boolean hasTypedIndividuals = individuals.stream()
+        .anyMatch(this::hasDomainClass);
+
+    if (hasTypedIndividuals) {
+      // Pattern B: typed individuals with metadata and property graphs
+      return Optional.of(buildPatternB(propertyName, individuals));
+    } else {
+      // Pattern A: untyped individuals (inline enum)
+      return Optional.of(TaxonomyInfo.patternA(propertyName, individuals));
+    }
+  }
+
+  /**
+   * Builds Pattern B taxonomy info with individual metadata and property graphs.
+   */
+  private TaxonomyInfo buildPatternB(String propertyName, List<OWLNamedIndividual> individuals) {
+    Map<String, TaxonomyInfo.IndividualMetadata> metadata = new HashMap<>();
+    List<TaxonomyInfo.IndividualGraph> individualGraphs = new ArrayList<>();
+
+    for (OWLNamedIndividual ind : individuals) {
+      OWLClass domainClass = getDomainClass(ind);
+      String codeValue = getAnnotationValue(ind, OntologyConstants.SKOS_NOTATION);
+      String displayName = getAnnotationValue(ind, OntologyConstants.SKOS_PREFLABEL);
+      String definition = getAnnotationValue(ind, OntologyConstants.SKOS_DEFINITION);
+      String indName = nameResolver.resolve(ind);
+      metadata.put(indName, new TaxonomyInfo.IndividualMetadata(
+          codeValue, displayName, definition, domainClass));
+
+      TaxonomyInfo.IndividualGraph graph = extractIndividualGraph(ind);
+      individualGraphs.add(graph);
+    }
+
+    return TaxonomyInfo.patternB(propertyName, individuals, metadata, individualGraphs);
+  }
+
+  /**
+   * Detects Pattern C or D from a named class.
+   */
+  private Optional<TaxonomyInfo> detectClassPattern(String propertyName, OWLClass targetClass) {
+    // Skip owl:Thing - it doesn't represent a taxonomy pattern
+    if (targetClass.isOWLThing()) {
+      return Optional.empty();
+    }
+
+    if (isSubClassOfSkosConcept(targetClass) || hasInSchemeRestriction(targetClass)) {
+      // Pattern D: SKOS taxonomy
+      OWLIndividual conceptScheme = findConceptScheme(targetClass);
+      List<OWLNamedIndividual> individuals = findSkosConceptIndividuals(targetClass);
+      return Optional.of(TaxonomyInfo.patternD(
+          propertyName, targetClass, individuals, conceptScheme));
+    } else if (!hasObjectPropertyRestrictions(targetClass)) {
+      // Pattern C: class-based taxonomy (no object property restrictions)
+      List<OWLNamedIndividual> individuals = findClassIndividuals(targetClass);
+      boolean hasHierarchy = hasSubclassHierarchy(targetClass);
+      return Optional.of(TaxonomyInfo.patternC(
+          propertyName, targetClass, individuals, hasHierarchy));
+    }
+
+    // Domain class with object property restrictions - not a taxonomy
+    return Optional.empty();
+  }
+
+  /**
+   * Checks if an individual has a domain class type (not owl:Thing).
+   */
+  private boolean hasDomainClass(OWLNamedIndividual individual) {
+    return EntitySearcher.getTypes(individual, ontology)
+        .anyMatch(type -> type.isNamed() && !type.isOWLThing());
+  }
+
+  /**
+   * Gets the domain class for an individual.
+   *
+   * @return the first named non-Thing class, or null if none
+   */
+  private OWLClass getDomainClass(OWLNamedIndividual individual) {
+    return EntitySearcher.getTypes(individual, ontology)
+        .filter(type -> type.isNamed() && !type.isOWLThing())
+        .map(OWLClassExpression::asOWLClass)
+        .findFirst()
+        .orElse(null);
+  }
+
+  /**
+   * Gets an annotation value for an individual, matching by short form to handle namespace
+   * flattening.
+   */
+  private String getAnnotationValue(OWLNamedIndividual individual, IRI annotationIRI) {
+    String shortForm = annotationIRI.getShortForm();
+    return EntitySearcher.getAnnotations(individual, ontology)
+        .filter(ann -> nameResolver.resolve(ann.getProperty()).equals(shortForm))
+        .findFirst()
+        .flatMap(ann -> ann.getValue().asLiteral())
+        .map(OWLLiteral::getLiteral)
+        .orElse(null);
+  }
+
+  /**
+   * Extracts an IndividualGraph for a Pattern B individual, including all property assertions.
+   */
+  private TaxonomyInfo.IndividualGraph extractIndividualGraph(OWLNamedIndividual individual) {
+    String code = getCodeValue(individual);
+    String displayName = getAnnotationValue(individual, OntologyConstants.SKOS_PREFLABEL);
+    String definition = getAnnotationValue(individual, OntologyConstants.SKOS_DEFINITION);
+
+    List<TaxonomyInfo.PropertyAssertion> assertions = new ArrayList<>();
+
+    // Extract data property assertions from axioms
+    ontology.dataPropertyAssertionAxioms(individual)
+        .forEach(axiom -> {
+          if (axiom.getProperty().isNamed()) {
+            String propName = nameResolver.resolve(axiom.getProperty().asOWLDataProperty());
+            OWLLiteral lit = axiom.getObject();
+            assertions.add(new TaxonomyInfo.PropertyAssertion(
+                propName,
+                lit.getLiteral(),
+                lit.getDatatype(),
+                null
+            ));
+          }
+        });
+
+    // Extract object property assertions from axioms
+    ontology.objectPropertyAssertionAxioms(individual)
+        .forEach(axiom -> {
+          if (axiom.getProperty().isNamed() && axiom.getObject().isNamed()) {
+            String propName = nameResolver.resolve(axiom.getProperty().asOWLObjectProperty());
+            assertions.add(new TaxonomyInfo.PropertyAssertion(
+                propName,
+                null,
+                null,
+                axiom.getObject().asOWLNamedIndividual()
+            ));
+          }
+        });
+
+    return new TaxonomyInfo.IndividualGraph(code, displayName, definition, assertions, individual);
+  }
+
+  /**
+   * Gets the code value for an individual: skos:notation if present, otherwise IRI local name.
+   */
+  private String getCodeValue(OWLNamedIndividual individual) {
+    String notation = getAnnotationValue(individual, OntologyConstants.SKOS_NOTATION);
+    return notation != null ? notation : nameResolver.resolve(individual);
+  }
+
+  /**
+   * Checks if a class is a subclass of skos:Concept.
+   */
+  private boolean isSubClassOfSkosConcept(OWLClass cls) {
+    return EntitySearcher.getSuperClasses(cls, ontology)
+        .anyMatch(superCls -> superCls.isNamed() &&
+            superCls.asOWLClass().getIRI().equals(OntologyConstants.SKOS_CONCEPT));
+  }
+
+  /**
+   * Checks if a class has a skos:inScheme restriction.
+   */
+  private boolean hasInSchemeRestriction(OWLClass cls) {
+    return ontology.subClassAxiomsForSubClass(cls)
+        .map(ax -> ax.getSuperClass())
+        .anyMatch(superCls -> {
+          if (superCls instanceof OWLObjectHasValue hasValue) {
+            return hasValue.getProperty().isNamed() &&
+                hasValue.getProperty().asOWLObjectProperty().getIRI()
+                    .equals(OntologyConstants.SKOS_IN_SCHEME);
+          }
+          return false;
+        });
+  }
+
+  /**
+   * Checks if a class has object property restrictions (indicating it's a domain class, not a
+   * taxonomy).
+   */
+  private boolean hasObjectPropertyRestrictions(OWLClass cls) {
+    return ontology.subClassAxiomsForSubClass(cls)
+        .map(ax -> ax.getSuperClass())
+        .anyMatch(superCls -> !superCls.getObjectPropertiesInSignature().isEmpty());
+  }
+
+  /**
+   * Checks if a class has subclasses (indicating a hierarchy).
+   */
+  private boolean hasSubclassHierarchy(OWLClass cls) {
+    return ontology.classesInSignature()
+        .anyMatch(subCls -> EntitySearcher.getSuperClasses(subCls, ontology)
+            .anyMatch(superCls -> superCls.isNamed() && superCls.asOWLClass().equals(cls)));
+  }
+
+  /**
+   * Finds the skos:ConceptScheme for a class via skos:inScheme restriction.
+   */
+  private OWLIndividual findConceptScheme(OWLClass cls) {
+    return ontology.subClassAxiomsForSubClass(cls)
+        .map(ax -> ax.getSuperClass())
+        .filter(superCls -> superCls instanceof OWLObjectHasValue)
+        .map(superCls -> (OWLObjectHasValue) superCls)
+        .filter(hasValue -> hasValue.getProperty().isNamed() &&
+            hasValue.getProperty().asOWLObjectProperty().getIRI()
+                .equals(OntologyConstants.SKOS_IN_SCHEME))
+        .map(OWLObjectHasValue::getFiller)
+        .findFirst()
+        .orElse(null);
+  }
+
+  /**
+   * Finds all individuals that are instances of the given SKOS concept class.
+   */
+  private List<OWLNamedIndividual> findSkosConceptIndividuals(OWLClass cls) {
+    List<OWLNamedIndividual> result = new ArrayList<>();
+    EntitySearcher.getIndividuals(cls, ontology)
+        .filter(ind -> ind instanceof OWLNamedIndividual)
+        .map(ind -> (OWLNamedIndividual) ind)
+        .forEach(result::add);
+    return result;
+  }
+
+  /**
+   * Finds all individuals of a class and its subclasses.
+   */
+  private List<OWLNamedIndividual> findClassIndividuals(OWLClass cls) {
+    List<OWLNamedIndividual> result = new ArrayList<>();
+
+    // Direct instances
+    EntitySearcher.getIndividuals(cls, ontology)
+        .filter(ind -> ind instanceof OWLNamedIndividual)
+        .map(ind -> (OWLNamedIndividual) ind)
+        .forEach(result::add);
+
+    // Instances of subclasses
+    ontology.classesInSignature()
+        .filter(subCls -> EntitySearcher.getSuperClasses(subCls, ontology)
+            .anyMatch(superCls -> superCls.isNamed() && superCls.asOWLClass().equals(cls)))
+        .forEach(subCls -> EntitySearcher.getIndividuals(subCls, ontology)
+            .filter(ind -> ind instanceof OWLNamedIndividual)
+            .map(ind -> (OWLNamedIndividual) ind)
+            .forEach(result::add));
+
+    return result;
+  }
+}

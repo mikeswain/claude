@@ -1,0 +1,99 @@
+package kakuro;
+
+import java.util.*;
+
+public final class Solver {
+    private final Grid grid;
+    private final List<Run> runs;
+    private final List<Position> blanks;
+    private final Map<Position, List<Run>> posToRuns;
+
+    public Solver(Grid grid) {
+        this.grid = grid;
+        this.runs = grid.runs();
+        this.posToRuns = buildPosToRuns();
+        this.blanks = orderByMostConstrained();
+    }
+
+    /** Solves the grid in-place. Returns true if a solution was found. */
+    public boolean solve() {
+        return solve(0);
+    }
+
+    private boolean solve(int idx) {
+        if (idx == blanks.size()) return true;
+        var pos = blanks.get(idx);
+        for (int d = 1; d <= 9; d++) {
+            if (isValid(pos, d)) {
+                grid.set(pos.row(), pos.col(), new Cell.Empty(d));
+                if (solve(idx + 1)) return true;
+                grid.set(pos.row(), pos.col(), new Cell.Empty(0));
+            }
+        }
+        return false;
+    }
+
+    private boolean isValid(Position pos, int digit) {
+        for (var run : posToRuns.get(pos)) {
+            if (!checkRun(run, pos, digit)) return false;
+        }
+        return true;
+    }
+
+    private boolean checkRun(Run run, Position pos, int digit) {
+        int sum = digit;
+        int filled = 1;
+        int remaining = 0;
+        for (var p : run.cells()) {
+            if (p.equals(pos)) continue;
+            int v = ((Cell.Empty) grid.get(p.row(), p.col())).value();
+            if (v == digit) return false; // duplicate
+            if (v > 0) {
+                sum += v;
+                filled++;
+            } else {
+                remaining++;
+            }
+        }
+        if (sum > run.target()) return false;
+        if (remaining == 0) return sum == run.target();
+        return sum + minSum(remaining) <= run.target()
+            && sum + maxSum(remaining) >= run.target();
+    }
+
+    /** Minimum possible sum of n distinct digits (1+2+...+n). */
+    private int minSum(int n) {
+        return n * (n + 1) / 2;
+    }
+
+    /** Maximum possible sum of n distinct digits (9+8+...+(10-n)). */
+    private int maxSum(int n) {
+        return n * (19 - n) / 2;
+    }
+
+    private Map<Position, List<Run>> buildPosToRuns() {
+        var map = new HashMap<Position, List<Run>>();
+        for (var run : runs) {
+            for (var pos : run.cells()) {
+                map.computeIfAbsent(pos, k -> new ArrayList<>()).add(run);
+            }
+        }
+        return map;
+    }
+
+    /** Order blank cells most-constrained-first (shortest run length). */
+    private List<Position> orderByMostConstrained() {
+        var set = new LinkedHashSet<Position>();
+        for (int r = 0; r < grid.rows(); r++) {
+            for (int c = 0; c < grid.cols(); c++) {
+                if (grid.get(r, c) instanceof Cell.Empty e && e.value() == 0) {
+                    set.add(new Position(r, c));
+                }
+            }
+        }
+        var list = new ArrayList<>(set);
+        list.sort(Comparator.comparingInt(p ->
+                posToRuns.get(p).stream().mapToInt(r -> r.cells().size()).min().orElse(10)));
+        return list;
+    }
+}

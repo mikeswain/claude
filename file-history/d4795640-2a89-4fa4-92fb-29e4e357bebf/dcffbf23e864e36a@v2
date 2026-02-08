@@ -1,0 +1,45 @@
+package kakuro;
+
+import java.nio.file.Path;
+
+public final class Main {
+
+    public static void main(String[] args) throws Exception {
+        if (args.length != 1) {
+            System.err.println("Usage: java kakuro.Main <puzzle.csv>");
+            System.exit(1);
+        }
+        var grid = CsvParser.parse(Path.of(args[0]));
+        var solver = new Solver(grid);
+        if (solver.solve()) {
+            printGrid(grid);
+        } else {
+            System.out.println("No solution found.");
+        }
+    }
+
+    private static void printGrid(Grid grid) {
+        for (int r = 0; r < grid.rows(); r++) {
+            var sb = new StringBuilder();
+            for (int c = 0; c < grid.cols(); c++) {
+                if (c > 0) sb.append(' ');
+                sb.append(formatCell(grid.get(r, c)));
+            }
+            System.out.println(sb);
+        }
+    }
+
+    private static String formatCell(Cell cell) {
+        return switch (cell) {
+            case Cell.Black _ -> "  #  ";
+            case Cell.Clue clue -> formatClue(clue);
+            case Cell.Empty e -> String.format("  %d  ", e.value());
+        };
+    }
+
+    private static String formatClue(Cell.Clue clue) {
+        String d = clue.down() > 0 ? String.valueOf(clue.down()) : " ";
+        String a = clue.across() > 0 ? String.valueOf(clue.across()) : " ";
+        return String.format("%2s\\%-2s", d, a);
+    }
+}

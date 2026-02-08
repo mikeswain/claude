@@ -1,0 +1,335 @@
+package com.grl.component.schema;
+
+import java.util.Optional;
+import java.util.OptionalInt;
+import org.semanticweb.owlapi.model.OWLClassExpression;
+import org.semanticweb.owlapi.model.OWLDataAllValuesFrom;
+import org.semanticweb.owlapi.model.OWLDataExactCardinality;
+import org.semanticweb.owlapi.model.OWLDataHasValue;
+import org.semanticweb.owlapi.model.OWLDataMaxCardinality;
+import org.semanticweb.owlapi.model.OWLDataMinCardinality;
+import org.semanticweb.owlapi.model.OWLDataOneOf;
+import org.semanticweb.owlapi.model.OWLDataRange;
+import org.semanticweb.owlapi.model.OWLDataSomeValuesFrom;
+import org.semanticweb.owlapi.model.OWLObjectAllValuesFrom;
+import org.semanticweb.owlapi.model.OWLObjectComplementOf;
+import org.semanticweb.owlapi.model.OWLObjectExactCardinality;
+import org.semanticweb.owlapi.model.OWLObjectHasValue;
+import org.semanticweb.owlapi.model.OWLObjectIntersectionOf;
+import org.semanticweb.owlapi.model.OWLObjectMaxCardinality;
+import org.semanticweb.owlapi.model.OWLObjectMinCardinality;
+import org.semanticweb.owlapi.model.OWLObjectOneOf;
+import org.semanticweb.owlapi.model.OWLObjectSomeValuesFrom;
+import org.semanticweb.owlapi.model.OWLObjectUnionOf;
+import org.semanticweb.owlapi.model.OWLPropertyRange;
+
+/**
+ * Typed container for OWL restriction information. Replaces the string-based Map<String,
+ * List<String>> pattern.
+ * <p>
+ * This sealed interface provides a type-safe way to represent OWL restrictions, enabling
+ * compile-time checking and eliminating magic string comparisons.
+ */
+public sealed interface RestrictionInfo {
+
+  /**
+   * @return the original OWL object (class expression or data range)
+   */
+  Object expression();
+
+  /**
+   * @return cardinality value if this is a cardinality restriction
+   */
+  default OptionalInt cardinality() {
+    return OptionalInt.empty();
+  }
+
+  /**
+   * @return filler class/datatype if this is a value restriction
+   */
+  default Optional<? extends OWLPropertyRange> filler() {
+    return Optional.empty();
+  }
+
+  // Cardinality restrictions
+  record MinCardinality(OWLObjectMinCardinality expression) implements RestrictionInfo {
+
+    @Override
+    public OptionalInt cardinality() {
+      return OptionalInt.of(expression.getCardinality());
+    }
+  }
+
+  record MaxCardinality(OWLObjectMaxCardinality expression) implements RestrictionInfo {
+
+    @Override
+    public OptionalInt cardinality() {
+      return OptionalInt.of(expression.getCardinality());
+    }
+  }
+
+  record ExactCardinality(OWLObjectExactCardinality expression) implements RestrictionInfo {
+
+    @Override
+    public OptionalInt cardinality() {
+      return OptionalInt.of(expression.getCardinality());
+    }
+  }
+
+  // Data cardinality restrictions
+  record DataMinCardinality(OWLDataMinCardinality expression) implements RestrictionInfo {
+
+    @Override
+    public OptionalInt cardinality() {
+      return OptionalInt.of(expression.getCardinality());
+    }
+  }
+
+  record DataMaxCardinality(OWLDataMaxCardinality expression) implements RestrictionInfo {
+
+    @Override
+    public OptionalInt cardinality() {
+      return OptionalInt.of(expression.getCardinality());
+    }
+  }
+
+  record DataExactCardinality(OWLDataExactCardinality expression) implements RestrictionInfo {
+
+    @Override
+    public OptionalInt cardinality() {
+      return OptionalInt.of(expression.getCardinality());
+    }
+  }
+
+  // Value restrictions
+  record SomeValuesFrom(OWLObjectSomeValuesFrom expression) implements RestrictionInfo {
+
+    @Override
+    public Optional<OWLClassExpression> filler() {
+      return Optional.of(expression.getFiller());
+    }
+  }
+
+  record AllValuesFrom(OWLObjectAllValuesFrom expression) implements RestrictionInfo {
+
+    @Override
+    public Optional<OWLClassExpression> filler() {
+      return Optional.of(expression.getFiller());
+    }
+  }
+
+  record DataSomeValuesFrom(OWLDataSomeValuesFrom expression) implements RestrictionInfo {
+
+    @Override
+    public Optional<OWLDataRange> filler() {
+      return Optional.of(expression.getFiller());
+    }
+  }
+
+  record DataAllValuesFrom(OWLDataAllValuesFrom expression) implements RestrictionInfo {
+
+    @Override
+    public Optional<OWLDataRange> filler() {
+      return Optional.of(expression.getFiller());
+    }
+  }
+
+  // Other restrictions
+  record HasValue(OWLObjectHasValue expression) implements RestrictionInfo {
+
+  }
+
+  record DataHasValue(OWLDataHasValue expression) implements RestrictionInfo {
+
+  }
+
+  record OneOf(OWLObjectOneOf expression) implements RestrictionInfo {
+
+  }
+
+  record DataOneOf(OWLDataOneOf expression) implements RestrictionInfo {
+
+  }
+
+  record UnionOf(OWLObjectUnionOf expression) implements RestrictionInfo {
+
+  }
+
+  record IntersectionOf(OWLObjectIntersectionOf expression) implements RestrictionInfo {
+
+  }
+
+  record ComplementOf(OWLObjectComplementOf expression) implements RestrictionInfo {
+
+  }
+
+  /**
+   * Factory method to wrap an OWL class expression in the appropriate RestrictionInfo type. Uses
+   * pattern matching switch for concise type discrimination.
+   *
+   * @param expr the OWL class expression to wrap
+   * @return an Optional containing the appropriate RestrictionInfo subtype, or empty if
+   * unrecognized
+   */
+  static Optional<RestrictionInfo> from(OWLClassExpression expr) {
+    return Optional.ofNullable(switch (expr) {
+      case OWLObjectMinCardinality c -> new MinCardinality(c);
+      case OWLObjectMaxCardinality c -> new MaxCardinality(c);
+      case OWLObjectExactCardinality c -> new ExactCardinality(c);
+      case OWLObjectSomeValuesFrom c -> new SomeValuesFrom(c);
+      case OWLObjectAllValuesFrom c -> new AllValuesFrom(c);
+      case OWLObjectHasValue c -> new HasValue(c);
+      case OWLObjectOneOf c -> new OneOf(c);
+      case OWLObjectUnionOf c -> new UnionOf(c);
+      case OWLObjectIntersectionOf c -> new IntersectionOf(c);
+      case OWLObjectComplementOf c -> new ComplementOf(c);
+      case OWLDataMinCardinality c -> new DataMinCardinality(c);
+      case OWLDataMaxCardinality c -> new DataMaxCardinality(c);
+      case OWLDataExactCardinality c -> new DataExactCardinality(c);
+      case OWLDataSomeValuesFrom c -> new DataSomeValuesFrom(c);
+      case OWLDataAllValuesFrom c -> new DataAllValuesFrom(c);
+      case OWLDataHasValue c -> new DataHasValue(c);
+      case OWLDataOneOf c -> new DataOneOf(c);
+      default -> null;
+    });
+  }
+
+  /**
+   * Apply this restriction to an ArraySchema with correct OWL→OpenAPI semantics.
+   *
+   * @param schema the ArraySchema to apply restrictions to
+   */
+  default void applyToArraySchema(io.swagger.v3.oas.models.media.ArraySchema schema) {
+    switch (this) {
+      case MinCardinality r -> schema.setMinItems(r.expression().getCardinality());
+      case MaxCardinality r -> schema.setMaxItems(r.expression().getCardinality());
+      case ExactCardinality r -> {
+        schema.setMinItems(r.expression().getCardinality());
+        schema.setMaxItems(r.expression().getCardinality());
+      }
+      case DataMinCardinality r -> schema.setMinItems(r.expression().getCardinality());
+      case DataMaxCardinality r -> schema.setMaxItems(r.expression().getCardinality());
+      case DataExactCardinality r -> {
+        schema.setMinItems(r.expression().getCardinality());
+        schema.setMaxItems(r.expression().getCardinality());
+      }
+      case SomeValuesFrom r -> {
+        // someValuesFrom = "at least one from this set"
+        // Set minItems=1, NO maxItems
+        schema.setMinItems(1);
+      }
+      case AllValuesFrom r -> {
+        // allValuesFrom = type constraint only, NO cardinality
+        // Do nothing
+      }
+      case DataSomeValuesFrom r -> schema.setMinItems(1);
+      case DataAllValuesFrom r -> { /* type constraint only */ }
+      default -> { /* other restrictions don't affect array cardinality */ }
+    }
+  }
+
+  /**
+   * Check if this restriction implies the property is required (minCardinality >= 1).
+   *
+   * @return true if this restriction makes the property required
+   */
+  default boolean impliesRequired() {
+    return switch (this) {
+      case MinCardinality r -> r.expression().getCardinality() >= 1;
+      case ExactCardinality r -> r.expression().getCardinality() >= 1;
+      case DataMinCardinality r -> r.expression().getCardinality() >= 1;
+      case DataExactCardinality r -> r.expression().getCardinality() >= 1;
+      case SomeValuesFrom r -> true;
+      case DataSomeValuesFrom r -> true;
+      default -> false;
+    };
+  }
+
+  /**
+   * Check if this restriction implies an array (cardinality > 1 or someValuesFrom).
+   *
+   * @return true if this restriction implies an array property
+   */
+  default boolean impliesArray() {
+    return switch (this) {
+      case MinCardinality r -> r.expression().getCardinality() > 1;
+      case MaxCardinality r -> r.expression().getCardinality() > 1;
+      case ExactCardinality r -> r.expression().getCardinality() > 1;
+      case DataMinCardinality r -> r.expression().getCardinality() > 1;
+      case DataMaxCardinality r -> r.expression().getCardinality() > 1;
+      case DataExactCardinality r -> r.expression().getCardinality() > 1;
+      case SomeValuesFrom r -> true;
+      case DataSomeValuesFrom r -> true;
+      default -> false;
+    };
+  }
+
+  /**
+   * Extract enum literal values from DataOneOf restriction. Used to populate enum values in OpenAPI
+   * schema.
+   *
+   * @return list of literal string values, or empty list if not a DataOneOf restriction
+   */
+  default java.util.List<String> getEnumValues() {
+    return switch (this) {
+      case DataOneOf dataOneOf -> dataOneOf.expression().getValues().stream()
+          .map(org.semanticweb.owlapi.model.OWLLiteral::getLiteral)
+          .toList();
+      default -> java.util.List.of();
+    };
+  }
+
+  /**
+   * Extract range OWLClass objects from value restrictions.
+   *
+   * @return list of range OWLClass objects from SomeValuesFrom/AllValuesFrom fillers
+   */
+  default java.util.List<org.semanticweb.owlapi.model.OWLClass> getRangeClasses() {
+    return switch (this) {
+      case SomeValuesFrom r -> r.filler()
+          .filter(f -> f instanceof org.semanticweb.owlapi.model.OWLClass)
+          .map(OWLClassExpression::asOWLClass)
+          .stream().toList();
+      case AllValuesFrom r -> r.filler()
+          .filter(f -> f instanceof org.semanticweb.owlapi.model.OWLClass)
+          .map(OWLClassExpression::asOWLClass)
+          .stream().toList();
+      default -> java.util.List.of();
+    };
+  }
+
+  /**
+   * Extract range class names from value restrictions. Used to determine which classes/datatypes
+   * are referenced in restrictions.
+   *
+   * @param nameResolver property name resolver for IRI conversion
+   * @return list of range class/datatype names
+   */
+  default java.util.List<String> getRangeNames(
+      com.grl.component.schema.PropertyNameResolver nameResolver) {
+    return switch (this) {
+      case SomeValuesFrom r -> r.filler()
+          .filter(f -> f instanceof org.semanticweb.owlapi.model.OWLClass)
+          .map(f -> nameResolver.resolve(f.asOWLClass()))
+          .stream().toList();
+      case AllValuesFrom r -> r.filler()
+          .filter(f -> f instanceof org.semanticweb.owlapi.model.OWLClass)
+          .map(f -> nameResolver.resolve(f.asOWLClass()))
+          .stream().toList();
+      case DataSomeValuesFrom r -> r.filler()
+          .filter(f -> f instanceof org.semanticweb.owlapi.model.OWLDatatype)
+          .map(f -> nameResolver.resolve(f.asOWLDatatype().getIRI()))
+          .stream().toList();
+      case DataAllValuesFrom r -> r.filler()
+          .filter(f -> f instanceof org.semanticweb.owlapi.model.OWLDatatype)
+          .map(f -> nameResolver.resolve(f.asOWLDatatype().getIRI()))
+          .stream().toList();
+      case OneOf oneOf -> oneOf.expression().individuals()
+          .flatMap(com.grl.component.owl.Narrow.to(
+              org.semanticweb.owlapi.model.OWLNamedIndividual.class))
+          .map(nameResolver::resolve)
+          .toList();
+      default -> java.util.List.of();
+    };
+  }
+}

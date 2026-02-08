@@ -1,0 +1,7 @@
+name: parent
+rootClass: only-set-in-parent
+templates:
+  openapi:
+    security:
+      - mike: [ "yes" ]
+

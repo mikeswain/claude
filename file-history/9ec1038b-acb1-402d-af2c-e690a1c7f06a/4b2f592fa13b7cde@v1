@@ -1,0 +1,467 @@
+package com.grl.component.mapper;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import com.grl.component.asg.OntologyConstants;
+import com.grl.component.asg.OpenApiConstants;
+import com.grl.component.asg.configuration.YamlConfig;
+import com.grl.component.schema.RestrictionInfo;
+import io.swagger.v3.oas.models.media.ArraySchema;
+import io.swagger.v3.oas.models.media.ObjectSchema;
+import io.swagger.v3.oas.models.media.Schema;
+import io.swagger.v3.oas.models.media.StringSchema;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.semanticweb.owlapi.apibinding.OWLManager;
+import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.OWLDataFactory;
+import org.semanticweb.owlapi.model.OWLDataProperty;
+import org.semanticweb.owlapi.model.OWLObjectProperty;
+import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.OWLOntologyCreationException;
+import org.semanticweb.owlapi.model.OWLOntologyManager;
+
+class ObjectPropertyMapperTest {
+
+  private static final String TEST_NS = "http://example.org/test#";
+
+  private OWLDataFactory df;
+  private OWLOntologyManager manager;
+  private OWLOntology ontology;
+  private YamlConfig config;
+  private YamlConfig configWithRequiredness;
+  private MappingContext context;
+  private OWLClass apiRootClass;
+  private OWLClass resourceClass;
+
+  @BeforeEach
+  void setUp() throws OWLOntologyCreationException {
+    manager = OWLManager.createOWLOntologyManager();
+    df = manager.getOWLDataFactory();
+    ontology = manager.createOntology(IRI.create(TEST_NS));
+
+    config = new YamlConfig();
+    configWithRequiredness = new YamlConfig() {
+      @Override
+      public boolean isEnforceRequiredness() {
+        return true;
+      }
+    };
+
+    // Create minimal ontology structure for testing
+    apiRootClass = df.getOWLClass(IRI.create(TEST_NS, "TestAPIRoot"));
+    resourceClass = df.getOWLClass(IRI.create(TEST_NS, "TestResource"));
+
+    // Add apiID restriction to resourceClass to make it a "linked resource"
+    OWLDataProperty apiIdProp = df.getOWLDataProperty(OntologyConstants.API_ID_IRI);
+    manager.addAxiom(ontology,
+        df.getOWLSubClassOfAxiom(resourceClass,
+            df.getOWLDataSomeValuesFrom(apiIdProp, df.getStringOWLDatatype())));
+
+    context = new MappingContext(
+        TEST_NS,
+        ontology,
+        "TestSchema",
+        apiRootClass,
+        Set.of(resourceClass),
+        config
+    );
+  }
+
+  private MappingContext createContextWithConfig(YamlConfig cfg) {
+    return new MappingContext(TEST_NS, ontology, "TestSchema", apiRootClass,
+        Set.of(resourceClass), cfg);
+  }
+
+  @Nested
+  class ConstructorBehavior {
+
+    @Test
+    void testGetNameReturnsCorrectName() {
+      ObjectPropertyMapper mapper = new ObjectPropertyMapper(
+          context, "propertyName", "Property Label", "Description",
+          Collections.emptySet(), List.of("RefClass"));
+
+      assertEquals("propertyName", mapper.getName());
+    }
+
+    @Test
+    void testNoRestrictionsNotArray() {
+      ObjectPropertyMapper mapper = new ObjectPropertyMapper(
+          context, "testProp", "Test", "Description",
+          Collections.emptySet(), List.of("RefClass"));
+
+      Schema<?> schema = mapper.getSchema();
+
+      // Without array-implying restrictions, should not be an ArraySchema
+      assertFalse(schema instanceof ArraySchema);
+    }
+
+    @Test
+    void testNoRestrictionsNotRequired() {
+      ObjectPropertyMapper mapper = new ObjectPropertyMapper(
+          context, "testProp", "Test", "Description",
+          Collections.emptySet(), List.of("RefClass"));
+
+      assertFalse(mapper.isRequired());
+    }
+  }
+
+  @Nested
+  class RequirednessHandling {
+
+    @Test
+    void testMinCardinalityImpliesRequiredWhenEnforced() {
+      OWLObjectProperty prop = df.getOWLObjectProperty(IRI.create(TEST_NS, "prop"));
+      OWLClass rangeClass = df.getOWLClass(IRI.create(TEST_NS, "Range"));
+      RestrictionInfo.MinCardinality restriction = new RestrictionInfo.MinCardinality(
+          df.getOWLObjectMinCardinality(1, prop, rangeClass));
+
+      MappingContext ctxWithReq = createContextWithConfig(configWithRequiredness);
+      ObjectPropertyMapper mapper = new ObjectPropertyMapper(
+          ctxWithReq, "testProp", "Test", "Description",
+          Set.of(restriction), List.of("RefClass"));
+
+      assertTrue(mapper.isRequired());
+    }
+
+    @Test
+    void testMinCardinalityZeroNotRequired() {
+      OWLObjectProperty prop = df.getOWLObjectProperty(IRI.create(TEST_NS, "prop"));
+      OWLClass rangeClass = df.getOWLClass(IRI.create(TEST_NS, "Range"));
+      RestrictionInfo.MinCardinality restriction = new RestrictionInfo.MinCardinality(
+          df.getOWLObjectMinCardinality(0, prop, rangeClass));
+
+      MappingContext ctxWithReq = createContextWithConfig(configWithRequiredness);
+      ObjectPropertyMapper mapper = new ObjectPropertyMapper(
+          ctxWithReq, "testProp", "Test", "Description",
+          Set.of(restriction), List.of("RefClass"));
+
+      assertFalse(mapper.isRequired());
+    }
+
+    @Test
+    void testSomeValuesFromImpliesRequiredWhenEnforced() {
+      OWLObjectProperty prop = df.getOWLObjectProperty(IRI.create(TEST_NS, "prop"));
+      OWLClass rangeClass = df.getOWLClass(IRI.create(TEST_NS, "Range"));
+      RestrictionInfo.SomeValuesFrom restriction = new RestrictionInfo.SomeValuesFrom(
+          df.getOWLObjectSomeValuesFrom(prop, rangeClass));
+
+      MappingContext ctxWithReq = createContextWithConfig(configWithRequiredness);
+      ObjectPropertyMapper mapper = new ObjectPropertyMapper(
+          ctxWithReq, "testProp", "Test", "Description",
+          Set.of(restriction), List.of("RefClass"));
+
+      assertTrue(mapper.isRequired());
+    }
+
+    @Test
+    void testRequirednessNotEnforcedByDefault() {
+      OWLObjectProperty prop = df.getOWLObjectProperty(IRI.create(TEST_NS, "prop"));
+      OWLClass rangeClass = df.getOWLClass(IRI.create(TEST_NS, "Range"));
+      RestrictionInfo.MinCardinality restriction = new RestrictionInfo.MinCardinality(
+          df.getOWLObjectMinCardinality(1, prop, rangeClass));
+
+      ObjectPropertyMapper mapper = new ObjectPropertyMapper(
+          context, "testProp", "Test", "Description",
+          Set.of(restriction), List.of("RefClass"));
+
+      assertFalse(mapper.isRequired());
+    }
+  }
+
+  @Nested
+  class ArraySchemaGeneration {
+
+    @Test
+    void testSomeValuesFromCreatesArraySchema() {
+      OWLObjectProperty prop = df.getOWLObjectProperty(IRI.create(TEST_NS, "prop"));
+      OWLClass rangeClass = df.getOWLClass(IRI.create(TEST_NS, "Range"));
+      RestrictionInfo.SomeValuesFrom restriction = new RestrictionInfo.SomeValuesFrom(
+          df.getOWLObjectSomeValuesFrom(prop, rangeClass));
+
+      ObjectPropertyMapper mapper = new ObjectPropertyMapper(
+          context, "testProp", "Test", "Description",
+          Set.of(restriction), List.of("RefClass"));
+
+      Schema<?> schema = mapper.getSchema();
+
+      assertInstanceOf(ArraySchema.class, schema);
+    }
+
+    @Test
+    void testMaxCardinalityGreaterThanOneCreatesArray() {
+      OWLObjectProperty prop = df.getOWLObjectProperty(IRI.create(TEST_NS, "prop"));
+      OWLClass rangeClass = df.getOWLClass(IRI.create(TEST_NS, "Range"));
+      RestrictionInfo.MaxCardinality restriction = new RestrictionInfo.MaxCardinality(
+          df.getOWLObjectMaxCardinality(5, prop, rangeClass));
+
+      ObjectPropertyMapper mapper = new ObjectPropertyMapper(
+          context, "testProp", "Test", "Description",
+          Set.of(restriction), List.of("RefClass"));
+
+      Schema<?> schema = mapper.getSchema();
+
+      assertInstanceOf(ArraySchema.class, schema);
+      ArraySchema arraySchema = (ArraySchema) schema;
+      assertEquals(5, arraySchema.getMaxItems());
+    }
+
+    @Test
+    void testMinCardinalityGreaterThanOneCreatesArray() {
+      OWLObjectProperty prop = df.getOWLObjectProperty(IRI.create(TEST_NS, "prop"));
+      OWLClass rangeClass = df.getOWLClass(IRI.create(TEST_NS, "Range"));
+      RestrictionInfo.MinCardinality restriction = new RestrictionInfo.MinCardinality(
+          df.getOWLObjectMinCardinality(2, prop, rangeClass));
+
+      ObjectPropertyMapper mapper = new ObjectPropertyMapper(
+          context, "testProp", "Test", "Description",
+          Set.of(restriction), List.of("RefClass"));
+
+      Schema<?> schema = mapper.getSchema();
+
+      assertInstanceOf(ArraySchema.class, schema);
+      ArraySchema arraySchema = (ArraySchema) schema;
+      assertEquals(2, arraySchema.getMinItems());
+    }
+
+    @Test
+    void testExactCardinalityGreaterThanOneCreatesArray() {
+      OWLObjectProperty prop = df.getOWLObjectProperty(IRI.create(TEST_NS, "prop"));
+      OWLClass rangeClass = df.getOWLClass(IRI.create(TEST_NS, "Range"));
+      RestrictionInfo.ExactCardinality restriction = new RestrictionInfo.ExactCardinality(
+          df.getOWLObjectExactCardinality(3, prop, rangeClass));
+
+      ObjectPropertyMapper mapper = new ObjectPropertyMapper(
+          context, "testProp", "Test", "Description",
+          Set.of(restriction), List.of("RefClass"));
+
+      Schema<?> schema = mapper.getSchema();
+
+      assertInstanceOf(ArraySchema.class, schema);
+      ArraySchema arraySchema = (ArraySchema) schema;
+      assertEquals(3, arraySchema.getMinItems());
+      assertEquals(3, arraySchema.getMaxItems());
+    }
+
+    @Test
+    void testMaxCardinalityOneDoesNotCreateArray() {
+      OWLObjectProperty prop = df.getOWLObjectProperty(IRI.create(TEST_NS, "prop"));
+      OWLClass rangeClass = df.getOWLClass(IRI.create(TEST_NS, "Range"));
+      RestrictionInfo.MaxCardinality restriction = new RestrictionInfo.MaxCardinality(
+          df.getOWLObjectMaxCardinality(1, prop, rangeClass));
+
+      ObjectPropertyMapper mapper = new ObjectPropertyMapper(
+          context, "testProp", "Test", "Description",
+          Set.of(restriction), List.of("RefClass"));
+
+      Schema<?> schema = mapper.getSchema();
+
+      assertFalse(schema instanceof ArraySchema);
+    }
+  }
+
+  @Nested
+  class SingleReferenceHandling {
+
+    @Test
+    void testSingleRefCreatesRefSchema() {
+      ObjectPropertyMapper mapper = new ObjectPropertyMapper(
+          context, "testProp", "Test Property", "Description",
+          Collections.emptySet(), List.of("NonResourceClass"));
+
+      Schema<?> schema = mapper.getSchema();
+
+      // Single non-array reference should have a $ref
+      assertNotNull(schema);
+      assertEquals("Test Property", schema.getTitle());
+    }
+
+    @Test
+    void testSingleRefToResourceClassCreatesLinkedSchema() {
+      // TestResource is in resourceClasses and has apiID, so should create StringSchema with extension
+      ObjectPropertyMapper mapper = new ObjectPropertyMapper(
+          context, "testProp", "Test Property", "Description",
+          Collections.emptySet(), List.of("TestResource"));
+
+      Schema<?> schema = mapper.getSchema();
+
+      assertNotNull(schema);
+      assertInstanceOf(StringSchema.class, schema);
+      StringSchema stringSchema = (StringSchema) schema;
+      assertNotNull(stringSchema.getExtensions());
+      assertTrue(stringSchema.getExtensions().containsKey(OpenApiConstants.X_GRL_MODEL_LINK));
+      assertEquals("TestResource", stringSchema.getExtensions().get(OpenApiConstants.X_GRL_MODEL_LINK));
+    }
+
+    @Test
+    void testSingleRefToResourceClassHasDescription() {
+      ObjectPropertyMapper mapper = new ObjectPropertyMapper(
+          context, "testProp", "Test Property", "Description",
+          Collections.emptySet(), List.of("TestResource"));
+
+      Schema<?> schema = mapper.getSchema();
+
+      assertInstanceOf(StringSchema.class, schema);
+      StringSchema stringSchema = (StringSchema) schema;
+      assertTrue(stringSchema.getDescription().contains("Unique identifier"));
+    }
+
+    @Test
+    void testSingleRefToResourceClassHasExample() {
+      ObjectPropertyMapper mapper = new ObjectPropertyMapper(
+          context, "testProp", "Test Property", "Description",
+          Collections.emptySet(), List.of("TestResource"));
+
+      Schema<?> schema = mapper.getSchema();
+
+      assertInstanceOf(StringSchema.class, schema);
+      StringSchema stringSchema = (StringSchema) schema;
+      assertNotNull(stringSchema.getExample());
+      assertTrue(stringSchema.getExample().toString().contains("TestResource"));
+    }
+  }
+
+  @Nested
+  class MultipleReferenceHandling {
+
+    @Test
+    void testEmptyRefListCreatesObjectSchema() {
+      ObjectPropertyMapper mapper = new ObjectPropertyMapper(
+          context, "testProp", "Test Property", "Description",
+          Collections.emptySet(), Collections.emptyList());
+
+      Schema<?> schema = mapper.getSchema();
+
+      assertInstanceOf(ObjectSchema.class, schema);
+    }
+
+    @Test
+    void testMultipleRefsCreateObjectSchemaWithProperties() {
+      // Add another class to the ontology
+      OWLClass anotherClass = df.getOWLClass(IRI.create(TEST_NS, "AnotherClass"));
+      manager.addAxiom(ontology, df.getOWLDeclarationAxiom(anotherClass));
+
+      ObjectPropertyMapper mapper = new ObjectPropertyMapper(
+          context, "testProp", "Test Property", "Description",
+          Collections.emptySet(), List.of("RefClass1", "RefClass2"));
+
+      Schema<?> schema = mapper.getSchema();
+
+      assertInstanceOf(ObjectSchema.class, schema);
+      ObjectSchema objectSchema = (ObjectSchema) schema;
+      assertNotNull(objectSchema.getProperties());
+      assertEquals(2, objectSchema.getProperties().size());
+      assertTrue(objectSchema.getProperties().containsKey("RefClass1"));
+      assertTrue(objectSchema.getProperties().containsKey("RefClass2"));
+    }
+
+    @Test
+    void testMultipleRefsWithArrayRestrictionCreatesArrayOfObjectSchema() {
+      OWLObjectProperty prop = df.getOWLObjectProperty(IRI.create(TEST_NS, "prop"));
+      OWLClass rangeClass = df.getOWLClass(IRI.create(TEST_NS, "Range"));
+      RestrictionInfo.SomeValuesFrom restriction = new RestrictionInfo.SomeValuesFrom(
+          df.getOWLObjectSomeValuesFrom(prop, rangeClass));
+
+      ObjectPropertyMapper mapper = new ObjectPropertyMapper(
+          context, "testProp", "Test Property", "Description",
+          Set.of(restriction), List.of("RefClass1", "RefClass2"));
+
+      Schema<?> schema = mapper.getSchema();
+
+      assertInstanceOf(ArraySchema.class, schema);
+      ArraySchema arraySchema = (ArraySchema) schema;
+      assertNotNull(arraySchema.getItems());
+      assertInstanceOf(ObjectSchema.class, arraySchema.getItems());
+    }
+
+    @Test
+    void testMultipleRefsArrayHasDescription() {
+      OWLObjectProperty prop = df.getOWLObjectProperty(IRI.create(TEST_NS, "prop"));
+      OWLClass rangeClass = df.getOWLClass(IRI.create(TEST_NS, "Range"));
+      RestrictionInfo.SomeValuesFrom restriction = new RestrictionInfo.SomeValuesFrom(
+          df.getOWLObjectSomeValuesFrom(prop, rangeClass));
+
+      ObjectPropertyMapper mapper = new ObjectPropertyMapper(
+          context, "testProp", "Test Property", "Test Description",
+          Set.of(restriction), List.of("RefClass1", "RefClass2"));
+
+      Schema<?> schema = mapper.getSchema();
+
+      assertInstanceOf(ArraySchema.class, schema);
+      ArraySchema arraySchema = (ArraySchema) schema;
+      assertEquals("Test Description", arraySchema.getDescription());
+    }
+  }
+
+  @Nested
+  class SchemaMetadata {
+
+    @Test
+    void testSchemaTitleIsSet() {
+      ObjectPropertyMapper mapper = new ObjectPropertyMapper(
+          context, "testProp", "My Property Label", "Description",
+          Collections.emptySet(), List.of("RefClass"));
+
+      Schema<?> schema = mapper.getSchema();
+
+      assertEquals("My Property Label", schema.getTitle());
+    }
+  }
+
+  @Nested
+  class ArrayWithResourceClass {
+
+    @Test
+    void testArrayOfResourceClassReferencesCreateStringSchemaItems() {
+      OWLObjectProperty prop = df.getOWLObjectProperty(IRI.create(TEST_NS, "prop"));
+      OWLClass rangeClass = df.getOWLClass(IRI.create(TEST_NS, "Range"));
+      RestrictionInfo.SomeValuesFrom restriction = new RestrictionInfo.SomeValuesFrom(
+          df.getOWLObjectSomeValuesFrom(prop, rangeClass));
+
+      ObjectPropertyMapper mapper = new ObjectPropertyMapper(
+          context, "testProp", "Test Property", "Description",
+          Set.of(restriction), List.of("TestResource"));
+
+      Schema<?> schema = mapper.getSchema();
+
+      assertInstanceOf(ArraySchema.class, schema);
+      ArraySchema arraySchema = (ArraySchema) schema;
+      // Items should be StringSchema with x-grl-model-link extension
+      assertInstanceOf(StringSchema.class, arraySchema.getItems());
+      StringSchema itemSchema = (StringSchema) arraySchema.getItems();
+      assertNotNull(itemSchema.getExtensions());
+      assertTrue(itemSchema.getExtensions().containsKey(OpenApiConstants.X_GRL_MODEL_LINK));
+    }
+
+    @Test
+    void testArrayWithCardinalityRestrictions() {
+      OWLObjectProperty prop = df.getOWLObjectProperty(IRI.create(TEST_NS, "prop"));
+      OWLClass rangeClass = df.getOWLClass(IRI.create(TEST_NS, "Range"));
+      RestrictionInfo.MinCardinality minCard = new RestrictionInfo.MinCardinality(
+          df.getOWLObjectMinCardinality(2, prop, rangeClass));
+      RestrictionInfo.MaxCardinality maxCard = new RestrictionInfo.MaxCardinality(
+          df.getOWLObjectMaxCardinality(10, prop, rangeClass));
+
+      ObjectPropertyMapper mapper = new ObjectPropertyMapper(
+          context, "testProp", "Test Property", "Description",
+          Set.of(minCard, maxCard), List.of("TestResource"));
+
+      Schema<?> schema = mapper.getSchema();
+
+      assertInstanceOf(ArraySchema.class, schema);
+      ArraySchema arraySchema = (ArraySchema) schema;
+      assertEquals(2, arraySchema.getMinItems());
+      assertEquals(10, arraySchema.getMaxItems());
+    }
+  }
+}

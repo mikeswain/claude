@@ -1,0 +1,281 @@
+package com.grl.component.schema;
+
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.Map;
+import java.util.Set;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.semanticweb.owlapi.apibinding.OWLManager;
+import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.OWLDataFactory;
+import org.semanticweb.owlapi.model.OWLDataProperty;
+import org.semanticweb.owlapi.model.OWLDatatype;
+import org.semanticweb.owlapi.model.OWLObjectProperty;
+import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.OWLOntologyCreationException;
+import org.semanticweb.owlapi.model.OWLOntologyManager;
+
+/**
+ * Unit tests for SchemaVisitor. Tests various OWL restriction types and their conversion to
+ * RestrictionInfo.
+ */
+class SchemaVisitorTest {
+
+  private OWLOntologyManager manager;
+  private OWLDataFactory factory;
+  private OWLOntology ontology;
+  private OWLClass testClass;
+  private OWLClass targetClass;
+  private OWLClass owlThing;
+  private OWLObjectProperty hasProperty;
+  private OWLDataProperty hasDataProperty;
+
+  private static final String BASE_IRI = "http://example.org/test#";
+
+  @BeforeEach
+  void setUp() throws OWLOntologyCreationException {
+    manager = OWLManager.createOWLOntologyManager();
+    ontology = manager.createOntology(IRI.create(BASE_IRI + "ontology"));
+    factory = manager.getOWLDataFactory();
+
+    testClass = factory.getOWLClass(IRI.create(BASE_IRI + "TestClass"));
+    targetClass = factory.getOWLClass(IRI.create(BASE_IRI + "TargetClass"));
+    owlThing = factory.getOWLThing();
+    hasProperty = factory.getOWLObjectProperty(IRI.create(BASE_IRI + "hasProperty"));
+    hasDataProperty = factory.getOWLDataProperty(IRI.create(BASE_IRI + "hasDataProperty"));
+  }
+
+  @Test
+  void testObjectSomeValuesFrom() {
+    // TestClass subClassOf (hasProperty some TargetClass)
+    var restriction = factory.getOWLObjectSomeValuesFrom(hasProperty, targetClass);
+    var axiom = factory.getOWLSubClassOfAxiom(testClass, restriction);
+    manager.addAxiom(ontology, axiom);
+
+    SchemaVisitor visitor = new SchemaVisitor(testClass, ontology, owlThing, "", false);
+    testClass.accept(visitor);
+
+    Map<String, Set<RestrictionInfo>> restrictions = visitor.getRestrictions();
+    assertTrue(restrictions.containsKey("hasProperty"), "Should contain hasProperty");
+
+    Set<RestrictionInfo> infos = restrictions.get("hasProperty");
+    assertEquals(1, infos.size(), "Should have one restriction");
+    assertInstanceOf(RestrictionInfo.SomeValuesFrom.class, infos.stream().findFirst().orElseThrow(),
+        "Should be SomeValuesFrom restriction");
+
+    Set<String> objectProps = visitor.getObjectPropertyNames();
+    assertTrue(objectProps.contains("hasProperty"), "Should track property name");
+  }
+
+  @Test
+  void testObjectAllValuesFrom() {
+    // TestClass subClassOf (hasProperty only TargetClass)
+    var restriction = factory.getOWLObjectAllValuesFrom(hasProperty, targetClass);
+    var axiom = factory.getOWLSubClassOfAxiom(testClass, restriction);
+    manager.addAxiom(ontology, axiom);
+
+    SchemaVisitor visitor = new SchemaVisitor(testClass, ontology, owlThing, "", false);
+    testClass.accept(visitor);
+
+    Map<String, Set<RestrictionInfo>> restrictions = visitor.getRestrictions();
+    assertTrue(restrictions.containsKey("hasProperty"));
+
+    Set<RestrictionInfo> infos = restrictions.get("hasProperty");
+    assertEquals(1, infos.size());
+    assertInstanceOf(RestrictionInfo.AllValuesFrom.class, infos.stream().findFirst().orElseThrow(),
+        "Should be AllValuesFrom restriction");
+  }
+
+  @Test
+  void testObjectMinCardinality() {
+    // TestClass subClassOf (hasProperty min 1 TargetClass)
+    var restriction = factory.getOWLObjectMinCardinality(1, hasProperty, targetClass);
+    var axiom = factory.getOWLSubClassOfAxiom(testClass, restriction);
+    manager.addAxiom(ontology, axiom);
+
+    SchemaVisitor visitor = new SchemaVisitor(testClass, ontology, owlThing, "", false);
+    testClass.accept(visitor);
+
+    Map<String, Set<RestrictionInfo>> restrictions = visitor.getRestrictions();
+    assertTrue(restrictions.containsKey("hasProperty"));
+
+    Set<RestrictionInfo> infos = restrictions.get("hasProperty");
+    assertEquals(1, infos.size());
+    assertInstanceOf(RestrictionInfo.MinCardinality.class, infos.stream().findFirst().orElseThrow(),
+        "Should be MinCardinality restriction");
+
+    RestrictionInfo.MinCardinality minCard = (RestrictionInfo.MinCardinality) infos.stream()
+        .findFirst().orElseThrow();
+    assertEquals(1, minCard.cardinality().orElse(-1), "Cardinality should be 1");
+    assertTrue(minCard.impliesRequired(), "Min cardinality 1 implies required");
+  }
+
+  @Test
+  void testObjectMaxCardinality() {
+    // TestClass subClassOf (hasProperty max 5 TargetClass)
+    var restriction = factory.getOWLObjectMaxCardinality(5, hasProperty, targetClass);
+    var axiom = factory.getOWLSubClassOfAxiom(testClass, restriction);
+    manager.addAxiom(ontology, axiom);
+
+    SchemaVisitor visitor = new SchemaVisitor(testClass, ontology, owlThing, "", false);
+    testClass.accept(visitor);
+
+    Map<String, Set<RestrictionInfo>> restrictions = visitor.getRestrictions();
+    Set<RestrictionInfo> infos = restrictions.get("hasProperty");
+    assertEquals(1, infos.size());
+    assertInstanceOf(RestrictionInfo.MaxCardinality.class, infos.stream().findFirst().orElseThrow(),
+        "Should be MaxCardinality restriction");
+
+    RestrictionInfo.MaxCardinality maxCard = (RestrictionInfo.MaxCardinality) infos.stream()
+        .findFirst().orElseThrow();
+    assertEquals(5, maxCard.cardinality().orElse(-1), "Cardinality should be 5");
+  }
+
+  @Test
+  void testObjectExactCardinality() {
+    // TestClass subClassOf (hasProperty exactly 3 TargetClass)
+    var restriction = factory.getOWLObjectExactCardinality(3, hasProperty, targetClass);
+    var axiom = factory.getOWLSubClassOfAxiom(testClass, restriction);
+    manager.addAxiom(ontology, axiom);
+
+    SchemaVisitor visitor = new SchemaVisitor(testClass, ontology, owlThing, "", false);
+    testClass.accept(visitor);
+
+    Map<String, Set<RestrictionInfo>> restrictions = visitor.getRestrictions();
+    Set<RestrictionInfo> infos = restrictions.get("hasProperty");
+    assertEquals(1, infos.size());
+    assertInstanceOf(RestrictionInfo.ExactCardinality.class,
+        infos.stream().findFirst().orElseThrow(),
+        "Should be ExactCardinality restriction");
+
+    RestrictionInfo.ExactCardinality exactCard = (RestrictionInfo.ExactCardinality) infos.stream()
+        .findFirst().orElseThrow();
+    assertEquals(3, exactCard.cardinality().orElse(-1), "Cardinality should be 3");
+  }
+
+  @Test
+  void testDataSomeValuesFrom() {
+    // TestClass subClassOf (hasDataProperty some xsd:string)
+    OWLDatatype stringType = factory.getStringOWLDatatype();
+    var restriction = factory.getOWLDataSomeValuesFrom(hasDataProperty, stringType);
+    var axiom = factory.getOWLSubClassOfAxiom(testClass, restriction);
+    manager.addAxiom(ontology, axiom);
+
+    SchemaVisitor visitor = new SchemaVisitor(testClass, ontology, owlThing, "", false);
+    testClass.accept(visitor);
+
+    Map<String, Set<RestrictionInfo>> restrictions = visitor.getRestrictions();
+    assertTrue(restrictions.containsKey("hasDataProperty"));
+
+    Set<RestrictionInfo> infos = restrictions.get("hasDataProperty");
+    assertEquals(1, infos.size());
+    assertInstanceOf(RestrictionInfo.DataSomeValuesFrom.class,
+        infos.stream().findFirst().orElseThrow(),
+        "Should be DataSomeValuesFrom restriction");
+
+    Set<String> dataProps = visitor.getDataPropertyNames();
+    assertTrue(dataProps.contains("hasDataProperty"), "Should track data property name");
+  }
+
+  @Test
+  void testDataMinCardinality() {
+    // TestClass subClassOf (hasDataProperty min 2 xsd:string)
+    OWLDatatype stringType = factory.getStringOWLDatatype();
+    var restriction = factory.getOWLDataMinCardinality(2, hasDataProperty, stringType);
+    var axiom = factory.getOWLSubClassOfAxiom(testClass, restriction);
+    manager.addAxiom(ontology, axiom);
+
+    SchemaVisitor visitor = new SchemaVisitor(testClass, ontology, owlThing, "", false);
+    testClass.accept(visitor);
+
+    Map<String, Set<RestrictionInfo>> restrictions = visitor.getRestrictions();
+    Set<RestrictionInfo> infos = restrictions.get("hasDataProperty");
+    assertEquals(1, infos.size());
+    assertInstanceOf(RestrictionInfo.DataMinCardinality.class,
+        infos.stream().findFirst().orElseThrow(),
+        "Should be DataMinCardinality restriction");
+
+    RestrictionInfo.DataMinCardinality minCard = (RestrictionInfo.DataMinCardinality) infos.stream()
+        .findFirst().orElseThrow();
+    assertEquals(2, minCard.cardinality().orElse(-1), "Cardinality should be 2");
+  }
+
+  @Test
+  void testMultipleRestrictionsSameProperty() {
+    // TestClass subClassOf (hasProperty min 1 TargetClass) and (hasProperty max 5 TargetClass)
+    var minRestriction = factory.getOWLObjectMinCardinality(1, hasProperty, targetClass);
+    var maxRestriction = factory.getOWLObjectMaxCardinality(5, hasProperty, targetClass);
+
+    manager.addAxiom(ontology, factory.getOWLSubClassOfAxiom(testClass, minRestriction));
+    manager.addAxiom(ontology, factory.getOWLSubClassOfAxiom(testClass, maxRestriction));
+
+    SchemaVisitor visitor = new SchemaVisitor(testClass, ontology, owlThing, "", false);
+    testClass.accept(visitor);
+
+    Map<String, Set<RestrictionInfo>> restrictions = visitor.getRestrictions();
+    Set<RestrictionInfo> infos = restrictions.get("hasProperty");
+    assertEquals(2, infos.size(), "Should have two restrictions on same property");
+
+    boolean hasMin = infos.stream().anyMatch(r -> r instanceof RestrictionInfo.MinCardinality);
+    boolean hasMax = infos.stream().anyMatch(r -> r instanceof RestrictionInfo.MaxCardinality);
+    assertTrue(hasMin && hasMax, "Should have both min and max cardinality restrictions");
+  }
+
+  @Test
+  void testCollectionsAreEncapsulated() {
+    // Add a restriction so the collections are not empty
+    var restriction = factory.getOWLObjectMinCardinality(1, hasProperty, targetClass);
+    var axiom = factory.getOWLSubClassOfAxiom(testClass, restriction);
+    manager.addAxiom(ontology, axiom);
+
+    SchemaVisitor visitor = new SchemaVisitor(testClass, ontology, owlThing, "", false);
+    testClass.accept(visitor);
+
+    // Verify collections are returned (encapsulation check)
+    assertNotNull(visitor.getRestrictions(), "Should return restrictions map");
+    assertNotNull(visitor.getObjectPropertyNames(), "Should return object property names");
+    assertNotNull(visitor.getDataPropertyNames(), "Should return data property names");
+
+    // Verify the collections have content
+    assertFalse(visitor.getRestrictions().isEmpty(), "Should have restrictions");
+    assertFalse(visitor.getObjectPropertyNames().isEmpty(), "Should have object properties");
+  }
+
+  @Test
+  void testObjectUnionOf() {
+    // TestClass subClassOf (hasProperty some (TargetClass or OWLThing))
+    OWLClass anotherClass = factory.getOWLClass(IRI.create(BASE_IRI + "AnotherClass"));
+    var union = factory.getOWLObjectUnionOf(targetClass, anotherClass);
+    var restriction = factory.getOWLObjectSomeValuesFrom(hasProperty, union);
+    var axiom = factory.getOWLSubClassOfAxiom(testClass, restriction);
+    manager.addAxiom(ontology, axiom);
+
+    SchemaVisitor visitor = new SchemaVisitor(testClass, ontology, owlThing, "", false);
+    testClass.accept(visitor);
+
+    Map<String, Set<RestrictionInfo>> restrictions = visitor.getRestrictions();
+    assertTrue(restrictions.containsKey("hasProperty"), "Should handle union in restriction");
+  }
+
+  @Test
+  void testProcessedClassesCycleDetection() {
+    // Create a cycle: TestClass subClassOf TargetClass, TargetClass subClassOf TestClass
+    var axiom1 = factory.getOWLSubClassOfAxiom(testClass, targetClass);
+    var axiom2 = factory.getOWLSubClassOfAxiom(targetClass, testClass);
+    manager.addAxiom(ontology, axiom1);
+    manager.addAxiom(ontology, axiom2);
+
+    // Should not throw StackOverflowError due to processedClasses tracking
+    assertDoesNotThrow(() -> {
+      SchemaVisitor visitor = new SchemaVisitor(testClass, ontology, owlThing, "", false);
+      testClass.accept(visitor);
+    }, "Should handle circular class hierarchies");
+  }
+}

@@ -1,0 +1,328 @@
+# Property Mappings
+
+This document details how OWL data properties, object properties, and taxonomy properties are mapped to OpenAPI schemas.
+
+## Data Properties
+
+Data properties represent literal values (strings, numbers, dates, etc.).
+
+### Basic Mapping
+
+**OWL:**
+```xml
+<owl:DatatypeProperty rdf:about="https://example.com/name">
+    <skos:prefLabel>Name</skos:prefLabel>
+    <skos:definition>The person's full name</skos:definition>
+</owl:DatatypeProperty>
+
+<!-- On the class -->
+<rdfs:subClassOf>
+    <owl:Restriction>
+        <owl:onProperty rdf:resource="https://example.com/name"/>
+        <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:Restriction>
+</rdfs:subClassOf>
+```
+
+**OpenAPI:**
+```yaml
+properties:
+  name:
+    type: string
+    title: Name
+    description: The person's full name
+    example: "name string value"
+required:
+  - name  # because of someValuesFrom
+```
+
+### Cardinality Effects
+
+| Restriction | Schema Effect |
+|-------------|---------------|
+| `someValuesFrom` | `type: array`, `minItems: 1`, required |
+| `allValuesFrom` | Type only, not required |
+| `exactCardinality(1)` | Non-array, required |
+| `minCardinality(1)` | `minItems: 1`, required |
+| `maxCardinality(1)` | `maxItems: 1` |
+| `minCardinality(n)` where n>1 | `type: array`, `minItems: n`, required |
+
+### Enum from DataOneOf
+
+**OWL:**
+```xml
+<rdfs:subClassOf>
+    <owl:Restriction>
+        <owl:onProperty rdf:resource="https://example.com/status"/>
+        <owl:someValuesFrom>
+            <rdfs:Datatype>
+                <owl:oneOf>
+                    <rdf:List>
+                        <rdf:first>active</rdf:first>
+                        <rdf:rest>
+                            <rdf:List>
+                                <rdf:first>inactive</rdf:first>
+                                <rdf:rest rdf:resource="rdf:nil"/>
+                            </rdf:List>
+                        </rdf:rest>
+                    </rdf:List>
+                </owl:oneOf>
+            </rdfs:Datatype>
+        </owl:someValuesFrom>
+    </owl:Restriction>
+</rdfs:subClassOf>
+```
+
+**OpenAPI:**
+```yaml
+status:
+  type: string
+  enum:
+    - active
+    - inactive
+```
+
+### Default Values from DataHasValue
+
+**OWL:**
+```xml
+<rdfs:subClassOf>
+    <owl:Restriction>
+        <owl:onProperty rdf:resource="https://example.com/country"/>
+        <owl:hasValue rdf:datatype="xsd:string">USA</owl:hasValue>
+    </owl:Restriction>
+</rdfs:subClassOf>
+```
+
+**OpenAPI:**
+```yaml
+country:
+  type: string
+  default: USA
+```
+
+## Object Properties
+
+Object properties link to other classes (resources or non-resources).
+
+### Reference to Resource Class
+
+When the range is a class that is also a resource (has `apiID`), the property becomes a reference.
+
+**OWL:**
+```xml
+<rdfs:subClassOf>
+    <owl:Restriction>
+        <owl:onProperty rdf:resource="https://example.com/employer"/>
+        <owl:someValuesFrom rdf:resource="https://example.com/Company"/>
+    </owl:Restriction>
+</rdfs:subClassOf>
+```
+
+**OpenAPI:**
+```yaml
+employer:
+  type: string
+  x-grl-model-link: Company
+  description: Unique identifier of Company
+  example: Company-12345
+```
+
+The `x-grl-model-link` extension indicates this is a reference to another API resource.
+
+### Reference to Non-Resource Class
+
+When the range is not a resource class, a `$ref` is used.
+
+**OWL:**
+```xml
+<rdfs:subClassOf>
+    <owl:Restriction>
+        <owl:onProperty rdf:resource="https://example.com/address"/>
+        <owl:someValuesFrom rdf:resource="https://example.com/Address"/>
+    </owl:Restriction>
+</rdfs:subClassOf>
+```
+
+**OpenAPI:**
+```yaml
+address:
+  $ref: '#/components/schemas/Address'
+```
+
+### Array of References
+
+With `someValuesFrom` or cardinality > 1:
+
+**OWL:**
+```xml
+<rdfs:subClassOf>
+    <owl:Restriction>
+        <owl:onProperty rdf:resource="https://example.com/employees"/>
+        <owl:someValuesFrom rdf:resource="https://example.com/Employee"/>
+    </owl:Restriction>
+</rdfs:subClassOf>
+```
+
+**OpenAPI:**
+```yaml
+employees:
+  type: array
+  minItems: 1
+  items:
+    type: string
+    x-grl-model-link: Employee
+    description: Unique identifier of Employee
+    example: Employee-12345
+```
+
+### Multiple Range Classes (Union)
+
+**OWL:**
+```xml
+<rdfs:subClassOf>
+    <owl:Restriction>
+        <owl:onProperty rdf:resource="https://example.com/contact"/>
+        <owl:someValuesFrom>
+            <owl:Class>
+                <owl:unionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="https://example.com/Person"/>
+                    <rdf:Description rdf:about="https://example.com/Organization"/>
+                </owl:unionOf>
+            </owl:Class>
+        </owl:someValuesFrom>
+    </owl:Restriction>
+</rdfs:subClassOf>
+```
+
+**OpenAPI:**
+```yaml
+contact:
+  type: array
+  items:
+    type: object
+    additionalProperties: false
+    properties:
+      Person:
+        $ref: '#/components/schemas/Person'
+      Organization:
+        $ref: '#/components/schemas/Organization'
+```
+
+## Taxonomy Properties
+
+Taxonomy properties link to named individuals, creating enum-like constraints.
+
+### Individual-Based Enum
+
+**OWL:**
+```xml
+<!-- Named individuals -->
+<owl:NamedIndividual rdf:about="https://example.com/StatusActive">
+    <skos:prefLabel>Active</skos:prefLabel>
+</owl:NamedIndividual>
+<owl:NamedIndividual rdf:about="https://example.com/StatusInactive">
+    <skos:prefLabel>Inactive</skos:prefLabel>
+</owl:NamedIndividual>
+
+<!-- Restriction referencing individuals -->
+<rdfs:subClassOf>
+    <owl:Restriction>
+        <owl:onProperty rdf:resource="https://example.com/status"/>
+        <owl:someValuesFrom>
+            <owl:Class>
+                <owl:oneOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="https://example.com/StatusActive"/>
+                    <rdf:Description rdf:about="https://example.com/StatusInactive"/>
+                </owl:oneOf>
+            </owl:Class>
+        </owl:someValuesFrom>
+    </owl:Restriction>
+</rdfs:subClassOf>
+```
+
+**OpenAPI:**
+```yaml
+status:
+  type: string
+  enum:
+    - Active
+    - Inactive
+```
+
+### Class-Based Taxonomy
+
+When the restriction references a class, individuals of that class become enum values.
+
+**OWL:**
+```xml
+<!-- Taxonomy class -->
+<owl:Class rdf:about="https://example.com/EmploymentStatus"/>
+
+<!-- Individuals of the class -->
+<owl:NamedIndividual rdf:about="https://example.com/FullTime">
+    <rdf:type rdf:resource="https://example.com/EmploymentStatus"/>
+    <skos:prefLabel>Full Time</skos:prefLabel>
+</owl:NamedIndividual>
+<owl:NamedIndividual rdf:about="https://example.com/PartTime">
+    <rdf:type rdf:resource="https://example.com/EmploymentStatus"/>
+    <skos:prefLabel>Part Time</skos:prefLabel>
+</owl:NamedIndividual>
+
+<!-- Restriction -->
+<rdfs:subClassOf>
+    <owl:Restriction>
+        <owl:onProperty rdf:resource="https://example.com/employmentType"/>
+        <owl:someValuesFrom rdf:resource="https://example.com/EmploymentStatus"/>
+    </owl:Restriction>
+</rdfs:subClassOf>
+```
+
+**OpenAPI:**
+```yaml
+EmploymentStatus:
+  type: string
+  enum:
+    - Full Time
+    - Part Time
+```
+
+### Array of Taxonomy Values
+
+With `someValuesFrom` or cardinality indicating multiple values:
+
+**OpenAPI:**
+```yaml
+skills:
+  type: array
+  minItems: 1
+  items:
+    type: string
+    enum:
+      - Java
+      - Python
+      - JavaScript
+```
+
+## Property Name Resolution
+
+Property names are derived from the IRI:
+
+1. Use the fragment (after `#`) if present
+2. Otherwise use the last path segment
+3. CamelCase is preserved
+
+Examples:
+- `https://example.com/ontology#firstName` → `firstName`
+- `https://example.com/ontology/firstName` → `firstName`
+- `https://example.com/has_address` → `has_address`
+
+## Labels and Descriptions
+
+Properties get their metadata from:
+
+| Field | Source (priority order) |
+|-------|------------------------|
+| `title` | `skos:prefLabel`, `rdfs:label`, IRI short form |
+| `description` | `skos:definition`, `rdfs:comment` |
+| `example` | `skos:example` on axiom, `skos:example` on property, auto-generated |

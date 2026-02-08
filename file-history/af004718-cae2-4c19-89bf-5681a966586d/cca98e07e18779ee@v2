@@ -1,0 +1,89 @@
+# Getting Started
+
+This guide will help you generate your first OpenAPI specification from an OWL ontology in under 5 minutes.
+
+## Prerequisites
+
+1. Java 21 or later installed
+2. ASG JAR file (either build from source or download)
+
+## Build ASG (if needed)
+
+```bash
+git clone https://github.com/Graph-Research-Labs/ASG.git
+cd ASG
+mvn clean package -DskipTests
+```
+
+The executable JAR will be at `target/asg-<version>-jar-with-dependencies.jar`.
+
+## Step 1: Create Your Configuration
+
+Create a file named `config.yaml`:
+
+```yaml
+# Required: Name of your API (alphanumeric with underscores)
+name: myapi
+
+# Required: Path to your ontology file
+ontologies:
+  - ./my-ontology.owl
+
+# Required: Output directory for generated files
+outputDir: ./output
+
+# Required: The root class that defines your API resources
+rootClass: https://example.com/ontology/MyAPIV1.0
+
+# Recommended: Enable required field enforcement
+enforceRequiredness: true
+
+# OpenAPI template customization
+templates:
+  openapi:
+    openapi: 3.1.0
+    info:
+      title: My API
+      version: 1.0.0
+      description: Generated from OWL ontology
+```
+
+## Step 2: Prepare Your Ontology
+
+Your ontology must follow the ASG structure. At minimum, you need:
+
+1. **An API root class** that is a subclass of `APIRoot` with a `hasAPI` restriction
+2. **Resource classes** linked via `hasResourceSchema`
+3. **Properties** annotated with `apiLabel` matching your API name
+
+See [Ontology Structure](ontology-design/structure.md) for detailed requirements.
+
+## Step 3: Run ASG
+
+```bash
+java -jar asg-<version>-jar-with-dependencies.jar -c config.yaml
+```
+
+## Step 4: Check Output
+
+Your generated OpenAPI specification will be in:
+- `output/myapi/openapi.yaml` (YAML format)
+- `output/myapi/openapi.json` (JSON format)
+
+## What's Generated
+
+For each resource class in your ontology, ASG generates:
+
+| Endpoint | Methods | Description |
+|----------|---------|-------------|
+| `/{Resource}` | GET, POST | Collection endpoint (list, create) |
+| `/{Resource}/{id}` | GET, PUT, PATCH, DELETE | Single resource endpoint |
+
+Each resource also gets a schema in `components/schemas/` with properties derived from your ontology's data and object properties.
+
+## Next Steps
+
+- [CLI Reference](cli-reference.md) - All command-line options
+- [Configuration Reference](configuration/config-reference.md) - Complete YAML options
+- [Ontology Structure](ontology-design/structure.md) - Detailed ontology requirements
+- [Minimal Example](examples/minimal-example.md) - Complete working example

@@ -1,0 +1,199 @@
+package regression;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import com.grl.TestUtil;
+import com.jayway.jsonpath.ReadContext;
+import java.util.List;
+import java.util.Map;
+import org.junit.jupiter.api.Test;
+
+/**
+ * Integration test for a large API specification generation. This test uses the nzcs1
+ * ontology.configuration file to generate the API spec and verifies specific aspects of the
+ * generated OpenAPI document. It focuses on features not covered by the SimpleApiIT test.
+ */
+public class LargeApiIT {
+
+  ReadContext apiSpec = TestUtil.getGeneratedSpec(
+      TestUtil.asFilePath(LargeApiIT.class, "config_nzcs1.yaml"));
+
+  @Test
+  public void testApiKeySecurityScheme() {
+    // Verify that the security schemes are correctly defined
+    Map<String, Object> securitySchemes = apiSpec.read("$.components.securitySchemes");
+    assertNotNull(securitySchemes, "Security schemes should be defined");
+
+    // Check for specific security scheme
+    assertTrue(securitySchemes.containsKey("apiKeyAuth"), "ApiKeyAuth scheme should be present");
+    Map<String, Object> apiKeyAuth = (Map<String, Object>) securitySchemes.get("apiKeyAuth");
+    assertEquals("apiKey", apiKeyAuth.get("type"), "ApiKeyAuth type should be 'apiKey'");
+    assertEquals("header", apiKeyAuth.get("in"), "ApiKeyAuth should be in 'header'");
+    assertEquals("X-Api-Key", apiKeyAuth.get("name"), "ApiKeyAuth name should be 'X-Api-Key'");
+
+    assertEquals(1, apiSpec.read("$.security[?(@.apiKey)]", List.class).size(),
+        "There should be one global security requirement for oauth2");
+  }
+
+  @Test
+  public void testOauthSecurityScheme() {
+    // Verify that the security schemes are correctly defined
+    Map<String, Object> securitySchemes = apiSpec.read("$.components.securitySchemes");
+    assertNotNull(securitySchemes, "Security schemes should be defined");
+
+    // Check for specific security scheme
+    assertTrue(securitySchemes.containsKey("oauth2"), "OAuth2 scheme should be present");
+    Map<String, Object> oauth2 = (Map<String, Object>) securitySchemes.get("oauth2");
+    assertEquals("oauth2", oauth2.get("type"), "OAuth2 type should be 'oauth2'");
+    Map<String, Object> flows = (Map<String, Object>) oauth2.get("flows");
+    assertNotNull(flows.get("authorizationCode"), "Authorization code flow should be present");
+
+    assertEquals(1, apiSpec.read("$.security[?(@.oauth2)]", List.class).size(),
+        "There should be one global security requirement for oauth2");
+  }
+
+  @Test
+  public void testOperationSecurity() {
+    assertEquals("read:nzcs1:Person",
+        apiSpec.read("$.paths['/Person/{PersonId}'].get.security[1].oauth2[0]"),
+        "GET /Person/{Person_ID} should require update:nzcs1:Person scope");
+    assertEquals("update:nzcs1:Person",
+        apiSpec.read("$.paths['/Person/{PersonId}'].put.security[1].oauth2[0]"),
+        "PUT /Person/{Person_ID} should require update:nzcs1:Person scope");
+    assertEquals("update:nzcs1:Person",
+        apiSpec.read("$.paths['/Person/{PersonId}'].patch.security[1].oauth2[0]"),
+        "PATCH /Person/{Person_ID} should require update:nzcs1:Person scope");
+    assertEquals("delete:nzcs1:Person",
+        apiSpec.read("$.paths['/Person/{PersonId}'].delete.security[1].oauth2[0]"),
+        "DELETE /Person/{Person_ID} should require delete:nzcs1:Person scope");
+    assertEquals("create:nzcs1:Person",
+        apiSpec.read("$.paths['/Person'].post.security[1].oauth2[0]"),
+        "POST /Person/{Person_ID} should require create:nzcs1:Person scope");
+    assertEquals("read:nzcs1:Person",
+        apiSpec.read("$.paths['/Person'].get.security[1].oauth2[0]"),
+        "POST /Person/{Person_ID} should require read:nzcs1:Person scope");
+
+  }
+
+  @Test
+  public void testOauth2FlowsScopes() {
+    Map<String, Object> securitySchemes = apiSpec.read("$.components.securitySchemes");
+    Map<String, String> scopes = apiSpec.read(
+        "$.components.securitySchemes.oauth2.flows.authorizationCode.scopes");
+    assertTrue(scopes.containsKey("read:nzcs1:Person"),
+        "Scope read:nzcs1:Person should be defined");
+    assertTrue(scopes.containsKey("create:nzcs1:Person"),
+        "Scope create:nzcs1:Person should be defined");
+    assertTrue(scopes.containsKey("update:nzcs1:Person"),
+        "Scope update:nzcs1:Person should be defined");
+    assertTrue(scopes.containsKey("delete:nzcs1:Person"),
+        "Scope delete:nzcs1:Person should be defined");
+  }
+
+  @Test
+  public void testNumericSchema() {
+    assertEquals("number", apiSpec.read(
+        "$.components.schemas.AchievedTargetPerformance.properties.numericValue.type"));
+    assertEquals(1.1d, apiSpec.read(
+        "$.components.schemas.AchievedTargetPerformance.properties.numericValue.example",
+        Double.class));
+  }
+
+  @Test
+  public void testInt32Schema() {
+    assertEquals("integer", apiSpec.read(
+        "$.components.schemas.DiscloseClimateRelatedTarget.properties.hasBaseYear.type"));
+    assertEquals("int32", apiSpec.read(
+        "$.components.schemas.DiscloseClimateRelatedTarget.properties.hasBaseYear.format"));
+    assertEquals(1, apiSpec.read(
+        "$.components.schemas.DiscloseClimateRelatedTarget.properties.hasBaseYear.example",
+        Integer.class));
+  }
+
+  @Test
+  public void testDataTimeSchema() {
+    assertEquals("string",
+        apiSpec.read("$.components.schemas.AchievedTargetPerformance.properties.atDateTime.type"));
+    assertEquals("date-time", apiSpec.read(
+        "$.components.schemas.AchievedTargetPerformance.properties.atDateTime.format"));
+    assertEquals("2025-01-15T14:55:58Z", apiSpec.read(
+        "$.components.schemas.AchievedTargetPerformance.properties.atDateTime.example"));
+  }
+
+  // Temporarily omitted as nzcs1 ontology seems to always want 'some' enums
+  public void testEnumSchema() {
+    assertEquals("string", apiSpec.read(
+        "$.components.schemas.AchievedTargetPerformance.properties.hasUnitOfMeasure.type"));
+    assertEquals(List.of("Percentage", "Metric Tonne", "Metric Tonnes CO2 Equivalent",
+        "Metric Tonnes Per Kilometer", "Count Of Nights", "Cubic Meter", "Kilowatt",
+        "Kilowatt Hour", "Liter", "Number Of Employees"), apiSpec.read(
+        "$.components.schemas.AchievedTargetPerformance.properties.hasUnitOfMeasure.enum"));
+  }
+
+  @Test
+  public void testNestedObjectSchema() {
+    assertEquals("#/components/schemas/DiscloseRelianceOnEmissionOffset", apiSpec.read(
+        "$.components.schemas.DiscloseClimateRelatedTarget.properties.reliesaOnOffset['$ref']"));
+    assertEquals("Relies On Offset", apiSpec.read(
+        "$.components.schemas.DiscloseClimateRelatedTarget.properties.reliesaOnOffset.title"));
+  }
+
+  @Test
+  public void testArrayEnumSchema() {
+    assertEquals("array", apiSpec.read(
+        "$.components.schemas.AchievedTargetPerformance.properties.hasUnitOfMeasure.type"));
+    assertEquals("string", apiSpec.read(
+        "$.components.schemas.AchievedTargetPerformance.properties.hasUnitOfMeasure.items.type"));
+    assertEquals(List.of("Percentage", "Metric Tonne", "Metric Tonnes CO2 Equivalent",
+        "Metric Tonnes Per Kilometer", "Count Of Nights", "Cubic Meter", "Kilowatt",
+        "Kilowatt Hour", "Liter", "Number Of Employees"), apiSpec.read(
+        "$.components.schemas.AchievedTargetPerformance.properties.hasUnitOfMeasure.items.enum"));
+  }
+
+  @Test
+  public void testArrayOfNestedObjectSchema() {
+    assertEquals("array", apiSpec.read(
+        "$.components.schemas.DiscloseOrganisationalStructureOfManagement.properties.hasParty.type"));
+    assertEquals("#/components/schemas/GovernanceorManagementBody", apiSpec.read(
+        "$.components.schemas.DiscloseOrganisationalStructureOfManagement.properties.hasParty.items['$ref']"));
+  }
+
+  @Test
+  public void testObjectReferenceSchema() {
+    String base = "$.components.schemas.DiscloseClimateRelatedTarget.properties.performanceAgainstTarget%s";
+    assertEquals("string", apiSpec.read(base.formatted(".type")));
+    assertEquals("Unique identifier of AchievedTargetPerformance",
+        apiSpec.read(base.formatted(".description")));
+    assertEquals("AchievedTargetPerformance-12345", apiSpec.read(base.formatted(".example")));
+    assertEquals("AchievedTargetPerformance", apiSpec.read(base.formatted("['x-grl-model-link']")));
+  }
+
+  @Test
+  public void testArrayOfObjectReferenceSchema() {
+    String base = "$.components.schemas.DiscloseClimateRelatedTargetRecords.properties.hasInterimTarget%s";
+    assertEquals("array", apiSpec.read(base.formatted(".type")));
+    assertEquals("string", apiSpec.read(base.formatted(".items.type")));
+    assertEquals("Unique identifier of DiscloseClimateRelatedTarget",
+        apiSpec.read(base.formatted(".items.description")));
+    assertEquals("DiscloseClimateRelatedTarget",
+        apiSpec.read(base.formatted(".items['x-grl-model-link']")));
+  }
+
+  @Test
+  public void testArrayOfObjectReferenceSchemaLimits() {
+    String base = "$.components.schemas.DiscloseClimateRelatedScenarioAnalysis.properties.hasChildRecord%s";
+    assertEquals(3, apiSpec.read(base.formatted(".maxItems"), Integer.class));
+    assertEquals(3, apiSpec.read(base.formatted(".minItems"), Integer.class));
+  }
+
+  @Test
+  public void testExtraPathsFromConfig() {
+    assertNotNull(apiSpec.read("$.paths['/healthcheck']"),
+        "Custom endpoint /healthcheck should be present");
+    assertEquals("Health check endpoint", apiSpec.read("$.paths['/healthcheck'].get.description"),
+        "Custom endpoint summary should match");
+  }
+
+}

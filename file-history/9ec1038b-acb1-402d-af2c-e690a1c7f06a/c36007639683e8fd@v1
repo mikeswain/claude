@@ -1,0 +1,6 @@
+name: child
+securitySchemeName: only-set-in-child
+extends: config-parent.yaml
+namespaceMappings:
+  grl1:
+    - this-will-be-the-second

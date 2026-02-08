@@ -1,0 +1,63 @@
+package kakuro;
+
+import java.util.List;
+
+import static kakuro.Assertions.*;
+
+/** Tests for {@link Grid} run extraction. */
+public final class GridTest {
+
+    public static void main(String[] args) {
+        extractsAcrossRun();
+        extractsDownRun();
+        extractsBothDirections();
+        System.out.println("GridTest: all passed");
+    }
+
+    static void extractsAcrossRun() {
+        // [\3] [_] [_]
+        var cells = new Cell[][] {{
+                new Cell.Clue(0, 3),
+                new Cell.Empty(0),
+                new Cell.Empty(0)
+        }};
+        var grid = new Grid(cells);
+        assertEquals(1, grid.runs().size(), "run count");
+        var run = grid.runs().getFirst();
+        assertEquals(3, run.target(), "target");
+        assertEquals(
+                List.of(new Position(0, 1), new Position(0, 2)),
+                run.cells(), "cells");
+    }
+
+    static void extractsDownRun() {
+        // [3\]
+        // [_]
+        // [_]
+        var cells = new Cell[][] {
+                {new Cell.Clue(3, 0)},
+                {new Cell.Empty(0)},
+                {new Cell.Empty(0)}
+        };
+        var grid = new Grid(cells);
+        assertEquals(1, grid.runs().size(), "run count");
+        var run = grid.runs().getFirst();
+        assertEquals(3, run.target(), "target");
+        assertEquals(
+                List.of(new Position(1, 0), new Position(2, 0)),
+                run.cells(), "cells");
+    }
+
+    static void extractsBothDirections() {
+        // [#]   [4\]  [6\]
+        // [\3]  [_]   [_]
+        // [\7]  [_]   [_]
+        var cells = new Cell[][] {
+                {new Cell.Black(), new Cell.Clue(4, 0), new Cell.Clue(6, 0)},
+                {new Cell.Clue(0, 3), new Cell.Empty(0), new Cell.Empty(0)},
+                {new Cell.Clue(0, 7), new Cell.Empty(0), new Cell.Empty(0)}
+        };
+        var grid = new Grid(cells);
+        assertEquals(4, grid.runs().size(), "run count (2 down + 2 across)");
+    }
+}

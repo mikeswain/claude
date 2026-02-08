@@ -1,0 +1,168 @@
+# Security Configuration
+
+ASG supports generating security requirements for OpenAPI operations based on security schemes defined in templates and security annotations on ontology resources.
+
+## Defining Security Schemes
+
+Security schemes are defined in the OpenAPI template:
+
+```yaml
+templates:
+  openapi:
+    components:
+      securitySchemes:
+        oauth2:
+          type: oauth2
+          flows:
+            authorizationCode:
+              authorizationUrl: https://auth.example.com/authorize
+              tokenUrl: https://auth.example.com/token
+              scopes:
+                read: Read access
+                write: Write access
+                admin: Admin access
+        api_key:
+          type: apiKey
+          in: header
+          name: X-API-Key
+```
+
+## Security Scheme Selection
+
+### Automatic Selection
+
+If `securitySchemeName` is not specified, ASG automatically selects:
+
+1. The first OAuth2 security scheme found, OR
+2. The first API key security scheme found
+
+### Explicit Selection
+
+```yaml
+securitySchemeName: oauth2
+```
+
+## Security Templates
+
+Security requirements are generated using templates with placeholder substitution.
+
+### Default Security Template
+
+Used when resources do NOT have a `security` annotation:
+
+```yaml
+defaultSecurityTemplate: "{api}.{model}.{action}"
+```
+
+**Placeholders:**
+
+| Placeholder | Description | Example |
+|-------------|-------------|---------|
+| `{api}` | API name from config | `myapi` |
+| `{model}` | Resource class name | `Employee` |
+| `{action}` | Mapped HTTP method | `read` |
+
+### Security Template
+
+Used when resources HAVE a `security` annotation:
+
+```yaml
+securityTemplate: "{security}"
+```
+
+**Additional placeholder:**
+
+| Placeholder | Description | Example |
+|-------------|-------------|---------|
+| `{security}` | Value from security annotation | `admin` |
+
+### Suppressing Security Generation
+
+Set templates to `null` or empty string to suppress security:
+
+```yaml
+# No security for unannotated resources
+defaultSecurityTemplate: null
+
+# No security even for annotated resources
+securityTemplate: null
+```
+
+## Action Mappings
+
+Map HTTP methods to action names for use in templates:
+
+```yaml
+securityActionMappings:
+  GET: read
+  POST: create
+  PUT: update
+  PATCH: update
+  DELETE: delete
+```
+
+These mappings are used when expanding the `{action}` placeholder.
+
+## Ontology Security Annotations
+
+Add security requirements to specific resources using the `security` annotation:
+
+```xml
+<owl:Class rdf:about="https://example.com/AdminResource">
+    <www:security>admin</www:security>
+</owl:Class>
+```
+
+With `securityTemplate: "{api}.{security}"`, this generates:
+```yaml
+security:
+  - oauth2:
+      - myapi.admin
+```
+
+## Example Configurations
+
+### OAuth2 with Scopes per Action
+
+```yaml
+securitySchemeName: oauth2
+defaultSecurityTemplate: "{api}:{model}:{action}"
+securityActionMappings:
+  GET: read
+  POST: write
+  PUT: write
+  PATCH: write
+  DELETE: delete
+```
+
+Generated security for `GET /Employee`:
+```yaml
+security:
+  - oauth2:
+      - myapi:Employee:read
+```
+
+### API Key Only
+
+```yaml
+templates:
+  openapi:
+    components:
+      securitySchemes:
+        api_key:
+          type: apiKey
+          in: header
+          name: X-API-Key
+
+# No scope-based security templates needed
+defaultSecurityTemplate: null
+```
+
+### Resource-Level Security
+
+```yaml
+securityTemplate: "{api}.{security}"
+defaultSecurityTemplate: "{api}.{model}.{action}"
+```
+
+Resources with `security` annotation use their custom scope; others use the default pattern.

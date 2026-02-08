@@ -1,0 +1,5 @@
+package kakuro;
+
+import java.util.List;
+
+public record Run(int target, List<Position> cells) {}

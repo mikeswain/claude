@@ -1,0 +1,250 @@
+# Troubleshooting
+
+Common issues and solutions when using ASG.
+
+## Configuration Issues
+
+### "Name must be alphanumeric with underscores only"
+
+**Problem:** The `name` field contains invalid characters.
+
+**Solution:** Use only letters, numbers, and underscores:
+```yaml
+# Bad
+name: my-api
+
+# Good
+name: my_api
+```
+
+### "Only one namespace mapping can be specified"
+
+**Problem:** Multiple namespace mapping targets defined.
+
+**Solution:** Use a single target namespace with multiple patterns:
+```yaml
+# Bad
+namespaceMappings:
+  https://example.com/api1/:
+    - https://example.com/.*
+  https://example.com/api2/:
+    - https://other.com/.*
+
+# Good
+namespaceMappings:
+  https://example.com/api/:
+    - https://example.com/.*
+    - https://other.com/.*
+```
+
+Or use a list (target inferred):
+```yaml
+namespaceMappings:
+  - https://example.com/.*
+  - https://other.com/.*
+```
+
+### "Cannot find rootClass"
+
+**Problem:** The specified `rootClass` doesn't exist or isn't a valid API spec class.
+
+**Solution:**
+1. Check the IRI is correct (case-sensitive)
+2. Verify the class is a subclass of `GRLAPISpecifications`
+3. Ensure the ontology imports are loaded correctly
+
+### Relative paths not resolving
+
+**Problem:** Ontology files or catalog not found.
+
+**Solution:** Paths are relative to the config file location:
+```yaml
+# If config is at /project/config/api.yaml
+# and ontology is at /project/ontologies/my.owl
+
+ontologies:
+  - ../ontologies/my.owl  # Correct
+  - /ontologies/my.owl    # Wrong - looks for /ontologies/
+```
+
+Use `${configDir}` for clarity:
+```yaml
+ontologies:
+  - ${configDir}/../ontologies/my.owl
+```
+
+## Ontology Issues
+
+### "No properties with apiLabel annotation found"
+
+**Problem:** Properties aren't being included in the generated schema.
+
+**Causes:**
+1. Missing `apiLabel` annotations on SubClassOf axioms
+2. Mismatched API name in annotations
+3. Annotations on wrong element
+
+**Solution:** Verify axiom annotations:
+```xml
+<!-- The apiLabel goes on the AXIOM, not the class or property -->
+<owl:Axiom>
+    <owl:annotatedSource rdf:resource="https://example.com/Employee"/>
+    <owl:annotatedProperty rdf:resource="http://www.w3.org/2000/01/rdf-schema#subClassOf"/>
+    <owl:annotatedTarget><!-- blank node ID of the restriction --></owl:annotatedTarget>
+    <www:apiLabel>MyAPIV1.0</www:apiLabel>  <!-- Must match rootClass name -->
+</owl:Axiom>
+```
+
+### Resource not appearing as endpoint
+
+**Problem:** A class isn't generating API endpoints.
+
+**Causes:**
+1. Missing `hasResourceSchema` restriction from API spec class
+2. Class doesn't have `apiID` property restriction
+3. Missing `apiLabel` annotation on `apiID` restriction
+
+**Solution:** Ensure the class:
+1. Is linked from API spec via `hasResourceSchema`
+2. Has an `apiID` data property restriction
+3. Has `apiLabel` annotation on the `apiID` restriction
+
+### Properties showing as arrays unexpectedly
+
+**Problem:** Properties are arrays when they should be singular.
+
+**Cause:** `someValuesFrom` always implies an array.
+
+**Solution:** Use `qualifiedCardinality(1)` for singular required properties:
+```xml
+<!-- Array (someValuesFrom) -->
+<owl:someValuesFrom rdf:resource="xsd:string"/>
+
+<!-- Singular (exactCardinality) -->
+<owl:qualifiedCardinality rdf:datatype="xsd:nonNegativeInteger">1</owl:qualifiedCardinality>
+<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+```
+
+### Missing required properties
+
+**Problem:** Properties with cardinality >= 1 aren't marked required.
+
+**Solution:** Enable `enforceRequiredness`:
+```yaml
+enforceRequiredness: true
+```
+
+### Object property shows as string instead of $ref
+
+**Problem:** An object property shows a string type with `x-grl-model-link` instead of a schema reference.
+
+**Cause:** The range class IS a resource (has `apiID`), so it's treated as a reference.
+
+**Explanation:** This is correct behavior. When a class is a resource (has its own API endpoints), references to it become identifiers (strings) with `x-grl-model-link`, not nested objects.
+
+**If you want nested objects:** Remove the `apiID` restriction from the range class so it's not treated as a resource.
+
+## Generation Issues
+
+### Import not resolved
+
+**Problem:** Ontology import fails to load.
+
+**Solutions:**
+1. Use a catalog file:
+   ```yaml
+   catalogFile: ./catalog-v001.xml
+   ```
+2. Ensure imported ontology files are accessible
+3. Check network access for remote imports
+
+### Namespace flattening issues
+
+**Problem:** IRIs aren't being flattened correctly.
+
+**Debugging:**
+```bash
+java -jar asg.jar -c config.yaml -G
+```
+
+Check `ontology-flat.owl` in the output directory to see the flattened result.
+
+**Solution:** Adjust namespace mappings. Use `!` prefix to exclude:
+```yaml
+namespaceMappings:
+  - "!http://www.w3.org/2002/07/owl#.*"      # Exclude OWL
+  - "!http://www.w3.org/2001/XMLSchema#.*"   # Exclude XSD
+  - ".*"                                       # Include everything else
+```
+
+### OutOfMemoryError
+
+**Problem:** JVM runs out of memory with large ontologies.
+
+**Solution:** Increase heap size:
+```bash
+java -Xmx4g -jar asg.jar -c config.yaml
+```
+
+## Output Issues
+
+### Missing descriptions or titles
+
+**Problem:** Generated schema lacks descriptions or titles.
+
+**Solution:** Add SKOS annotations to ontology:
+```xml
+<owl:Class rdf:about="https://example.com/Employee">
+    <skos:prefLabel>Employee</skos:prefLabel>       <!-- becomes title -->
+    <skos:definition>A company employee.</skos:definition>  <!-- becomes description -->
+</owl:Class>
+```
+
+### Generic examples
+
+**Problem:** Examples are auto-generated and not meaningful.
+
+**Solution:** Add `skos:example` annotations:
+```xml
+<owl:DatatypeProperty rdf:about="https://example.com/email">
+    <skos:example>john.doe@example.com</skos:example>
+</owl:DatatypeProperty>
+```
+
+Or on the axiom for context-specific examples.
+
+### Security requirements not generated
+
+**Problem:** Endpoints don't have security requirements.
+
+**Solution:**
+1. Define security scheme in template:
+   ```yaml
+   templates:
+     openapi:
+       components:
+         securitySchemes:
+           oauth2:
+             type: oauth2
+             flows: ...
+   ```
+2. Configure security templates:
+   ```yaml
+   defaultSecurityTemplate: "{api}.{model}.{action}"
+   ```
+3. Or add `security` annotation to resource classes.
+
+## Debugging Tips
+
+1. **Check effective-config.yaml** - Review the merged configuration in the output directory.
+
+2. **Use -G flag** - Stop after flattening to verify namespace mappings:
+   ```bash
+   java -jar asg.jar -c config.yaml -G
+   ```
+
+3. **Examine ontology files** - Review `ontology-merged.owl` to see what ASG is working with.
+
+4. **Enable logging** - Check console output for warnings about missing annotations.
+
+5. **Validate ontology** - Use Protégé or another OWL tool to check ontology validity.

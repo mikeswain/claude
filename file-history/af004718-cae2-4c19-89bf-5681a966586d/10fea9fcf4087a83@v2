@@ -1,0 +1,155 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns="https://example.com/taxonomy/"
+     xml:base="https://example.com/taxonomy/"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+     xmlns:base="https://www.graphresearchlabs.com/base/"
+     xmlns:api="https://www.graphresearchlabs.com/">
+
+    <owl:Ontology rdf:about="https://example.com/taxonomy/">
+        <owl:imports rdf:resource="https://www.graphresearchlabs.com/base/V1.0.2"/>
+        <rdfs:comment>Test ontology for taxonomy (enum) properties via named individuals.</rdfs:comment>
+    </owl:Ontology>
+
+    <!-- APIRoot links to API specification -->
+    <rdf:Description rdf:about="https://www.graphresearchlabs.com/base/APIRoot">
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="https://www.graphresearchlabs.com/base/hasAPI"/>
+                <owl:someValuesFrom rdf:resource="https://example.com/taxonomy/TaxonomyTestAPIV1.0"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </rdf:Description>
+
+    <!-- API Specification Class -->
+    <owl:Class rdf:about="https://example.com/taxonomy/TaxonomyTestAPIV1.0">
+        <rdfs:subClassOf rdf:resource="https://www.graphresearchlabs.com/base/GRLAPISpecifications"/>
+        <rdfs:subClassOf rdf:nodeID="hasTaxonomyResource"/>
+        <skos:prefLabel>Taxonomy Test API V1.0</skos:prefLabel>
+        <api:apiDisplayLabel>TaxonomyTestAPIV1.0</api:apiDisplayLabel>
+    </owl:Class>
+
+    <owl:Restriction rdf:nodeID="hasTaxonomyResource">
+        <owl:onProperty rdf:resource="https://www.graphresearchlabs.com/base/hasResourceSchema"/>
+        <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+        <owl:onClass rdf:resource="https://example.com/taxonomy/TaxonomyTest"/>
+    </owl:Restriction>
+    <owl:Axiom>
+        <owl:annotatedSource rdf:resource="https://example.com/taxonomy/TaxonomyTestAPIV1.0"/>
+        <owl:annotatedProperty rdf:resource="http://www.w3.org/2000/01/rdf-schema#subClassOf"/>
+        <owl:annotatedTarget rdf:nodeID="hasTaxonomyResource"/>
+        <api:apitag>TaxonomyTest</api:apitag>
+    </owl:Axiom>
+
+    <!-- Status Taxonomy Class -->
+    <owl:Class rdf:about="https://example.com/taxonomy/Status">
+        <skos:prefLabel>Status</skos:prefLabel>
+        <skos:definition>Status values for the resource.</skos:definition>
+    </owl:Class>
+
+    <!-- Status Individuals -->
+    <owl:NamedIndividual rdf:about="https://example.com/taxonomy/StatusActive">
+        <rdf:type rdf:resource="https://example.com/taxonomy/Status"/>
+        <skos:prefLabel>Active</skos:prefLabel>
+    </owl:NamedIndividual>
+
+    <owl:NamedIndividual rdf:about="https://example.com/taxonomy/StatusInactive">
+        <rdf:type rdf:resource="https://example.com/taxonomy/Status"/>
+        <skos:prefLabel>Inactive</skos:prefLabel>
+    </owl:NamedIndividual>
+
+    <owl:NamedIndividual rdf:about="https://example.com/taxonomy/StatusPending">
+        <rdf:type rdf:resource="https://example.com/taxonomy/Status"/>
+        <skos:prefLabel>Pending</skos:prefLabel>
+    </owl:NamedIndividual>
+
+    <!-- Priority Taxonomy Class -->
+    <owl:Class rdf:about="https://example.com/taxonomy/Priority">
+        <skos:prefLabel>Priority</skos:prefLabel>
+        <skos:definition>Priority levels.</skos:definition>
+    </owl:Class>
+
+    <!-- Priority Individuals -->
+    <owl:NamedIndividual rdf:about="https://example.com/taxonomy/PriorityLow">
+        <rdf:type rdf:resource="https://example.com/taxonomy/Priority"/>
+        <skos:prefLabel>Low</skos:prefLabel>
+    </owl:NamedIndividual>
+
+    <owl:NamedIndividual rdf:about="https://example.com/taxonomy/PriorityMedium">
+        <rdf:type rdf:resource="https://example.com/taxonomy/Priority"/>
+        <skos:prefLabel>Medium</skos:prefLabel>
+    </owl:NamedIndividual>
+
+    <owl:NamedIndividual rdf:about="https://example.com/taxonomy/PriorityHigh">
+        <rdf:type rdf:resource="https://example.com/taxonomy/Priority"/>
+        <skos:prefLabel>High</skos:prefLabel>
+    </owl:NamedIndividual>
+
+    <!-- Object Properties for Taxonomy -->
+    <owl:ObjectProperty rdf:about="https://example.com/taxonomy/hasStatus">
+        <skos:prefLabel>Has Status</skos:prefLabel>
+        <skos:definition>The status of the resource.</skos:definition>
+    </owl:ObjectProperty>
+
+    <owl:ObjectProperty rdf:about="https://example.com/taxonomy/hasPriority">
+        <skos:prefLabel>Has Priority</skos:prefLabel>
+        <skos:definition>The priority level of the resource.</skos:definition>
+    </owl:ObjectProperty>
+
+    <!-- TaxonomyTest Resource Class -->
+    <owl:Class rdf:about="https://example.com/taxonomy/TaxonomyTest">
+        <skos:prefLabel>Taxonomy Test</skos:prefLabel>
+        <skos:definition>Resource class to test taxonomy (enum) properties.</skos:definition>
+
+        <!-- apiID -->
+        <rdfs:subClassOf rdf:nodeID="taxApiId"/>
+
+        <!-- hasStatus - class-based taxonomy -->
+        <rdfs:subClassOf rdf:nodeID="hasStatusRestr"/>
+
+        <!-- hasPriority - class-based taxonomy -->
+        <rdfs:subClassOf rdf:nodeID="hasPriorityRestr"/>
+    </owl:Class>
+
+    <!-- apiID restriction -->
+    <owl:Restriction rdf:nodeID="taxApiId">
+        <owl:onProperty rdf:resource="https://www.graphresearchlabs.com/base/apiID"/>
+        <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+        <owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:Restriction>
+    <owl:Axiom>
+        <owl:annotatedSource rdf:resource="https://example.com/taxonomy/TaxonomyTest"/>
+        <owl:annotatedProperty rdf:resource="http://www.w3.org/2000/01/rdf-schema#subClassOf"/>
+        <owl:annotatedTarget rdf:nodeID="taxApiId"/>
+        <api:apiLabel>TaxonomyTestAPIV1.0</api:apiLabel>
+    </owl:Axiom>
+
+    <!-- hasStatus restriction (someValuesFrom Status class) -->
+    <owl:Restriction rdf:nodeID="hasStatusRestr">
+        <owl:onProperty rdf:resource="https://example.com/taxonomy/hasStatus"/>
+        <owl:someValuesFrom rdf:resource="https://example.com/taxonomy/Status"/>
+    </owl:Restriction>
+    <owl:Axiom>
+        <owl:annotatedSource rdf:resource="https://example.com/taxonomy/TaxonomyTest"/>
+        <owl:annotatedProperty rdf:resource="http://www.w3.org/2000/01/rdf-schema#subClassOf"/>
+        <owl:annotatedTarget rdf:nodeID="hasStatusRestr"/>
+        <api:apiLabel>TaxonomyTestAPIV1.0</api:apiLabel>
+    </owl:Axiom>
+
+    <!-- hasPriority restriction (someValuesFrom Priority class) -->
+    <owl:Restriction rdf:nodeID="hasPriorityRestr">
+        <owl:onProperty rdf:resource="https://example.com/taxonomy/hasPriority"/>
+        <owl:someValuesFrom rdf:resource="https://example.com/taxonomy/Priority"/>
+    </owl:Restriction>
+    <owl:Axiom>
+        <owl:annotatedSource rdf:resource="https://example.com/taxonomy/TaxonomyTest"/>
+        <owl:annotatedProperty rdf:resource="http://www.w3.org/2000/01/rdf-schema#subClassOf"/>
+        <owl:annotatedTarget rdf:nodeID="hasPriorityRestr"/>
+        <api:apiLabel>TaxonomyTestAPIV1.0</api:apiLabel>
+    </owl:Axiom>
+
+</rdf:RDF>

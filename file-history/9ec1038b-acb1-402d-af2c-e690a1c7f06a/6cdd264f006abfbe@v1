@@ -1,0 +1,19 @@
+ontologies:
+  - ../Sustainability Financial Disclosure Ontology API/ClimateRelatedFinancialDisclosureOntology-1.0.1.owl
+name: nzcs1
+extends: base-config.yaml
+catalogFile: ../Sustainability Financial Disclosure Ontology API/catalog-v001.xml
+namespaceMappings:
+  https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/:
+    - https://www.graphresearchlabs.com/.*
+    - https://ontologies.semanticarts.com/.*
+    - https://w3id.org/semanticarts/ns/ontology/gist/.*
+rootClass: https://www.graphresearchlabs.com/SustainabilityFinancialDisclosure/NZCS1APIV1.0.0
+templates:
+  openapi:
+    info:
+      description: This is API to support Climate Disclosures under NZ Climate Disclosure Standard 1 API
+      title: NZ Climate Disclosure Standard 1 API
+    servers:
+      - url: nzcs1
+        description: description

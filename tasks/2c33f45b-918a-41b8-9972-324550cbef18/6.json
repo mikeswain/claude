@@ -1,0 +1,9 @@
+{
+  "id": "6",
+  "subject": "Delete dead code and update tests/configs",
+  "description": "Steps 6-8: Update Asg CLI, delete AsgUtils.applyNamespaceMappings, NamespaceMappingsDeserializer, clean up tests and config files. Keep namespaceMappings field but mark as deprecated.",
+  "activeForm": "Cleaning up dead code and tests",
+  "status": "pending",
+  "blocks": [],
+  "blockedBy": []
+}

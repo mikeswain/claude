@@ -1,0 +1,9 @@
+{
+  "id": "3",
+  "subject": "Eliminate findDataProperty/findObjectProperty in ResourceSchemaMapper",
+  "description": "Step 3: Use visitor's new maps instead of searching ontology signature by short name. Delete the find methods. Fix createSchemaVisitor to use static OWLManager.",
+  "activeForm": "Updating ResourceSchemaMapper",
+  "status": "pending",
+  "blocks": [],
+  "blockedBy": []
+}

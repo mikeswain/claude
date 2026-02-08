@@ -1,0 +1,15 @@
+.classpath
+.project
+.settings/
+
+bin
+target
+
+
+.factorypath
+config.yaml
+generate-server.sh
+oba-*-jar-with-dependencies.jar
+outputs
+/.idea/
+*.snap.debug

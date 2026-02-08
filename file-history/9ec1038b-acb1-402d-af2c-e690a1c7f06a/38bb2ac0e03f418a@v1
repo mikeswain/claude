@@ -1,0 +1,62 @@
+extends: config_base.yaml
+ontologies:
+  - ${configDir}/imports/business-ontology/Manufacturing/SensorOntology.rdf
+name: manufacturing
+outputDir: ${configDir}/../../test-output
+catalogFile: ${configDir}/imports/business-ontology/Manufacturing/catalog-v001.xml
+namespaceMappings:
+  - "!http://www.w3.org/2002/07/owl#.*"
+  - "!http://www.w3.org/1999/02/22-rdf-syntax-ns#.*"
+  - "!http://www.w3.org/XML/1998/namespace.*"
+  - "!http://www.w3.org/2001/XMLSchema#.*"
+  - "!http://www.w3.org/2000/01/rdf-schema#.*"
+  - "!https://w3id.org/semanticarts/ontology/gist/.*"
+  - ".*"
+defaultSecurityTemplate: ""
+securityActionMappings:
+  GET: read
+  POST: create
+  DELETE: delete
+  PATCH: update
+  PUT: update
+templates:
+  openapi:
+    openapi: 3.1.0
+    info:
+      description: This is API to support Climate Disclosures under NZ Climate Disclosure Standard 1 API
+      title: NZ Climate Disclosure Standard 1 API
+      version: 1.0.1
+      termsOfService: terms
+      contact:
+        name: Test
+        url: null
+        email: support@graphresearchlabs.com
+      license:
+        name: Copyright 2024 Graphic Research Labs
+        url: http://www.climatetracker.com/
+    security:
+      - apiKey: [ ]
+      - oauth2: [ ]
+    components:
+      securitySchemes:
+        apiKeyAuth:
+          type: apiKey
+          in: header # can be "header", "query" or "cookie"
+          name: X-Api-Key # name of the header, query parameter or cookie
+        oauth2:
+          type: "oauth2"
+          flows:
+            authorizationCode:
+              authorizationUrl: https://dev-3kuyljqso8qiqmqd.us.auth0.com/authorize
+              tokenUrl: https://dev-3kuyljqso8qiqmqd.us.auth0.com/oauth/token
+              x-grl-audience: https://graph.climatetracker.com/nzcs1
+              scopes:
+                test: "Test scope"
+
+
+    servers:
+      - url: manufacturing
+        description: description
+    externalDocs:
+      description: documentation
+      url: https://graphresearchlabs.atlassian.net/wiki/spaces/~139218355/pages/8749057/XAN-29+Integration+Mapping+Generator+Notes

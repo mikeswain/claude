@@ -1,0 +1,215 @@
+# XSD Datatype Mappings
+
+ASG maps XSD (XML Schema Definition) datatypes to OpenAPI/JSON Schema types. This document lists all 46 supported datatype mappings.
+
+## Quick Reference
+
+| XSD Datatype | OpenAPI Type | Format | Notes |
+|--------------|--------------|--------|-------|
+| `xsd:string` | `string` | - | Default string type |
+| `xsd:boolean` | `boolean` | - | |
+| `xsd:integer` | `integer` | - | Arbitrary precision |
+| `xsd:decimal` | `number` | - | Decimal numbers |
+| `xsd:float` | `number` | `double` | 32-bit float |
+| `xsd:double` | `number` | `double` | 64-bit float |
+| `xsd:dateTime` | `string` | `date-time` | ISO 8601 |
+| `xsd:date` | `string` | `date` | ISO 8601 date only |
+| `xsd:time` | `string` | `time` | ISO 8601 time only |
+| `xsd:anyURI` | `string` | `uri` | |
+
+## Complete Datatype Mapping
+
+### String Types
+
+| XSD Datatype | OpenAPI Type | Example |
+|--------------|--------------|---------|
+| `xsd:string` | `string` | `"Hello World"` |
+| `xsd:normalizedString` | `string` | `"normalized text"` |
+| `xsd:token` | `string` | `"token"` |
+| `xsd:language` | `string` | `"en-US"` |
+| `xsd:Name` | `string` | `"xmlName"` |
+| `xsd:NCName` | `string` | `"localName"` |
+| `xsd:NMTOKEN` | `string` | `"nmtoken"` |
+| `xsd:NMTOKENS` | `string` | `"token1 token2"` |
+| `xsd:ID` | `string` | `"id123"` |
+| `xsd:IDREF` | `string` | `"id123"` |
+| `xsd:IDREFS` | `string` | `"id1 id2"` |
+| `xsd:ENTITY` | `string` | `"entity"` |
+| `xsd:ENTITIES` | `string` | `"ent1 ent2"` |
+| `xsd:QName` | `string` | `"prefix:local"` |
+| `xsd:NOTATION` | `string` | `"notation"` |
+| `rdf:langString` | `string` | `"text@en"` |
+| `rdfs:Literal` | `string` | Any literal |
+
+### Numeric Types - Integer Family
+
+| XSD Datatype | OpenAPI Type | Range | Format |
+|--------------|--------------|-------|--------|
+| `xsd:integer` | `integer` | Unbounded | - |
+| `xsd:long` | `integer` | ±2^63 | `int64` |
+| `xsd:int` | `integer` | ±2^31 | - |
+| `xsd:short` | `integer` | ±2^15 | - |
+| `xsd:byte` | `integer` | ±2^7 | - |
+| `xsd:nonNegativeInteger` | `integer` | ≥ 0 | - |
+| `xsd:positiveInteger` | `integer` | > 0 | - |
+| `xsd:nonPositiveInteger` | `integer` | ≤ 0 | - |
+| `xsd:negativeInteger` | `integer` | < 0 | - |
+| `xsd:unsignedLong` | `integer` | 0 to 2^64-1 | - |
+| `xsd:unsignedInt` | `integer` | 0 to 2^32-1 | - |
+| `xsd:unsignedShort` | `integer` | 0 to 2^16-1 | - |
+| `xsd:unsignedByte` | `integer` | 0 to 255 | - |
+
+### Numeric Types - Decimal Family
+
+| XSD Datatype | OpenAPI Type | Format | Example |
+|--------------|--------------|--------|---------|
+| `xsd:decimal` | `number` | - | `123.45` |
+| `xsd:float` | `number` | `double` | `1.23e4` |
+| `xsd:double` | `number` | `double` | `1.23e308` |
+
+### Boolean Type
+
+| XSD Datatype | OpenAPI Type | Values |
+|--------------|--------------|--------|
+| `xsd:boolean` | `boolean` | `true`, `false` |
+
+### Date and Time Types
+
+| XSD Datatype | OpenAPI Type | Format | Example |
+|--------------|--------------|--------|---------|
+| `xsd:dateTime` | `string` | `date-time` | `2025-01-15T14:30:00Z` |
+| `xsd:dateTimeStamp` | `string` | `date-time` | `2025-01-15T14:30:00+00:00` |
+| `xsd:date` | `string` | `date` | `2025-01-15` |
+| `xsd:time` | `string` | `time` | `14:30:00` |
+| `xsd:duration` | `string` | `duration` | `P3Y6M4DT12H30M5S` |
+| `xsd:gYear` | `string` | - | `2025` |
+| `xsd:gYearMonth` | `string` | - | `2025-01` |
+| `xsd:gMonth` | `string` | - | `--01` |
+| `xsd:gMonthDay` | `string` | - | `--01-15` |
+| `xsd:gDay` | `string` | - | `---15` |
+
+### Binary Types
+
+| XSD Datatype | OpenAPI Type | Format | Notes |
+|--------------|--------------|--------|-------|
+| `xsd:base64Binary` | `string` | `byte` | Base64 encoded |
+| `xsd:hexBinary` | `string` | - | Hex encoded |
+
+### URI Types
+
+| XSD Datatype | OpenAPI Type | Format | Example |
+|--------------|--------------|--------|---------|
+| `xsd:anyURI` | `string` | `uri` | `https://example.com` |
+
+### Any Types
+
+| XSD Datatype | OpenAPI Type | Notes |
+|--------------|--------------|-------|
+| `xsd:anyType` | `string` | Fallback to string |
+| `xsd:anySimpleType` | `string` | Fallback to string |
+
+## Example Usage
+
+### String Property
+
+**OWL:**
+```xml
+<owl:Restriction>
+    <owl:onProperty rdf:resource="https://example.com/name"/>
+    <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:Restriction>
+```
+
+**OpenAPI:**
+```yaml
+name:
+  type: string
+  example: "name string value"
+```
+
+### Integer Property
+
+**OWL:**
+```xml
+<owl:Restriction>
+    <owl:onProperty rdf:resource="https://example.com/age"/>
+    <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+</owl:Restriction>
+```
+
+**OpenAPI:**
+```yaml
+age:
+  type: integer
+  example: 1
+```
+
+### DateTime Property
+
+**OWL:**
+```xml
+<owl:Restriction>
+    <owl:onProperty rdf:resource="https://example.com/createdAt"/>
+    <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#dateTime"/>
+</owl:Restriction>
+```
+
+**OpenAPI:**
+```yaml
+createdAt:
+  type: string
+  format: date-time
+  example: "2025-01-15T14:55:58+00:00"
+```
+
+### URI Property
+
+**OWL:**
+```xml
+<owl:Restriction>
+    <owl:onProperty rdf:resource="https://example.com/website"/>
+    <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#anyURI"/>
+</owl:Restriction>
+```
+
+**OpenAPI:**
+```yaml
+website:
+  type: string
+  format: uri
+  example: "http://www.example.com"
+```
+
+### Boolean Property
+
+**OWL:**
+```xml
+<owl:Restriction>
+    <owl:onProperty rdf:resource="https://example.com/isActive"/>
+    <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
+</owl:Restriction>
+```
+
+**OpenAPI:**
+```yaml
+isActive:
+  type: boolean
+  example: true
+```
+
+## Auto-Generated Examples
+
+When no `skos:example` annotation is provided, ASG generates appropriate example values:
+
+| OpenAPI Type | Format | Generated Example |
+|--------------|--------|-------------------|
+| `string` | - | `"propertyName string value"` |
+| `string` | `uri` | `"http://www.example.com"` |
+| `string` | `date` | `"2025-01-15"` |
+| `string` | `date-time` | `"2025-01-15T14:55:58+00:00"` |
+| `string` | `time` | `"14:55:58+00:00"` |
+| `string` | `duration` | `"P3Y6M4DT12H30M5S"` |
+| `string` | `byte` | `"Ynl0ZSBhcnJvdw=="` |
+| `number` | - | `1.1` |
+| `integer` | - | `1` |
+| `boolean` | - | `true` |

@@ -1,0 +1,159 @@
+# OWL to OpenAPI Mapping Matrix
+
+Quick reference for how OWL constructs map to OpenAPI/JSON Schema.
+
+## Restriction Mappings
+
+| OWL Restriction | OpenAPI Schema Effect | Required? | Array? |
+|-----------------|----------------------|-----------|--------|
+| `MinCardinality(0)` | No effect | No | No |
+| `MinCardinality(1)` | `minItems: 1` | Yes | No |
+| `MinCardinality(n)` where n>1 | `minItems: n` | Yes | Yes |
+| `MaxCardinality(1)` | `maxItems: 1` | No | No |
+| `MaxCardinality(n)` where n>1 | `maxItems: n` | No | Yes |
+| `ExactCardinality(1)` | `minItems: 1, maxItems: 1` | Yes | No |
+| `ExactCardinality(n)` where n>1 | `minItems: n, maxItems: n` | Yes | Yes |
+| `SomeValuesFrom` | `minItems: 1` | Yes | Yes |
+| `AllValuesFrom` | Type constraint only | No | No |
+| `HasValue` | `default: value` | No | No |
+| `OneOf` (individuals) | `enum: [labels]` | No | No |
+| `DataOneOf` (literals) | `enum: [values]` | No | No |
+| `UnionOf` | `anyOf: [schemas]` | No | - |
+| `IntersectionOf` | `allOf: [schemas]` | No | - |
+| `ComplementOf` | `not: schema` | No | - |
+
+## Property Type Mappings
+
+| OWL Property Type | Range | OpenAPI Mapping |
+|-------------------|-------|-----------------|
+| Data Property | XSD type | Primitive type (see datatypes) |
+| Object Property | Resource class | `string` with `x-grl-model-link` |
+| Object Property | Non-resource class | `$ref` or inline schema |
+| Object Property | Named individuals | `enum` with individual labels |
+
+## Datatype Quick Reference
+
+| XSD Type | OpenAPI Type | OpenAPI Format |
+|----------|--------------|----------------|
+| `string` | `string` | - |
+| `boolean` | `boolean` | - |
+| `integer`, `int`, `long`, etc. | `integer` | - |
+| `decimal`, `float`, `double` | `number` | `double` for float/double |
+| `dateTime` | `string` | `date-time` |
+| `date` | `string` | `date` |
+| `time` | `string` | `time` |
+| `duration` | `string` | `duration` |
+| `anyURI` | `string` | `uri` |
+| `base64Binary` | `string` | `byte` |
+
+## Annotation Mappings
+
+| OWL Annotation | OpenAPI Location |
+|----------------|------------------|
+| `skos:prefLabel` | `title` |
+| `skos:definition` | `description` |
+| `skos:example` | `example` |
+| `rdfs:comment` | `description` (fallback) |
+| `apiLabel` | Filters which axioms are included |
+| `apiTag` | `tags` on operations |
+| `apiDescription` | `description` on path items |
+| `apiSummary` | `summary` on path items |
+| `security` | Security requirements |
+
+## Resource to Endpoint Mapping
+
+| Resource | Endpoint | Methods |
+|----------|----------|---------|
+| Class with `apiID` | `/{ResourceName}` | GET (list), POST (create) |
+| Class with `apiID` | `/{ResourceName}/{id}` | GET, PUT, PATCH, DELETE |
+
+## Schema Structure
+
+For a resource class `Employee`:
+
+```yaml
+components:
+  schemas:
+    Employee:
+      type: object
+      title: Employee                    # from skos:prefLabel
+      description: An employee record    # from skos:definition
+      additionalProperties: false
+      required:
+        - apiID                          # always required
+        - name                           # if minCardinality ≥ 1
+      properties:
+        apiID:
+          type: string
+          title: Api Id
+          description: REST ID of the object
+          example: apiID string value
+        name:
+          type: string
+          title: Name
+          description: Employee's full name
+          example: John Doe
+        department:
+          type: string
+          x-grl-model-link: Department   # reference to another resource
+          description: Unique identifier of Department
+          example: Department-12345
+```
+
+## Path Structure
+
+For a resource `Employee`:
+
+```yaml
+paths:
+  /Employee:
+    summary: Employee collection
+    description: Collection of Employee resources
+    get:
+      operationId: Employee/collection/GET
+      tags: [Employee]
+      parameters:
+        - name: start
+          in: query
+        - name: limit
+          in: query
+      responses:
+        '200':
+          description: Employee Collection
+          content:
+            application/json:
+              schema:
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Employee'
+    post:
+      operationId: Employee/collection/POST
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Employee'
+      responses:
+        '201':
+          description: New Employee
+
+  /Employee/{EmployeeId}:
+    summary: Single Employee
+    get:
+      operationId: Employee/single/GET
+      parameters:
+        - name: EmployeeId
+          in: path
+          required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Employee'
+    put: ...
+    patch: ...
+    delete: ...
+```

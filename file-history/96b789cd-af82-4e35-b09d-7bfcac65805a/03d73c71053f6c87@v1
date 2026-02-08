@@ -1,0 +1,245 @@
+package com.grl.component.asg.configuration;
+
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonMerge;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import io.swagger.v3.oas.models.Components;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.PathItem;
+import io.swagger.v3.oas.models.security.SecurityScheme;
+import io.swagger.v3.oas.models.security.SecurityScheme.Type;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
+import java.net.URI;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import javax.annotation.Nonnull;
+
+@SuppressWarnings("FieldMayBeFinal")
+public class YamlConfig {
+  public static class Templates {
+
+    private PathItem collectionPathItem;
+    private PathItem singlePathItem;
+
+    private OpenAPI openapi = new OpenAPI();
+
+    /**
+     * OpenAPI template to use for the generated api
+     *
+     * @return openapi template
+     */
+    @JsonMerge
+    public OpenAPI getOpenapi() {
+      return openapi;
+    }
+
+    /**
+     * PathItem template to use for the generated collection api endpoint
+     * @return path item template
+     */
+    @JsonMerge
+    public PathItem getCollectionPathItem() {
+      return collectionPathItem;
+    }
+
+    /**
+     * PathItem template to use for the generated single api endpoint
+     * @return path item template
+     */
+    @JsonMerge
+    public PathItem getSinglePathItem() {
+      return singlePathItem;
+    }
+
+  }
+
+  private Path outputDir;
+
+  @Pattern(regexp = "^[a-zA-Z0-9_]+$", message = "Name must be alphanumeric with underscores only")
+  private String name;
+
+  /**
+   * Openapi templates used as defaults when generating collection/single api endpoints
+   */
+  @JsonMerge
+  private Templates templates = new Templates();
+
+
+  private List<URI> ontologies = new ArrayList<>();
+
+  private Path catalogFile;
+
+  private String rootClass;
+
+  private boolean enforceRequiredness;
+
+  @Pattern(regexp = "^$|((\\{action}|\\{api|\\{model}|\\{security}|\\w+)(\\W|$))+")
+  private String securitySchemeName;
+
+  @Pattern(regexp = "^$|((\\{action}|\\{api}|\\{model}|\\w+)(\\W|$))+")
+  private String defaultSecurityTemplate;
+
+  @JsonMerge
+  private Map<PathItem.HttpMethod, String> securityActionMappings = new HashMap<>();
+
+  public String getDefaultSecurityTemplate() {
+    return defaultSecurityTemplate;
+  }
+
+  public String getSecurityTemplate() {
+    return securityTemplate;
+  }
+
+  public Map<PathItem.HttpMethod, String> getSecurityActionMappings() {
+    return securityActionMappings;
+  }
+
+  private String securityTemplate;
+
+
+  @JsonProperty("extends") // avoid keyword clash
+  private Path extendsConfig;
+
+  @JsonMerge
+  @JsonDeserialize(using = NamespaceMappingsDeserializer.class)
+  @Size(max = 1, message = "Only one namespace mapping can be specified")
+  private Map<String, Set<String>> namespaceMappings = new HashMap<>();
+
+  public Templates getTemplates() {
+    return templates;
+  }
+
+  /**
+   * List of ontology files to load
+   * @return list of ontology files
+   */
+  public List<URI> getOntologies() {
+    return ontologies;
+  }
+
+  public void setOntologies(List<URI> ontologies) {
+    this.ontologies = ontologies;
+  }
+
+  /**
+   * Output directory for generated files
+   *
+   * @return output directory
+   */
+  public Path getOutputDir() {
+    return outputDir;
+  }
+
+  public void setOutputDir(@Nonnull Path outputDir) {
+    this.outputDir = outputDir;
+  }
+  /**
+   * Name of the api being generated. This is used throughout where an identifier is needed for the api
+   * @return configuration name
+   */
+  public String getName() {
+    return name;
+  }
+
+  /**
+   * Catalog file to use for loading ontologies
+   *
+   * @return filename
+   */
+  public Path getCatalogFile() {
+    return catalogFile;
+  }
+
+  /**
+   * Namespace mappings to use when converting IRIs. The key is the destination namespace and the value
+   * is a list of regexps to match against the source namespace. Regexps may start with a '!' to indicate
+   * an inverted match - i.e. !https://example.com/.*  = all namespaces NOT matching https://example.com/ will be mapped
+   * The mappings can be supplied just as a single list of regexps too, in which case the target url
+   * for the namespace will be assumed to be the base iri of the first processed input document
+   *
+   * @return map of namespace mappings
+   */
+  public Map<String, Set<String>> getNamespaceMappings() {
+    return namespaceMappings;
+  }
+
+  /**
+   * Optional name of the security scheme to use for the generated api. If not specified, the first oauth2 security
+   * scheme found in the openapi template will be used
+   * @return security scheme name
+   */
+  public String getSecuritySchemeName() {
+    return securitySchemeName;
+  }
+
+  /**
+   * Optional Root class to use for the generated api. If not provided, the root class will be inferred from the
+   * singular class subclassed to APIRoot
+   * @return
+   */
+  public String getRootClass() {
+    return rootClass;
+  }
+
+  /**
+   * Optional Filename of configuration to extend. The configuration will be merged with this configuration recursively
+   *
+   * @return filename
+   */
+  @JsonGetter("extends") // avoid keyword clash
+  public Path getExtends() {
+    return extendsConfig;
+  }
+
+  /**
+   * @return true if the generated schema should have 'required' atrributes added for properties which have 1+
+   * cardinality or 'some'
+   */
+  public boolean isEnforceRequiredness() {
+    return enforceRequiredness;
+  }
+
+  /**
+   * if not explicitly set, derive the most likely oauth security schema by checking the openapi template the name of
+   * the auth2-typed schema
+   *
+   * @return
+   */
+  @JsonIgnore
+  public Optional<String> getOAuth2SecuritySchemeName() {
+    return Optional.ofNullable(securitySchemeName)
+        .or(() -> Optional.ofNullable(getTemplates()).map(Templates::getOpenapi).map(OpenAPI::getComponents)
+            .map(Components::getSecuritySchemes)
+            .flatMap(stringSecuritySchemeMap -> stringSecuritySchemeMap.entrySet().stream()
+                .filter(stringSecuritySchemeEntry -> stringSecuritySchemeEntry.getValue().getType()
+                    .equals(SecurityScheme.Type.OAUTH2)).map(Map.Entry::getKey).findFirst()));
+  }
+
+  /**
+   * @return Optional containing the name of the first API key security scheme found in the OpenAPI
+   * template, or an empty Optional if none is present.
+   */
+  @JsonIgnore
+  public Optional<String> getApiKeySecuritySchemaName() {
+    return Optional.ofNullable(getTemplates()).map(Templates::getOpenapi)
+        .map(OpenAPI::getComponents)
+        .map(Components::getSecuritySchemes)
+        .flatMap(stringSecuritySchemeMap -> stringSecuritySchemeMap.entrySet().stream()
+            .filter(stringSecuritySchemeEntry -> stringSecuritySchemeEntry.getValue().getType()
+                .equals(Type.APIKEY)).map(Map.Entry::getKey).findFirst());
+  }
+
+  @JsonIgnore
+  public Path getApiOutputDir() {
+    return getOutputDir().resolve(getName());
+  }
+}
+

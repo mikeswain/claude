@@ -1,0 +1,14 @@
+ontologies:
+  - ../Insurance Common Data Record API/Insurance Core Data Record API Ontology-1.0.4.owl
+name: insuranceCDR
+extends: base-config.yaml
+catalogFile: ../Insurance Common Data Record API/catalog-v001.xml
+rootClass: https://www.graphresearchlabs.com/InsuranceCDR/InsuranceCDRAPIV1.0.0
+templates:
+  openapi:
+    info:
+      description: Insurance API
+      title: Insurance API
+    servers:
+      - url: insurance
+        description: description

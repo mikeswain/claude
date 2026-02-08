@@ -1,0 +1,9 @@
+{
+  "id": "1",
+  "subject": "Add OWL property reverse-lookup maps to SchemaVisitor",
+  "description": "Step 1: Add Map<String, OWLObjectProperty> and Map<String, OWLDataProperty> alongside existing name sets. Populate them at every site where objectPropertyNames/dataPropertyNames are added. Add unmodifiable getters.",
+  "activeForm": "Adding property maps to SchemaVisitor",
+  "status": "pending",
+  "blocks": [],
+  "blockedBy": []
+}

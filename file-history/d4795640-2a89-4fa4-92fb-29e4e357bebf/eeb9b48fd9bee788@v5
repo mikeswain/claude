@@ -1,0 +1,111 @@
+package kakuro;
+
+import java.util.*;
+
+/**
+ * Solves a kakuro puzzle via backtracking with constraint pruning.
+ * Cells are ordered most-constrained-first, and candidates are
+ * filtered by uniqueness, partial sums, and min/max bounds.
+ */
+public final class Solver {
+    private final Grid grid;
+    private final List<Position> blanks;
+    private final Map<Position, List<Run>> posToRuns;
+    private final Map<Position, Integer> blankIndex;
+    private final int[] values;
+
+    public Solver(Grid grid) {
+        this.grid = grid;
+        this.posToRuns = buildPosToRuns(grid.runs());
+        this.blanks = orderByMostConstrained();
+        this.blankIndex = new HashMap<>();
+        for (int i = 0; i < blanks.size(); i++) {
+            blankIndex.put(blanks.get(i), i);
+        }
+        this.values = new int[blanks.size()];
+    }
+
+    /**
+     * Attempts to solve the puzzle.
+     *
+     * @return the solution as a position-to-digit map, or empty if unsolvable
+     */
+    public Optional<Map<Position, Integer>> solve() {
+        if (!search(0)) return Optional.empty();
+        var solution = new LinkedHashMap<Position, Integer>();
+        for (int i = 0; i < blanks.size(); i++) {
+            solution.put(blanks.get(i), values[i]);
+        }
+        return Optional.of(Collections.unmodifiableMap(solution));
+    }
+
+    private boolean search(int idx) {
+        if (idx == blanks.size()) return true;
+        var pos = blanks.get(idx);
+        int bi = blankIndex.get(pos);
+        for (int d = 1; d <= 9; d++) {
+            if (isValid(pos, d)) {
+                values[bi] = d;
+                if (search(idx + 1)) return true;
+                values[bi] = 0;
+            }
+        }
+        return false;
+    }
+
+    private boolean isValid(Position pos, int digit) {
+        return posToRuns.get(pos).stream().allMatch(run -> fitsRun(run, pos, digit));
+    }
+
+    private boolean fitsRun(Run run, Position pos, int digit) {
+        int sum = digit;
+        int remaining = 0;
+        for (var p : run.cells()) {
+            if (p.equals(pos)) continue;
+            int v = valueOf(p);
+            if (v == digit) return false;
+            if (v > 0) {
+                sum += v;
+            } else {
+                remaining++;
+            }
+        }
+        if (sum > run.target()) return false;
+        if (remaining == 0) return sum == run.target();
+        return sum + minSum(remaining) <= run.target()
+            && sum + maxSum(remaining) >= run.target();
+    }
+
+    private int valueOf(Position p) {
+        Integer idx = blankIndex.get(p);
+        return idx != null ? values[idx] : 0;
+    }
+
+    private int minSum(int n) {
+        return n * (n + 1) / 2;
+    }
+
+    private int maxSum(int n) {
+        return n * (19 - n) / 2;
+    }
+
+    private Map<Position, List<Run>> buildPosToRuns(List<Run> runs) {
+        var map = new HashMap<Position, List<Run>>();
+        for (var run : runs) {
+            for (var pos : run.cells()) {
+                map.computeIfAbsent(pos, k -> new ArrayList<>()).add(run);
+            }
+        }
+        return map;
+    }
+
+    private List<Position> orderByMostConstrained() {
+        return grid.positions()
+                .filter(p -> grid.get(p.row(), p.col()) instanceof Cell.Empty e && e.value() == 0)
+                .sorted(Comparator.comparingInt(p ->
+                        posToRuns.get(p).stream()
+                                .mapToInt(r -> r.cells().size())
+                                .min().orElse(10)))
+                .toList();
+    }
+}

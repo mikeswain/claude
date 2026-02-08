@@ -1,0 +1,9 @@
+{
+  "id": "4",
+  "subject": "Change ObjectPropertyMapper to accept OWLClass ranges",
+  "description": "Step 4: Change List<String> ref to List<OWLClass>. Add RestrictionInfo.getRangeClasses(). Add extractObjectPropertyRangeClasses() to ResourceSchemaMapper. Remove deprecated addSchema(String).",
+  "activeForm": "Refactoring ObjectPropertyMapper",
+  "status": "pending",
+  "blocks": [],
+  "blockedBy": []
+}

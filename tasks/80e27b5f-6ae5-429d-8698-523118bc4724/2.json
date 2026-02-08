@@ -1,0 +1,9 @@
+{
+  "id": "2",
+  "subject": "Implement Grid, CsvParser, Solver, and Main",
+  "description": "Grid.java - extracts runs from clue cells. CsvParser.java - parses CSV format (#=black, _=empty, D\\A=clue). Solver.java - backtracking with constraint pruning. Main.java - entry point with formatted output.",
+  "activeForm": "Implementing core classes",
+  "status": "pending",
+  "blocks": [],
+  "blockedBy": []
+}

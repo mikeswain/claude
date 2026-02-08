@@ -1,0 +1,88 @@
+# CLI Reference
+
+ASG is run from the command line using the executable JAR.
+
+## Basic Usage
+
+```bash
+java -jar asg-<version>-jar-with-dependencies.jar -c <config-file>
+```
+
+## Options
+
+| Option | Description |
+|--------|-------------|
+| `-c <file>` | **Required.** Path to the YAML configuration file |
+| `-G` | Stop after flattening the ontology (debug mode). Useful for verifying namespace mappings |
+
+## Examples
+
+### Generate API Specification
+
+```bash
+java -jar asg-1.0.0-jar-with-dependencies.jar -c config.yaml
+```
+
+### Debug Mode (Stop After Flattening)
+
+```bash
+java -jar asg-1.0.0-jar-with-dependencies.jar -c config.yaml -G
+```
+
+This stops processing after the ontology flattening step and outputs `ontology-flat.owl`. Use this to verify that namespace mappings are working correctly before full generation.
+
+## Exit Codes
+
+| Code | Meaning |
+|------|---------|
+| 0 | Success |
+| 1 | Error (configuration, ontology loading, or generation failure) |
+
+## Running from Maven
+
+ASG can also be run as part of a Maven build:
+
+```xml
+<plugin>
+    <groupId>org.codehaus.mojo</groupId>
+    <artifactId>exec-maven-plugin</artifactId>
+    <version>1.6.0</version>
+    <configuration>
+        <mainClass>com.grl.component.asg.Asg</mainClass>
+        <arguments>
+            <argument>-c</argument>
+            <argument>${project.basedir}/config.yaml</argument>
+        </arguments>
+    </configuration>
+</plugin>
+```
+
+Then run with:
+
+```bash
+mvn exec:java
+```
+
+## Programmatic Usage
+
+ASG can be embedded in Java applications:
+
+```java
+import com.grl.component.asg.Asg;
+
+public class MyApp {
+    public static void main(String[] args) {
+        Asg.main(new String[]{"-c", "config.yaml"});
+    }
+}
+```
+
+Add the dependency:
+
+```xml
+<dependency>
+    <groupId>com.graphresearchlabs</groupId>
+    <artifactId>asg</artifactId>
+    <version>1.0.0</version>
+</dependency>
+```

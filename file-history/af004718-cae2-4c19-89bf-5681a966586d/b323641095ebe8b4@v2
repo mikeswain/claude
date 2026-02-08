@@ -1,0 +1,257 @@
+# Minimal Example
+
+This example demonstrates the simplest possible ASG configuration with a working ontology.
+
+## File Structure
+
+```
+project/
+├── config.yaml
+├── ontology.owl
+└── output/
+    └── myapi/
+        ├── openapi.yaml
+        └── openapi.json
+```
+
+## Configuration File
+
+**config.yaml:**
+```yaml
+name: myapi
+ontologies:
+  - ./ontology.owl
+outputDir: ./output
+rootClass: https://example.com/MyAPIV1.0
+enforceRequiredness: true
+
+templates:
+  openapi:
+    openapi: 3.1.0
+    info:
+      title: My API
+      version: 1.0.0
+      description: A minimal example API
+```
+
+## Ontology File
+
+**ontology.owl:**
+```xml
+<?xml version="1.0"?>
+<rdf:RDF xmlns="https://example.com/"
+    xmlns:owl="http://www.w3.org/2002/07/owl#"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:xml="http://www.w3.org/XML/1998/namespace"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+    xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+    xmlns:base="https://www.graphresearchlabs.com/base/"
+    xmlns:api="https://www.graphresearchlabs.com/">
+
+    <owl:Ontology rdf:about="https://example.com/">
+        <owl:imports rdf:resource="https://www.graphresearchlabs.com/base/V1.0.2"/>
+    </owl:Ontology>
+
+    <!-- APIRoot links to our API specification -->
+    <rdf:Description rdf:about="https://www.graphresearchlabs.com/base/APIRoot">
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="https://www.graphresearchlabs.com/base/hasAPI"/>
+                <owl:someValuesFrom rdf:resource="https://example.com/MyAPIV1.0"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </rdf:Description>
+
+    <!-- API Specification Class -->
+    <owl:Class rdf:about="https://example.com/MyAPIV1.0">
+        <rdfs:subClassOf rdf:resource="https://www.graphresearchlabs.com/base/GRLAPISpecifications"/>
+        <rdfs:subClassOf rdf:nodeID="hasPersonResource"/>
+        <skos:prefLabel>My API V1.0</skos:prefLabel>
+    </owl:Class>
+
+    <!-- Link to Person resource -->
+    <owl:Restriction rdf:nodeID="hasPersonResource">
+        <owl:onProperty rdf:resource="https://www.graphresearchlabs.com/base/hasResourceSchema"/>
+        <owl:qualifiedCardinality rdf:datatype="xsd:nonNegativeInteger">1</owl:qualifiedCardinality>
+        <owl:onClass rdf:resource="https://example.com/Person"/>
+    </owl:Restriction>
+
+    <!-- Tag annotation for the resource -->
+    <owl:Axiom>
+        <owl:annotatedSource rdf:resource="https://example.com/MyAPIV1.0"/>
+        <owl:annotatedProperty rdf:resource="http://www.w3.org/2000/01/rdf-schema#subClassOf"/>
+        <owl:annotatedTarget rdf:nodeID="hasPersonResource"/>
+        <api:apitag>People</api:apitag>
+    </owl:Axiom>
+
+    <!-- Person Resource Class -->
+    <owl:Class rdf:about="https://example.com/Person">
+        <skos:prefLabel>Person</skos:prefLabel>
+        <skos:definition>A person in the system.</skos:definition>
+        <rdfs:subClassOf rdf:nodeID="personApiId"/>
+        <rdfs:subClassOf rdf:nodeID="personName"/>
+        <rdfs:subClassOf rdf:nodeID="personEmail"/>
+    </owl:Class>
+
+    <!-- apiID restriction (required for resources) -->
+    <owl:Restriction rdf:nodeID="personApiId">
+        <owl:onProperty rdf:resource="https://www.graphresearchlabs.com/base/apiID"/>
+        <owl:qualifiedCardinality rdf:datatype="xsd:nonNegativeInteger">1</owl:qualifiedCardinality>
+        <owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:Restriction>
+    <owl:Axiom>
+        <owl:annotatedSource rdf:resource="https://example.com/Person"/>
+        <owl:annotatedProperty rdf:resource="http://www.w3.org/2000/01/rdf-schema#subClassOf"/>
+        <owl:annotatedTarget rdf:nodeID="personApiId"/>
+        <api:apiLabel>MyAPIV1.0</api:apiLabel>
+    </owl:Axiom>
+
+    <!-- Name property -->
+    <owl:DatatypeProperty rdf:about="https://example.com/name">
+        <skos:prefLabel>Name</skos:prefLabel>
+        <skos:definition>The person's full name.</skos:definition>
+    </owl:DatatypeProperty>
+
+    <owl:Restriction rdf:nodeID="personName">
+        <owl:onProperty rdf:resource="https://example.com/name"/>
+        <owl:qualifiedCardinality rdf:datatype="xsd:nonNegativeInteger">1</owl:qualifiedCardinality>
+        <owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:Restriction>
+    <owl:Axiom>
+        <owl:annotatedSource rdf:resource="https://example.com/Person"/>
+        <owl:annotatedProperty rdf:resource="http://www.w3.org/2000/01/rdf-schema#subClassOf"/>
+        <owl:annotatedTarget rdf:nodeID="personName"/>
+        <api:apiLabel>MyAPIV1.0</api:apiLabel>
+    </owl:Axiom>
+
+    <!-- Email property -->
+    <owl:DatatypeProperty rdf:about="https://example.com/email">
+        <skos:prefLabel>Email</skos:prefLabel>
+        <skos:definition>The person's email address.</skos:definition>
+        <skos:example>person@example.com</skos:example>
+    </owl:DatatypeProperty>
+
+    <owl:Restriction rdf:nodeID="personEmail">
+        <owl:onProperty rdf:resource="https://example.com/email"/>
+        <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:Restriction>
+    <owl:Axiom>
+        <owl:annotatedSource rdf:resource="https://example.com/Person"/>
+        <owl:annotatedProperty rdf:resource="http://www.w3.org/2000/01/rdf-schema#subClassOf"/>
+        <owl:annotatedTarget rdf:nodeID="personEmail"/>
+        <api:apiLabel>MyAPIV1.0</api:apiLabel>
+    </owl:Axiom>
+</rdf:RDF>
+```
+
+## Running ASG
+
+```bash
+java -jar asg-1.0.0-jar-with-dependencies.jar -c config.yaml
+```
+
+## Generated Output
+
+**openapi.yaml (excerpt):**
+```yaml
+openapi: 3.1.0
+info:
+  title: My API
+  version: 1.0.0
+  description: A minimal example API
+  x-grl-api-label: MyAPIV1.0
+  x-grl-graph-namespace: https://example.com/
+
+tags:
+  - name: Person
+    description: A person in the system.
+
+paths:
+  /Person:
+    summary: Person collection
+    get:
+      operationId: Person/collection/GET
+      tags: [Person]
+      responses:
+        '200':
+          description: Person Collection
+    post:
+      operationId: Person/collection/POST
+      tags: [Person]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Person'
+      responses:
+        '201':
+          description: New Person
+
+  /Person/{PersonId}:
+    summary: Single Person
+    get:
+      operationId: Person/single/GET
+      tags: [Person]
+      parameters:
+        - name: PersonId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Existing Person
+    put:
+      operationId: Person/single/PUT
+      # ... similar structure
+    patch:
+      operationId: Person/single/PATCH
+      # ...
+    delete:
+      operationId: Person/single/DELETE
+      # ...
+
+components:
+  schemas:
+    Person:
+      type: object
+      title: Person
+      description: A person in the system.
+      additionalProperties: false
+      required:
+        - apiID
+        - name
+        - email
+      properties:
+        apiID:
+          type: string
+          title: Api Id
+          description: REST ID of the object.
+          example: apiID string value
+        name:
+          type: string
+          title: Name
+          description: The person's full name.
+          example: name string value
+        email:
+          type: array
+          minItems: 1
+          items:
+            type: string
+            title: Email
+            description: The person's email address.
+            example: person@example.com
+```
+
+## Key Points
+
+1. **API Root Connection**: The `APIRoot` class must have a `hasAPI` restriction pointing to your API spec class.
+
+2. **Resource Schema Link**: Your API spec class needs `hasResourceSchema` restrictions for each resource.
+
+3. **apiLabel Annotations**: Every property restriction must be annotated with `apiLabel` matching your API name.
+
+4. **apiID Property**: Every resource class must have an `apiID` data property restriction.
+
+5. **Cardinality**: Use `qualifiedCardinality(1)` for required singular properties, `someValuesFrom` for required arrays.

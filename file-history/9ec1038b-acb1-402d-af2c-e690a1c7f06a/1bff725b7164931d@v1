@@ -1,0 +1,10 @@
+name: parent
+rootClass: only-set-in-parent
+namespaceMappings:
+  grl1:
+    - this-will-be-the-first
+templates:
+  openapi:
+    security:
+      - mike: [ "yes" ]
+

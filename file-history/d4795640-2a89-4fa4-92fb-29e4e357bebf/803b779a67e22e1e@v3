@@ -1,0 +1,14 @@
+package kakuro;
+
+/** Represents a cell in a kakuro grid. */
+public sealed interface Cell {
+
+    /** A black (blocked) cell. */
+    record Black() implements Cell {}
+
+    /** A clue cell with target sums. Zero means no clue in that direction. */
+    record Clue(int down, int across) implements Cell {}
+
+    /** An empty cell to be filled with a digit 1-9. Value 0 means unsolved. */
+    record Empty(int value) implements Cell {}
+}

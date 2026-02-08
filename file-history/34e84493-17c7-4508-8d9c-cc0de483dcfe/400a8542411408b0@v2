@@ -1,0 +1,113 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this
+repository.
+
+## Project Overview
+
+ASG (API Specification Generator) generates OpenAPI 3.1 specification files (YAML/JSON) from OWL-RDF
+ontologies. It transforms semantic ontology structures into REST API specifications.
+
+## Build Commands
+
+```bash
+mvn clean package                    # Build and package
+mvn clean verify                     # Build with all tests (unit + integration)
+mvn clean package -DskipTests        # Build without tests
+mvn test                             # Run only unit tests
+mvn verify                           # Run integration tests
+mvn test -Dtest=NarrowTest           # Run single test class
+mvn test -P NoRegressionTests        # Build without regression tests (faster)
+```
+
+Output JARs in `target/`:
+
+- `asg-<version>-jar-with-dependencies.jar` - Executable JAR
+- `asg-<version>.jar` - Library JAR
+
+## Running the Tool
+
+```bash
+java -jar target/asg-*-jar-with-dependencies.jar -c <config-file>
+java -jar target/asg-*-jar-with-dependencies.jar -c <config-file> -G  # Stop after flattening (debug)
+```
+
+## Architecture
+
+### Pipeline Flow
+
+```
+Config Loading → Ontology Loading → Namespace Flattening → OWL→OpenAPI Mapping → Output
+```
+
+### Key Components
+
+**Entry Point:** `Asg.java` - CLI and orchestration
+
+**Core Mappers** (`com.grl.component.mapper/`):
+
+- `OntologyMapper` - Main orchestrator: loads ontology, generates OpenAPI
+- `ResourceSchemaMapper` - Maps OWL class to OpenAPI Schema
+- `DataPropertyMapper` / `ObjectPropertyMapper` / `TaxonomyPropertyMapper` - Property mapping
+  strategies
+
+**Schema Processing** (`com.grl.component.schema/`):
+
+- `SchemaVisitor` - OWL class expression visitor (Visitor pattern), collects restrictions
+- `RestrictionInfo` - Sealed interface with 16 record types for type-safe OWL restrictions
+- `PropertyNameResolver` - Resolves IRI short forms for property names
+
+**OWL Utilities** (`com.grl.component.owl/`):
+
+- `OntologyUtil` - OWL API helpers
+- `Narrow<T,R>` - Type-safe casting function for streams
+- `WithAnnotation` / `WithIRI` - Predicate factories for filtering
+
+**Configuration** (`com.grl.component.asg.configuration/`):
+
+- `Config` - Loads YAML with inheritance (`extends` field) and variable substitution
+- `YamlConfig` - Configuration POJO with Jakarta validation
+
+### Key Patterns
+
+1. **Visitor Pattern**: `SchemaVisitor` implements `OWLObjectVisitor` to traverse class hierarchies
+2. **Sealed Interface**: `RestrictionInfo` uses sealed types for compile-time exhaustiveness
+   checking
+3. **Context Object**: `MappingContext` maintains shared state with thread-safe schema cache
+
+## Testing
+
+**Unit tests:** `/src/test/java/com/grl/component/` - Match `**/*.java`
+
+**Integration tests:** `/src/test/java/regression/` - Match `**/*IT.java`
+
+- `SimpleApiIT` - Tests against employment ontology
+- `LargeApiIT` - Tests against business ontology (requires git submodule)
+
+**Test utilities:** `TestUtil.java` - Config loading, spec generation, caching helpers
+
+## Refactoring Guidelines
+
+1. **Leverage OWL API**: Use OWL API classes instead of custom implementations
+2. **Type Safety**: Utilize generics and typed collections
+3. **Immutability**: Prefer immutable OWL objects
+4. Ensure both unit and integration tests pass after changes
+
+## Output Structure
+
+```
+output/<api-name>/
+├── effective-config.yaml    # Merged config
+├── ontology0.owl           # Original ontology copy
+├── ontology-flat.owl       # Namespace-flattened
+├── ontology-merged.owl     # All imports merged
+├── openapi.json            # Generated spec (JSON)
+└── openapi.yaml            # Generated spec (YAML)
+```
+
+## Key Dependencies
+
+- **OWL API 5.1.20** - Ontology manipulation
+- **Swagger/OpenAPI 7.8.0** - Spec generation
+- **Jackson 2.18.0** - YAML/JSON serialization
+- **JUnit 5 / Mockito** - Testing

@@ -1,0 +1,121 @@
+# Plan: Add Unit Tests for Remaining Mapper Classes
+
+## Summary
+
+Add unit tests for the remaining mapper classes that currently have no coverage. Based on analysis, **TaxonomyPropertyMapper** and **MappingContext** are suitable for unit testing, while **ResourceSchemaMapper** and **OntologyMapper** have too much coupling and are better covered by integration tests.
+
+## Pre-requisite: Add Setters to YamlConfig
+
+**File**: `src/main/java/com/grl/component/asg/configuration/YamlConfig.java`
+
+Add setters to simplify test setup (avoid subclassing):
+- `setEnforceRequiredness(boolean)` - for testing required property behavior
+- `setName(String)` - for setting API name in tests
+
+**Note**: Add setters for any other config properties as needed during test implementation.
+
+## Current State
+
+| Class | Lines | Existing Unit Tests |
+|-------|-------|---------------------|
+| DataPropertyMapper | 320 | ✅ 52 tests |
+| ObjectPropertyMapper | 181 | ✅ 23 tests |
+| TaxonomyPropertyMapper | 73 | ❌ None |
+| MappingContext | 97 | ❌ None |
+| ResourceSchemaMapper | 362 | ❌ None (integration only) |
+| OntologyMapper | 380 | ❌ None (integration only) |
+
+## Implementation Plan
+
+### Phase 1: TaxonomyPropertyMapper Unit Tests
+
+**File**: `src/test/java/com/grl/component/mapper/TaxonomyPropertyMapperTest.java`
+
+**Test Categories** (~15 tests):
+
+1. **BasicSchemaGeneration** (4 tests)
+   - Single enum value creates StringSchema with enum property
+   - Multiple enum values create StringSchema with sorted enum list
+   - Schema name, title, description set correctly
+   - Empty ref list returns empty ObjectSchema
+
+2. **ArrayGeneration** (4 tests)
+   - SomeValuesFrom restriction creates ArraySchema
+   - MinCardinality > 1 creates ArraySchema
+   - MaxCardinality > 1 creates ArraySchema
+   - ArraySchema items are StringSchema with enum
+
+3. **RequirednessHandling** (4 tests)
+   - MinCardinality ≥ 1 with enforceRequiredness = isRequired()
+   - SomeValuesFrom with enforceRequiredness = isRequired()
+   - No restrictions = not required
+   - Requireness not enforced by default
+
+4. **RestrictionApplication** (3 tests)
+   - MinCardinality applies minItems to array
+   - MaxCardinality applies maxItems to array
+   - ExactCardinality applies both min and max
+
+### Phase 2: MappingContext Unit Tests
+
+**File**: `src/test/java/com/grl/component/mapper/MappingContextTest.java`
+
+**Test Categories** (~12 tests):
+
+1. **ConstructorAndInitialization** (4 tests)
+   - All constructor parameters stored correctly
+   - resourceClasses is unmodifiable
+   - Schema cache (schemaByRef) initially empty
+   - Manager instance created
+
+2. **SchemaCaching** (4 tests)
+   - addSchema() caches schema after creation
+   - Second call returns cached schema (not recomputed)
+   - Multiple different schemas cached correctly
+   - getSchemaByRef() returns the cache map
+
+3. **RecursionPrevention** (2 tests)
+   - Computing set prevents infinite recursion (returns null)
+   - Schema properly cached after non-recursive creation
+
+4. **Getters** (2 tests)
+   - All getters return correct values
+   - getApiOutputDir() combines outputDir and name
+
+## Files to Modify/Create
+
+1. **Modify**: `src/main/java/com/grl/component/asg/configuration/YamlConfig.java` - Add setters
+2. **Create**: `src/test/java/com/grl/component/mapper/TaxonomyPropertyMapperTest.java`
+3. **Create**: `src/test/java/com/grl/component/mapper/MappingContextTest.java`
+
+## Files to Read (Reference)
+
+- `src/main/java/com/grl/component/mapper/TaxonomyPropertyMapper.java` - Class to test
+- `src/main/java/com/grl/component/mapper/MappingContext.java` - Class to test
+- `src/test/java/com/grl/component/mapper/DataPropertyMapperTest.java` - Test patterns to reuse
+- `src/test/java/com/grl/component/mapper/ObjectPropertyMapperTest.java` - MappingContext setup pattern
+
+## Patterns to Reuse
+
+From existing tests:
+- `@Nested` class organization for test grouping
+- `config.setEnforceRequiredness(true)` for required property tests (after adding setter)
+- OWLDataFactory for creating restrictions
+- MappingContext setup with minimal test ontology (from ObjectPropertyMapperTest)
+- RestrictionInfo creation patterns
+
+## Out of Scope (Better as Integration Tests)
+
+**ResourceSchemaMapper** and **OntologyMapper** have tight coupling issues:
+- Direct instantiation of other mappers (cannot inject)
+- Deep ontology structure requirements
+- Static utility calls that can't be mocked
+- File I/O operations (OntologyMapper)
+
+These should remain covered by existing integration tests (`SimpleApiIT`, `LargeApiIT`).
+
+## Verification
+
+1. Run new tests: `mvn test -Dtest=TaxonomyPropertyMapperTest,MappingContextTest`
+2. Run all tests: `mvn test`
+3. Expected: ~27 new tests added, all 186+ tests pass

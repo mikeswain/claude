@@ -1,0 +1,62 @@
+package com.grl.component.schema;
+
+/**
+ * Enumeration of taxonomy patterns detected in OWL ontologies.
+ *
+ * <p>These patterns describe different ways taxonomies can be defined in OWL
+ * and determine how they are mapped to OpenAPI schemas.
+ *
+ * <ul>
+ *   <li><b>PATTERN_A</b>: Inline enumeration with untyped individuals (just owl:NamedIndividual)</li>
+ *   <li><b>PATTERN_B</b>: Typed individuals with metadata (individuals have domain class + annotations)</li>
+ *   <li><b>PATTERN_C</b>: Class-based taxonomy (extensible, may have hierarchy)</li>
+ *   <li><b>PATTERN_D</b>: SKOS taxonomy (FHIR-compatible, uses skos:Concept)</li>
+ *   <li><b>NONE</b>: Not a taxonomy pattern</li>
+ * </ul>
+ *
+ * @see TaxonomyInfo
+ */
+public enum TaxonomyPattern {
+  /**
+   * Inline enumeration with untyped individuals.
+   * The restriction target is a blank node with owl:oneOf, and individuals
+   * have no domain class beyond owl:NamedIndividual.
+   *
+   * <p>OpenAPI output: Inline StringSchema with enum values.
+   */
+  PATTERN_A,
+
+  /**
+   * Typed individuals with metadata.
+   * The restriction target is a blank node with owl:oneOf, but individuals
+   * have a domain class and may have metadata annotations (codeValue, displayName, definition).
+   *
+   * <p>OpenAPI output: StringSchema with enum values (string values only, no x-code-metadata).
+   */
+  PATTERN_B,
+
+  /**
+   * Class-based taxonomy (extensible).
+   * The restriction target is a named class IRI that is not a SKOS concept.
+   * May have subclasses forming a hierarchy.
+   *
+   * <p>OpenAPI output: $ref to schema in components/schemas with x-extensible: true
+   * and optional x-hierarchy.
+   */
+  PATTERN_C,
+
+  /**
+   * SKOS taxonomy (FHIR-compatible).
+   * The restriction target class is rdfs:subClassOf skos:Concept or has
+   * owl:equivalentClass with skos:inScheme restriction.
+   *
+   * <p>OpenAPI output: $ref to Coding schema with x-fhir-valueset, x-skos-hierarchy.
+   */
+  PATTERN_D,
+
+  /**
+   * Not a taxonomy pattern.
+   * The restriction does not match any known taxonomy pattern.
+   */
+  NONE
+}

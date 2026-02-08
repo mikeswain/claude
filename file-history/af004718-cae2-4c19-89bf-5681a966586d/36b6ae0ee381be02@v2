@@ -1,0 +1,170 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns="https://example.com/valuerestrictions/"
+     xml:base="https://example.com/valuerestrictions/"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+     xmlns:base="https://www.graphresearchlabs.com/base/"
+     xmlns:api="https://www.graphresearchlabs.com/">
+
+    <owl:Ontology rdf:about="https://example.com/valuerestrictions/">
+        <owl:imports rdf:resource="https://www.graphresearchlabs.com/base/V1.0.2"/>
+        <rdfs:comment>Test ontology for value restrictions (some, all, hasValue, oneOf).</rdfs:comment>
+    </owl:Ontology>
+
+    <!-- APIRoot links to API specification -->
+    <rdf:Description rdf:about="https://www.graphresearchlabs.com/base/APIRoot">
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="https://www.graphresearchlabs.com/base/hasAPI"/>
+                <owl:someValuesFrom rdf:resource="https://example.com/valuerestrictions/ValueRestrictionsAPIV1.0"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </rdf:Description>
+
+    <!-- API Specification Class -->
+    <owl:Class rdf:about="https://example.com/valuerestrictions/ValueRestrictionsAPIV1.0">
+        <rdfs:subClassOf rdf:resource="https://www.graphresearchlabs.com/base/GRLAPISpecifications"/>
+        <rdfs:subClassOf rdf:nodeID="hasValueRestrictionsResource"/>
+        <skos:prefLabel>Value Restrictions Test API V1.0</skos:prefLabel>
+        <api:apiDisplayLabel>ValueRestrictionsAPIV1.0</api:apiDisplayLabel>
+    </owl:Class>
+
+    <owl:Restriction rdf:nodeID="hasValueRestrictionsResource">
+        <owl:onProperty rdf:resource="https://www.graphresearchlabs.com/base/hasResourceSchema"/>
+        <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+        <owl:onClass rdf:resource="https://example.com/valuerestrictions/ValueRestrictionsTest"/>
+    </owl:Restriction>
+    <owl:Axiom>
+        <owl:annotatedSource rdf:resource="https://example.com/valuerestrictions/ValueRestrictionsAPIV1.0"/>
+        <owl:annotatedProperty rdf:resource="http://www.w3.org/2000/01/rdf-schema#subClassOf"/>
+        <owl:annotatedTarget rdf:nodeID="hasValueRestrictionsResource"/>
+        <api:apitag>ValueRestrictionsTest</api:apitag>
+    </owl:Axiom>
+
+    <!-- Data Properties -->
+    <owl:DatatypeProperty rdf:about="https://example.com/valuerestrictions/someValuesString">
+        <skos:prefLabel>Some Values String</skos:prefLabel>
+        <skos:definition>Property with someValuesFrom string</skos:definition>
+    </owl:DatatypeProperty>
+
+    <owl:DatatypeProperty rdf:about="https://example.com/valuerestrictions/allValuesString">
+        <skos:prefLabel>All Values String</skos:prefLabel>
+        <skos:definition>Property with allValuesFrom string</skos:definition>
+    </owl:DatatypeProperty>
+
+    <owl:DatatypeProperty rdf:about="https://example.com/valuerestrictions/hasValueDefault">
+        <skos:prefLabel>Has Value Default</skos:prefLabel>
+        <skos:definition>Property with hasValue providing a default</skos:definition>
+    </owl:DatatypeProperty>
+
+    <owl:DatatypeProperty rdf:about="https://example.com/valuerestrictions/dataOneOfEnum">
+        <skos:prefLabel>Data One Of Enum</skos:prefLabel>
+        <skos:definition>Property with dataOneOf creating an enum</skos:definition>
+    </owl:DatatypeProperty>
+
+    <!-- ValueRestrictionsTest Resource Class -->
+    <owl:Class rdf:about="https://example.com/valuerestrictions/ValueRestrictionsTest">
+        <skos:prefLabel>Value Restrictions Test</skos:prefLabel>
+        <skos:definition>Resource class to test value restrictions.</skos:definition>
+
+        <!-- apiID (required for resources) -->
+        <rdfs:subClassOf rdf:nodeID="valApiId"/>
+
+        <!-- someValuesFrom -->
+        <rdfs:subClassOf rdf:nodeID="someValuesRestr"/>
+
+        <!-- allValuesFrom -->
+        <rdfs:subClassOf rdf:nodeID="allValuesRestr"/>
+
+        <!-- hasValue -->
+        <rdfs:subClassOf rdf:nodeID="hasValueRestr"/>
+
+        <!-- dataOneOf -->
+        <rdfs:subClassOf rdf:nodeID="dataOneOfRestr"/>
+    </owl:Class>
+
+    <!-- apiID restriction -->
+    <owl:Restriction rdf:nodeID="valApiId">
+        <owl:onProperty rdf:resource="https://www.graphresearchlabs.com/base/apiID"/>
+        <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+        <owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:Restriction>
+    <owl:Axiom>
+        <owl:annotatedSource rdf:resource="https://example.com/valuerestrictions/ValueRestrictionsTest"/>
+        <owl:annotatedProperty rdf:resource="http://www.w3.org/2000/01/rdf-schema#subClassOf"/>
+        <owl:annotatedTarget rdf:nodeID="valApiId"/>
+        <api:apiLabel>ValueRestrictionsAPIV1.0</api:apiLabel>
+    </owl:Axiom>
+
+    <!-- someValuesFrom restriction -->
+    <owl:Restriction rdf:nodeID="someValuesRestr">
+        <owl:onProperty rdf:resource="https://example.com/valuerestrictions/someValuesString"/>
+        <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:Restriction>
+    <owl:Axiom>
+        <owl:annotatedSource rdf:resource="https://example.com/valuerestrictions/ValueRestrictionsTest"/>
+        <owl:annotatedProperty rdf:resource="http://www.w3.org/2000/01/rdf-schema#subClassOf"/>
+        <owl:annotatedTarget rdf:nodeID="someValuesRestr"/>
+        <api:apiLabel>ValueRestrictionsAPIV1.0</api:apiLabel>
+    </owl:Axiom>
+
+    <!-- allValuesFrom restriction -->
+    <owl:Restriction rdf:nodeID="allValuesRestr">
+        <owl:onProperty rdf:resource="https://example.com/valuerestrictions/allValuesString"/>
+        <owl:allValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:Restriction>
+    <owl:Axiom>
+        <owl:annotatedSource rdf:resource="https://example.com/valuerestrictions/ValueRestrictionsTest"/>
+        <owl:annotatedProperty rdf:resource="http://www.w3.org/2000/01/rdf-schema#subClassOf"/>
+        <owl:annotatedTarget rdf:nodeID="allValuesRestr"/>
+        <api:apiLabel>ValueRestrictionsAPIV1.0</api:apiLabel>
+    </owl:Axiom>
+
+    <!-- hasValue restriction -->
+    <owl:Restriction rdf:nodeID="hasValueRestr">
+        <owl:onProperty rdf:resource="https://example.com/valuerestrictions/hasValueDefault"/>
+        <owl:hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#string">DefaultValue</owl:hasValue>
+    </owl:Restriction>
+    <owl:Axiom>
+        <owl:annotatedSource rdf:resource="https://example.com/valuerestrictions/ValueRestrictionsTest"/>
+        <owl:annotatedProperty rdf:resource="http://www.w3.org/2000/01/rdf-schema#subClassOf"/>
+        <owl:annotatedTarget rdf:nodeID="hasValueRestr"/>
+        <api:apiLabel>ValueRestrictionsAPIV1.0</api:apiLabel>
+    </owl:Axiom>
+
+    <!-- dataOneOf restriction -->
+    <owl:Restriction rdf:nodeID="dataOneOfRestr">
+        <owl:onProperty rdf:resource="https://example.com/valuerestrictions/dataOneOfEnum"/>
+        <owl:someValuesFrom>
+            <rdfs:Datatype>
+                <owl:oneOf>
+                    <rdf:List>
+                        <rdf:first rdf:datatype="http://www.w3.org/2001/XMLSchema#string">low</rdf:first>
+                        <rdf:rest>
+                            <rdf:List>
+                                <rdf:first rdf:datatype="http://www.w3.org/2001/XMLSchema#string">medium</rdf:first>
+                                <rdf:rest>
+                                    <rdf:List>
+                                        <rdf:first rdf:datatype="http://www.w3.org/2001/XMLSchema#string">high</rdf:first>
+                                        <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+                                    </rdf:List>
+                                </rdf:rest>
+                            </rdf:List>
+                        </rdf:rest>
+                    </rdf:List>
+                </owl:oneOf>
+            </rdfs:Datatype>
+        </owl:someValuesFrom>
+    </owl:Restriction>
+    <owl:Axiom>
+        <owl:annotatedSource rdf:resource="https://example.com/valuerestrictions/ValueRestrictionsTest"/>
+        <owl:annotatedProperty rdf:resource="http://www.w3.org/2000/01/rdf-schema#subClassOf"/>
+        <owl:annotatedTarget rdf:nodeID="dataOneOfRestr"/>
+        <api:apiLabel>ValueRestrictionsAPIV1.0</api:apiLabel>
+    </owl:Axiom>
+
+</rdf:RDF>

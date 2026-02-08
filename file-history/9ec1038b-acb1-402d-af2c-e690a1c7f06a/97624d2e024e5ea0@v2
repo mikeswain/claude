@@ -1,0 +1,3 @@
+name: grandchild
+catalogFile: only-in-grandchild.txt
+extends: ../config-child.yaml

@@ -1,0 +1,59 @@
+package kakuro;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public final class Grid {
+    private final Cell[][] cells;
+    private final int rows;
+    private final int cols;
+    private final List<Run> runs;
+
+    public Grid(Cell[][] cells) {
+        this.cells = cells;
+        this.rows = cells.length;
+        this.cols = cells[0].length;
+        this.runs = extractRuns();
+    }
+
+    public Cell get(int row, int col) {
+        return cells[row][col];
+    }
+
+    public void set(int row, int col, Cell cell) {
+        cells[row][col] = cell;
+    }
+
+    public int rows() { return rows; }
+    public int cols() { return cols; }
+    public List<Run> runs() { return runs; }
+
+    private List<Run> extractRuns() {
+        var result = new ArrayList<Run>();
+        for (int r = 0; r < rows; r++) {
+            for (int c = 0; c < cols; c++) {
+                if (cells[r][c] instanceof Cell.Clue clue) {
+                    if (clue.across() > 0) {
+                        result.add(buildRun(clue.across(), r, c, 0, 1));
+                    }
+                    if (clue.down() > 0) {
+                        result.add(buildRun(clue.down(), r, c, 1, 0));
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+    private Run buildRun(int target, int r, int c, int dr, int dc) {
+        var positions = new ArrayList<Position>();
+        int nr = r + dr;
+        int nc = c + dc;
+        while (nr < rows && nc < cols && cells[nr][nc] instanceof Cell.Empty) {
+            positions.add(new Position(nr, nc));
+            nr += dr;
+            nc += dc;
+        }
+        return new Run(target, List.copyOf(positions));
+    }
+}

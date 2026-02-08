@@ -1,0 +1,15 @@
+ontologies:
+  - ../NeuASG Test/EmploymentTestOntology.owl
+name: employment
+extends: base-config.yaml
+catalogFile: ../NeuASG Test/catalog-v001.xml
+rootClass: https://www.graphresearchlabs.com/employment/EmploymentAPIV1.0.1
+templates:
+  openapi:
+    info:
+      description: Minimal Test API
+      title: Employment
+      version: 1.0.0
+    servers:
+      - url: employment
+        description: description

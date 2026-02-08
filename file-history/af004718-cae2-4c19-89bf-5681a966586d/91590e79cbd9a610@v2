@@ -1,0 +1,91 @@
+package regression.features.properties;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import com.grl.TestUtil;
+import com.jayway.jsonpath.ReadContext;
+import java.util.List;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+
+/**
+ * Integration tests for taxonomy (enum) properties.
+ * Tests that object properties pointing to classes with named individuals
+ * are mapped to string enums in OpenAPI.
+ */
+public class TaxonomyPropertyIT {
+
+  private static ReadContext spec;
+
+  @BeforeAll
+  static void setup() {
+    spec = TestUtil.getGeneratedSpec(
+        TestUtil.asFilePath(TaxonomyPropertyIT.class, "/regression/configs/config_taxonomy.yaml"));
+  }
+
+  @Test
+  void statusTaxonomyCreatesEnumFromIndividuals() {
+    // The Status taxonomy should create an array with items containing enum values
+    assertNotNull(spec.read("$.components.schemas.TaxonomyTest.properties.Status"));
+
+    // Taxonomy properties generate as arrays with items.enum
+    List<String> enumValues = spec.read("$.components.schemas.TaxonomyTest.properties.Status.items.enum", List.class);
+
+    assertNotNull(enumValues, "Status should have enum values");
+    assertTrue(enumValues.contains("Active"), "Enum should contain 'Active'");
+    assertTrue(enumValues.contains("Inactive"), "Enum should contain 'Inactive'");
+    assertTrue(enumValues.contains("Pending"), "Enum should contain 'Pending'");
+  }
+
+  @Test
+  void priorityTaxonomyCreatesEnumFromIndividuals() {
+    // The Priority taxonomy should create an array with items containing enum values
+    assertNotNull(spec.read("$.components.schemas.TaxonomyTest.properties.Priority"));
+
+    // Taxonomy properties generate as arrays with items.enum
+    List<String> enumValues = spec.read("$.components.schemas.TaxonomyTest.properties.Priority.items.enum", List.class);
+
+    assertNotNull(enumValues, "Priority should have enum values");
+    assertTrue(enumValues.contains("Low"), "Enum should contain 'Low'");
+    assertTrue(enumValues.contains("Medium"), "Enum should contain 'Medium'");
+    assertTrue(enumValues.contains("High"), "Enum should contain 'High'");
+  }
+
+  @Test
+  void taxonomyPropertyIsArrayType() {
+    // Taxonomy properties with someValuesFrom generate as arrays
+    assertEquals("array", spec.read("$.components.schemas.TaxonomyTest.properties.Status.type"));
+    assertEquals("array", spec.read("$.components.schemas.TaxonomyTest.properties.Priority.type"));
+  }
+
+  @Test
+  void taxonomyPropertyHasMinItems() {
+    // someValuesFrom implies at least one value
+    assertEquals(1, spec.read("$.components.schemas.TaxonomyTest.properties.Status.minItems", Integer.class));
+    assertEquals(1, spec.read("$.components.schemas.TaxonomyTest.properties.Priority.minItems", Integer.class));
+  }
+
+  @Test
+  void taxonomyPropertiesAreRequired() {
+    // Taxonomy properties with someValuesFrom should be required
+    List<String> required = spec.read("$.components.schemas.TaxonomyTest.required", List.class);
+    assertTrue(required.contains("Status"), "Status should be required");
+    assertTrue(required.contains("Priority"), "Priority should be required");
+  }
+
+  @Test
+  void schemaHasCorrectStructure() {
+    assertEquals("object", spec.read("$.components.schemas.TaxonomyTest.type"));
+    assertEquals("Taxonomy Test", spec.read("$.components.schemas.TaxonomyTest.title"));
+    assertNotNull(spec.read("$.components.schemas.TaxonomyTest.properties.apiID"));
+  }
+
+  @Test
+  void resourceHasCorrectEndpoints() {
+    // Should have collection and single endpoints
+    assertNotNull(spec.read("$.paths['/TaxonomyTest']"));
+    assertNotNull(spec.read("$.paths['/TaxonomyTest/{TaxonomyTestId}']"));
+  }
+}

@@ -1,0 +1,2 @@
+enforceRequiredness: True
+outputDir: ${configDir}/../../test-output
