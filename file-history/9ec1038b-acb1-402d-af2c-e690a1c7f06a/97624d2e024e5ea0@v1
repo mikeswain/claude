@@ -1,6 +1,0 @@
-name: grandchild
-catalogFile: only-in-grandchild.txt
-extends: ../config-child.yaml
-namespaceMappings:
-  grl1:
-    - this-will-be-the-third

@@ -1,9 +1,0 @@
-{
-  "id": "7",
-  "subject": "Run full test suite and verify",
-  "description": "Run mvn clean verify to ensure all unit and integration tests pass.",
-  "activeForm": "Running verification tests",
-  "status": "pending",
-  "blocks": [],
-  "blockedBy": []
-}

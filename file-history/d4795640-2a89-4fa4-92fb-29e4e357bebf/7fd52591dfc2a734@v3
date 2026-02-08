@@ -1,6 +1,0 @@
-package kakuro;
-
-import java.util.List;
-
-/** A sequence of empty cells that must sum to a target using unique digits 1-9. */
-public record Run(int target, List<Position> cells) {}

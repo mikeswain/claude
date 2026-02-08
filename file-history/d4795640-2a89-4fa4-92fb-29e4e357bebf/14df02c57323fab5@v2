@@ -1,3 +1,0 @@
-package kakuro;
-
-public record Position(int row, int col) {}

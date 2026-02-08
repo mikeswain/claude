@@ -1,9 +1,0 @@
-{
-  "id": "2",
-  "subject": "Change MappingContext.addSchema() to accept OWLClass",
-  "description": "Step 2: Change addSchema(String) to addSchema(OWLClass). Remove defaultOntologyPrefixIRI and manager fields. Add temporary deprecated String overload.",
-  "activeForm": "Refactoring MappingContext",
-  "status": "pending",
-  "blocks": [],
-  "blockedBy": []
-}

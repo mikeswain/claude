@@ -1,4 +1,0 @@
-ontologies:
-  - ../Management API/Management API.owl
-catalogFile: ../Management API/catalog-v001.xml
-extends: base-config.yaml

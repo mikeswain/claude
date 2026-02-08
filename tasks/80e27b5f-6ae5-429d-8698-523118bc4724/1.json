@@ -1,9 +1,0 @@
-{
-  "id": "1",
-  "subject": "Create Java 21 kakuro solver project structure",
-  "description": "Create src/kakuro/ directory and puzzles/ directory. Write Cell.java (sealed interface), Position.java (record), Run.java (record).",
-  "activeForm": "Creating project structure",
-  "status": "pending",
-  "blocks": [],
-  "blockedBy": []
-}

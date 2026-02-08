@@ -1,7 +1,0 @@
-package kakuro;
-
-public sealed interface Cell {
-    record Black() implements Cell {}
-    record Clue(int down, int across) implements Cell {}
-    record Empty(int value) implements Cell {}
-}

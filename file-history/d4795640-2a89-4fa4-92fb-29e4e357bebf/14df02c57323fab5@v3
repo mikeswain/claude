@@ -1,4 +1,0 @@
-package kakuro;
-
-/** A row/column coordinate in the grid. */
-public record Position(int row, int col) {}
