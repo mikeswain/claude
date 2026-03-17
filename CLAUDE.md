@@ -1,41 +1,33 @@
-# Claude Global Guidelines
-## Coding Preferences
-### All Languages
-- in general, prefer readability and maintainability to fancy stuff
-- the best code is no code; avoid unnecessary complexity and boilerplate
-- use descriptive variable and function names, chosen carefully to convey intent and domain meaning
-- avoid deep nesting and long functions; break into smaller, focused units (function length <= 20 lines)
-- keep all state and symbols scoped as narrowly as possible; avoid global state and side effects
-### Java
-- source/class file <=200 lines unless a long data table etc
-- use latest language features where sensible (e.g. records, sealed interfaces, pattern matching)
-- prefer immutability and final fields where possible
-- streams are the default for iteration and transformation; use imperative loops only when clearly simpler (e.g. multi-variable accumulation with early exit, index-based mutation, recursive backtracking)
-- use Optional for nullable return values instead of null, and for chaining operations that may return null
-- Prefer composition over inheritance; use interfaces and delegation
-- use dependency injection for better testability (if in a framework that supports it)
-### Typescript
-- use strict typing and interfaces to define data structures
-- prefer const and let over var; use const by default
-- use async/await for asynchronous code; avoid callbacks and promises directly
-- functional style (map, filter, reduce, flatMap) is the default for iteration and transformation; use imperative loops only when clearly simpler (e.g. complex accumulation with early exit, index-based mutation)
-- prefer immutability and pure functions where possible
-## Testing Preferences
-- write unit tests for all public functions and critical internal logic
-- use descriptive test names that convey the scenario being tested
-- aim for high code coverage, but prioritize meaningful tests over coverage percentage
-- use test doubles (mocks, stubs) to isolate units under test and avoid too many external dependencies
-- don't take this too far, framework  libraries and project dependencies can be used in tests without mocks if they are stable and well-tested themselves
-- prefer integration tests for end-to-end scenarios that involve multiple components working together
-## Documentation Preferences
-- write clear and concise docstrings for all public functions, classes, and modules
-- use Javadoc style for Java and TSDoc for TypeScript
-- include examples in docstrings where it helps clarify usage
-- maintain an up-to-date README with project overview, setup instructions, and usage examples
-- use inline comments sparingly, only to explain non-obvious code or decisions
-- prefer self-explanatory code and good naming over comments that explain what the code does
-## Refactoring Guidelines
-- ensure all tests pass before and after refactoring and during steps in between
-- make small, incremental changes rather than large, sweeping ones
+# Tool Usage
+- Never use `cd <path> && git ...` compound commands. Use `git -C <path>` instead to avoid compound command approval prompts.
+- Prefer single-command forms over `cd && <tool>` patterns generally.
 
+# Coding Preferences (All Languages)
+- Readability and maintainability over cleverness
+- The best code is no code; avoid unnecessary complexity and boilerplate
+- Descriptive names chosen carefully to convey intent and domain meaning
+- Follow the language's common case conventions
+- Avoid deep nesting; functions over ~20 lines are getting uncomfortable
+- Prefer immutable, functional code — easier to debug and prove correct
+- Scope state and symbols as narrowly as possible; avoid global state and side effects
+- Fail fast with runtime exceptions; prefer assertions over labouring on vanishingly unlikely cases
+- Never swallow exceptions unless there is a specific mitigation path (document with a comment)
+- Avoid complex nested if/then and break/continue unless it genuinely clarifies the logic
+- Prefer static imports; dynamic imports only when genuinely justified by download size
 
+# Testing
+- **Write tests proactively alongside new logic — do not wait to be asked**
+- Unit tests for all public functions and critical internal logic
+- Descriptive test names that convey the scenario
+- Meaningful tests over coverage percentage
+- Use test doubles to isolate units, but don't mock stable framework/project dependencies
+- Prefer integration tests for multi-component end-to-end scenarios
+
+# Documentation
+- Clear, concise docstrings for all public APIs (language-specific format in skills)
+- Examples in docstrings where they clarify usage
+- Inline comments only for non-obvious decisions; prefer self-explanatory code
+
+# Refactoring
+- All tests pass before, during, and after
+- Small, incremental changes over large sweeping ones
